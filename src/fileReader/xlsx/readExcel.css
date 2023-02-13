@@ -1,0 +1,8 @@
+.file-input-control .icon {
+    color: gray;
+}
+
+.file-input-control .icon.active {
+    color: red;
+    cursor: pointer;
+}

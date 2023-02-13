@@ -1,0 +1,8 @@
+npx create-react-app react-excel-min
+cd react-excel-min
+npm start
+
+# Copy the source code
+npm install react-router-dom react-icons react-bootstrap react-scripts react-select react-table
+npm install react-redux redux redux-thunk
+npm install xlsx bootstrap date-fns
