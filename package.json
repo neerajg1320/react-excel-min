@@ -1,5 +1,5 @@
 {
-  "name": "react-excel-min",
+  "name": "@glassball/tallymate-ui",
   "version": "0.1.0",
   "private": true,
   "main": "src/index.js",
