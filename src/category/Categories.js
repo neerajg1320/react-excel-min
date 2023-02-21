@@ -5,6 +5,7 @@ import Select from "react-select";
 import {listToOptions} from "../utils/options";
 import {useContext} from "react";
 import AppContext from "../AppContext";
+import {FeatureTable} from "@glassball/table";
 
 
 export const Categories = () => {
@@ -34,6 +35,11 @@ export const Categories = () => {
     setExpanded(false);
   }, []);
 
+
+  const handleDataChange = useCallback((newData) => {
+    console.log(`newData=${JSON.stringify(newData)}`);
+  }, []);
+
   return (
     <div>
       <h3>Categories</h3>
@@ -44,7 +50,7 @@ export const Categories = () => {
           title="Add"
           expanded={expanded}
           onChange={setExpanded}
-          popupPosition={{top:"100%"}}
+          popupPosition={{top:"100%", right:"0"}}
         >
           <div style={{
             display: "flex", flexDirection: "column", gap: "20px"
@@ -84,13 +90,15 @@ export const Categories = () => {
         </ExpandableButton>
       </div>
 
-      {categories && categories.map((item, index) => {
+      {false && categories && categories.map((item, index) => {
         return (
             <div key={index}>
               <h5>{item.name}</h5>
             </div>
         );
       })}
+
+      <FeatureTable data={categories} onDataChange={handleDataChange}/>
     </div>
   );
 };
