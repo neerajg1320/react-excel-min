@@ -12,25 +12,17 @@ import {DELETE, PATCH} from "./common/operationsTypes";
 import GlobalFilterSection from "./GlobalFilterSection";
 import PaginationSection from "./PaginationSection";
 import ColumnVisibilitySection from "./ColumnVisibilitySection";
-import AppContext from "../AppContext";
 
 // We derive columns from data
 // We will just convert the columns.
 // Any modification of columns should be handled above this.
 
 
-export const TableWrapper = () => {
+export const TableWrapper = ({data:initialData, onDataChange:updateData, ledgers, categories}) => {
   if (debug.lifecycle) {
     console.log(`Rendering <TableWrapper>`);
   }
-
-  const {
-    data:initialData,
-    onDataChange: updateData,
-    ledgers,
-    categories
-  } = useContext(AppContext);
-
+  
   const [data, setData] = useState(initialData);
 
   const {state} = useLocation();

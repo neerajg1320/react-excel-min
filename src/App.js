@@ -196,7 +196,7 @@ const App = () => {
             <Route index element={<ReadWrapper />} />
 
             {/* Transactions are categorized by user */}
-            <Route path="transactions" element={<TableWrapper />} />
+            <Route path="transactions" element={<TableWrapper data={data} onDataChange={handleDataChange} {...{ledgers, categories}}/>} />
 
             {/* Category information added by user */}
             <Route path="categories" element={<Categories />} />
