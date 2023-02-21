@@ -9,6 +9,7 @@ import {TallyWrapper} from "./tally/TallyWrapper";
 import {Categories} from "./category/Categories";
 
 import AppContext from "./AppContext";
+import {TableBulk} from "./table/TableBulk";
 
 const defaultGroups = [
   {
@@ -196,7 +197,7 @@ const App = () => {
             <Route index element={<ReadWrapper />} />
 
             {/* Transactions are categorized by user */}
-            <Route path="transactions" element={<TableWrapper data={data} onDataChange={handleDataChange} {...{ledgers, categories}}/>} />
+            <Route path="transactions" element={<TableBulk data={data} onDataChange={handleDataChange} {...{ledgers, categories}}/>} />
 
             {/* Category information added by user */}
             <Route path="categories" element={<Categories />} />

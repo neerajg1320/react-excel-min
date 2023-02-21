@@ -18,11 +18,13 @@ import ColumnVisibilitySection from "./ColumnVisibilitySection";
 // Any modification of columns should be handled above this.
 
 
-export const TableWrapper = ({data:initialData, onDataChange:updateData, ledgers, categories}) => {
+export const TableWrapper = (props) => {
+  const {data:initialData, onDataChange:updateData, ledgers, categories} = props;
+
   if (debug.lifecycle) {
     console.log(`Rendering <TableWrapper>`);
   }
-  
+
   const [data, setData] = useState(initialData);
 
   const {state} = useLocation();
