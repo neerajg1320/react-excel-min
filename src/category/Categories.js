@@ -25,7 +25,7 @@ export const Categories = () => {
     setExpanded(false);
   }, []);
 
-  const handleSaveClick = useCallback((name, group) => {
+  const handleSaveClick = useCallback((categories, name, group) => {
     console.log(`handleSaveClick: name=${name} group=${group}`);
     // updateCategories((prevState) => {
     //   return [...prevState, {name, group}];
@@ -75,7 +75,7 @@ export const Categories = () => {
               >
                 Cancel
               </Button>
-              <Button size="sm" onClick={() => { handleSaveClick(name, group) }} >
+              <Button size="sm" onClick={() => { handleSaveClick(categories, name, group) }} >
                 Save
               </Button>
             </div>

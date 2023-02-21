@@ -165,7 +165,7 @@ const App = () => {
   }, []);
 
   const handleCategoriesChange = (categories) => {
-    if (debugLedgers) {
+    if (debugCategories) {
       console.log(`App: handleCategoriesChange:`, categories);
     }
     setCategories(categories);
