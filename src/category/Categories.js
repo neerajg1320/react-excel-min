@@ -3,38 +3,23 @@ import Button from "react-bootstrap/Button";
 import ExpandableButton from "../components/expandableButton/ExpandableButton";
 import Select from "react-select";
 import {listToOptions} from "../utils/options";
+import {useContext} from "react";
+import AppContext from "../AppContext";
 
-const defaultGroups = [
-  {
-    name: "Direct Expenses"
-  },
-  {
-    name: "Indirect Expenses"
-  },
-];
 
-const defaultCategories = [
-  {
-    name: "Travel",
-    group: "Indirect Expenses"
-  },
-  {
-    name: "Salary",
-    group: "Indirect Expenses"
-  }
-];
-
-export const Categories = ({
-    initialValue=defaultCategories,
-    initialGroups=defaultGroups
-}) => {
-  const [list, setList] = useState(initialValue);
+export const Categories = () => {
   const [expanded, setExpanded] = useState(false);
   const [name, setName] = useState('');
   const [group, setGroup] = useState('');
+  const {
+    categories,
+    onCategoriesChange: updateCategories,
+    groups
+  } = useContext(AppContext);
+
   const groupOptions = useMemo(() => {
-    return listToOptions(initialGroups.map(item => item.name), "Group")
-  }, []);
+    return listToOptions(groups.map(item => item.name), "Group")
+  }, [groups]);
 
   const handleCancelClick = useCallback(() => {
     setExpanded(false);
@@ -42,9 +27,10 @@ export const Categories = ({
 
   const handleSaveClick = useCallback((name, group) => {
     console.log(`handleSaveClick: name=${name} group=${group}`);
-    setList((prevState) => {
-      return [...prevState, {name, group}];
-    });
+    // updateCategories((prevState) => {
+    //   return [...prevState, {name, group}];
+    // });
+    updateCategories([...categories, {name, group}]);
     setExpanded(false);
   }, []);
 
@@ -98,7 +84,7 @@ export const Categories = ({
         </ExpandableButton>
       </div>
 
-      {list && list.map((item, index) => {
+      {categories && categories.map((item, index) => {
         return (
             <div key={index}>
               <h5>{item.name}</h5>

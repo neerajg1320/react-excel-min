@@ -10,6 +10,27 @@ import {Categories} from "./category/Categories";
 
 import AppContext from "./AppContext";
 
+const defaultGroups = [
+  {
+    name: "Direct Expenses"
+  },
+  {
+    name: "Indirect Expenses"
+  },
+];
+
+const defaultCategories = [
+  {
+    name: "Travel",
+    group: "Indirect Expenses"
+  },
+  {
+    name: "Salary",
+    group: "Indirect Expenses"
+  }
+];
+
+
 const App = () => {
   if (debug.lifecycle) {
     console.log(`Rendering <App>`);
@@ -17,6 +38,7 @@ const App = () => {
 
   const debugData = false;
   const debugLedgers = false;
+  const debugCategories = true;
 
   useEffect(() => {
     if (debug.lifecycle) {
@@ -33,6 +55,8 @@ const App = () => {
   // The App keeps a copy of data
   const [data, setData] = useState([]);
   const [ledgers, setLedgers] = useState([]);
+  const [categories, setCategories] = useState(defaultCategories);
+  const [groups, setGroups] = useState(defaultGroups);
   // The following two could be turned to refs
   const [modifiedRows, setModifiedRows] = useState([]);
   const [deletedRows, setDeletedRows] = useState([]);
@@ -140,6 +164,13 @@ const App = () => {
     setLedgers(ledgers);
   }, []);
 
+  const handleCategoriesChange = (categories) => {
+    if (debugLedgers) {
+      console.log(`App: handleCategoriesChange:`, categories);
+    }
+    setCategories(categories);
+  }
+
   // Currently we are not using the AppContext
   const appContext = {
     data,
@@ -148,7 +179,10 @@ const App = () => {
     onLedgersChange: handleLedgersChange,
     tallySaved:tallySavedRef.current,
     modifiedRows,
-    deletedRows
+    deletedRows,
+    categories,
+    onCategoriesChange: handleCategoriesChange,
+    groups,
   }
 
   return (
