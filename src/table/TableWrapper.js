@@ -27,7 +27,8 @@ export const TableWrapper = () => {
   const {
     data:initialData,
     onDataChange: updateData,
-    ledgers
+    ledgers,
+    categories
   } = useContext(AppContext);
 
   const [data, setData] = useState(initialData);
@@ -130,13 +131,22 @@ export const TableWrapper = () => {
   const selectables = useMemo(() => {
     // This is compile time mapping.
     // For future: Can we do this run time?
+    if (ledgers && ledgers.length > 0) {
+      return [
+        {
+          'keyName': 'category',
+          'choices': ledgers.map(ledger => ledger.name)
+        }
+      ];
+    }
+
     return [
       {
         'keyName': 'category',
-        'choices': ledgers.map(ledger => ledger.name)
+        'choices': categories.map(category => category.name)
       }
     ];
-  }, [ledgers]);
+  }, [ledgers, categories]);
 
   const rtColumns = useMemo(() => {
     return columns.map((col, index) => {
