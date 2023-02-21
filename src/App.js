@@ -6,6 +6,8 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {debug} from "./components/config/debug";
 import {HomeLayout} from "./components/HomeLayout";
 import {TallyWrapper} from "./tally/TallyWrapper";
+import {Categories} from "./category/Categories";
+
 import AppContext from "./AppContext";
 
 const App = () => {
@@ -159,8 +161,11 @@ const App = () => {
             {/* Data read from excel file */}
             <Route index element={<ReadWrapper />} />
 
+            {/* Transactions are categorized by user */}
+            <Route path="transactions" element={<TableWrapper />} />
+
             {/* Category information added by user */}
-            <Route path="table" element={<TableWrapper />} />
+            <Route path="categories" element={<Categories />} />
 
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Route>

@@ -23,8 +23,11 @@ export const HomeLayout = () => {
           <NavLink to="/" style={style}>
             Read
           </NavLink>
-          <NavLink to="/table" style={style}>
-            Table
+          <NavLink to="/transactions" style={style}>
+            Transactions
+          </NavLink>
+          <NavLink to="/categories" style={style}>
+            Categories
           </NavLink>
         </nav>
 
