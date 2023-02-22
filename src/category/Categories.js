@@ -5,7 +5,7 @@ import Select from "react-select";
 import {listToOptions} from "../utils/options";
 import {useContext} from "react";
 import AppContext from "../AppContext";
-import {FeatureTable} from "@glassball/table";
+import {TableBulk} from "@glassball/table";
 
 
 export const Categories = () => {
@@ -98,7 +98,7 @@ export const Categories = () => {
         );
       })}
 
-      <FeatureTable data={categories} onDataChange={handleDataChange}/>
+      <TableBulk data={categories} onDataChange={handleDataChange}/>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import {debug} from "./components/config/debug";
 import {HomeLayout} from "./components/HomeLayout";
 import {TallyWrapper} from "./tally/TallyWrapper";
 import {Categories} from "./category/Categories";
-import {FeatureTable} from "@glassball/table";
+import {TableBulk} from "@glassball/table";
 
 import AppContext from "./AppContext";
 
@@ -196,7 +196,7 @@ const App = () => {
             <Route index element={<ReadWrapper />} />
 
             {/* Transactions are categorized by user */}
-            <Route path="transactions" element={<FeatureTable data={data} onDataChange={handleDataChange} {...{ledgers, categories}}/>} />
+            <Route path="transactions" element={<TableBulk data={data} onDataChange={handleDataChange} {...{ledgers, categories}}/>} />
 
             {/* Category information added by user */}
             <Route path="categories" element={<Categories />} />
