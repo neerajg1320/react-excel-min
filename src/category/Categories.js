@@ -38,6 +38,7 @@ export const Categories = () => {
 
   const handleDataChange = useCallback((newData) => {
     console.log(`newData=${JSON.stringify(newData)}`);
+    updateCategories(newData);
   }, []);
 
   return (

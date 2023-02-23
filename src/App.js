@@ -27,6 +27,22 @@ const defaultCategories = [
   {
     name: "Salary",
     group: "Indirect Expenses"
+  },
+  {
+    name: "Stationary",
+    group: "Indirect Expenses"
+  },
+  {
+    name: "Food",
+    group: "Indirect Expenses"
+  },
+  {
+    name: "Transport",
+    group: "Indirect Expenses"
+  },
+  {
+    name: "Cotton",
+    group: "Direct Expenses"
   }
 ];
 
@@ -58,41 +74,11 @@ const App = () => {
   const [categories, setCategories] = useState(defaultCategories);
   const [groups, setGroups] = useState(defaultGroups);
   // The following two could be turned to refs
-  const [modifiedRows, setModifiedRows] = useState([]);
-  const [deletedRows, setDeletedRows] = useState([]);
+  const modifiedRows = useRef([]);
+  const deletedRows = useRef([]);
+
   const tallySavedRef = useRef(false);
 
-
-  const updateModifiedRows = useCallback((indices) => {
-    setModifiedRows((prev) => {
-      const newIds = indices.filter(index => !prev.includes(index));
-      return [...prev, ...newIds];
-    });
-  }, [setModifiedRows]);
-
-  const updateDeletedRows = useCallback((indices) => {
-    setDeletedRows((prev) => {
-      const newIds = indices.filter(index => !prev.includes(index));
-      return [...prev, ...newIds];
-    });
-
-    // Remove the deleted indices from the modifiedRows
-    setModifiedRows((prev) => {
-      return prev.filter(index => !indices.includes(index))
-    });
-  }, [setDeletedRows, setModifiedRows]);
-
-  const clearMarkedRows = useCallback(() => {
-    setModifiedRows([]);
-    setDeletedRows([]);
-  }, [setModifiedRows, setDeletedRows]);
-
-  useEffect(() => {
-    if (debugData) {
-      console.log(`modifiedRows:`, modifiedRows);
-      console.log(`deletedRows:`, deletedRows);
-    }
-  }, [modifiedRows, deletedRows]);
 
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
@@ -107,35 +93,14 @@ const App = () => {
     if (source === "dataSourceFileReader") {
       const indices = data.map((item,index) => index);
       if (indices.length > 0) {
-        setModifiedRows(indices);
+        // setModifiedRows(indices);
         tallySavedRef.current = false;
       }
     } else if (source === "dataSourceTable") {
-      if (updates) {
-        // console.log(`App:handleDataChange`, updates, data);
-        const modificationUpdates = updates.filter(update => update.action === 'PATCH');
-        const modifiedIndices = modificationUpdates.reduce((prev, update) => {
-          const newIds = update.payload.indices.filter(index => !prev.includes(index));
-          return [...prev, ...newIds];
-        }, [])
-        if (modifiedIndices.length > 0) {
-          updateModifiedRows(modifiedIndices);
-        }
-
-        const deletionUpdates = updates.filter(update => update.action === 'DELETE');
-        const deletedIndices = deletionUpdates.reduce((prev, update) => {
-          const newIds = update.payload.indices.filter(index => !prev.includes(index));
-          return [...prev, ...newIds];
-        }, [])
-        if (deletedIndices.length > 0) {
-          // TBD: This is the place where we need to check if data is in sync with server
-          if (tallySavedRef.current) {
-            updateDeletedRows(deletedIndices);
-          } else {
-            newData = data.filter((item, index) => !deletedIndices.includes(index));
-          }
-        }
-      }
+        // For now we do nothing here.
+      console.log(`handleDataChange:dataSourceTable updates=`, updates);
+      modifiedRows.current = updates.modifiedRows;
+      deletedRows.current = updates.deletedRows;
     } else if (source === "dataSourceTally") {
       // We can count the Tally Operations here. This will happen only if data is submitted to Tally
       // We should get the indices here and clear the modifiedRows
@@ -146,7 +111,7 @@ const App = () => {
       // We need to be very careful here
       // We need to check if all responses are accounted
       if (responseIds.length > 0) {
-        clearMarkedRows();
+        // clearMarkedRows();
         tallySavedRef.current = true;
       }
 
@@ -165,9 +130,8 @@ const App = () => {
   }, []);
 
   const handleCategoriesChange = (categories) => {
-    if (debugCategories) {
-      console.log(`App: handleCategoriesChange:`, categories);
-    }
+    console.log(`App: handleCategoriesChange:`, categories);
+
     setCategories(categories);
   }
 
@@ -178,8 +142,8 @@ const App = () => {
     ledgers,
     onLedgersChange: handleLedgersChange,
     tallySaved:tallySavedRef.current,
-    modifiedRows,
-    deletedRows,
+    modifiedRows: modifiedRows.current,
+    deletedRows: deletedRows.current,
     categories,
     onCategoriesChange: handleCategoriesChange,
     groups,
@@ -196,7 +160,16 @@ const App = () => {
             <Route index element={<ReadWrapper />} />
 
             {/* Transactions are categorized by user */}
-            <Route path="transactions" element={<TableBulk data={data} onDataChange={handleDataChange} {...{ledgers, categories}}/>} />
+            <Route
+                path="transactions"
+                element={
+                  <TableBulk
+                      data={data}
+                      onDataChange={handleDataChange}
+                      updateWithCommit={false}
+                      {...{ledgers, categories}}
+                  />
+                } />
 
             {/* Category information added by user */}
             <Route path="categories" element={<Categories />} />
