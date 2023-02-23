@@ -8,16 +8,15 @@ import AppContext from "../AppContext";
 import {TableBulk} from "@glassball/table";
 
 
-export const Categories = () => {
+export const Categories = ({
+                             categories,
+                             onCategoriesChange: updateCategories,
+                             groups
+                           }) => {
   const [expanded, setExpanded] = useState(false);
   const [name, setName] = useState('');
   const [group, setGroup] = useState('');
-  const {
-    categories,
-    onCategoriesChange: updateCategories,
-    groups
-  } = useContext(AppContext);
-
+  
   const groupOptions = useMemo(() => {
     return listToOptions(groups.map(item => item.name), "Group")
   }, [groups]);

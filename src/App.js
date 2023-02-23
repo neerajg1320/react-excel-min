@@ -144,9 +144,9 @@ const App = () => {
     tallySaved:tallySavedRef.current,
     modifiedRows: modifiedRows.current,
     deletedRows: deletedRows.current,
-    categories,
-    onCategoriesChange: handleCategoriesChange,
-    groups,
+    // categories,
+    // onCategoriesChange: handleCategoriesChange,
+    // groups,
   }
 
   return (
@@ -172,7 +172,15 @@ const App = () => {
                 } />
 
             {/* Category information added by user */}
-            <Route path="categories" element={<Categories />} />
+            <Route
+                path="categories"
+                element={
+                  <Categories
+                      {...{categories, groups}}
+                      onCategoriesChange={handleCategoriesChange}
+                  />
+                }
+            />
 
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Route>
