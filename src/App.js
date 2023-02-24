@@ -93,14 +93,19 @@ const App = () => {
   ]);
 
   // The following two could be turned to refs
-  const modifiedRows = useRef([]);
-  const deletedRows = useRef([]);
+  const modifiedRowsRef = useRef([]);
+  const deletedRowsRef = useRef([]);
   const tallySavedRef = useRef(false);
 
+  const clearMarkedRows = useCallback(() => {
+    modifiedRowsRef.current = [];
+    deletedRowsRef.current = [];
+
+  }, []);
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
   const handleDataChange = useCallback((data, updates, source) => {
-    // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} data=`, data);
+    console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} data=${JSON.stringify(data, null, 2)}`);
 
     let newData = data;
 
@@ -115,9 +120,9 @@ const App = () => {
       }
     } else if (source === "dataSourceTable") {
         // For now we do nothing here.
-      console.log(`handleDataChange:dataSourceTable updates=`, updates);
-      modifiedRows.current = updates.modifiedRows;
-      deletedRows.current = updates.deletedRows;
+      console.log(`handleDataChange:dataSourceTable updates=${JSON.stringify(updates, null, 2)}`);
+      modifiedRowsRef.current = updates.modifiedRows;
+      deletedRowsRef.current = updates.deletedRows;
     } else if (source === "dataSourceTally") {
       // We can count the Tally Operations here. This will happen only if data is submitted to Tally
       // We should get the indices here and clear the modifiedRows
@@ -128,7 +133,7 @@ const App = () => {
       // We need to be very careful here
       // We need to check if all responses are accounted
       if (responseIds.length > 0) {
-        // clearMarkedRows();
+        clearMarkedRows();
         tallySavedRef.current = true;
       }
 
@@ -188,8 +193,8 @@ const App = () => {
     ledgers:ledgersRef.current,
     onLedgersChange: handleLedgersChange,
     tallySaved:tallySavedRef.current,
-    modifiedRows: modifiedRows.current,
-    deletedRows: deletedRows.current,
+    modifiedRows: modifiedRowsRef.current,
+    deletedRows: deletedRowsRef.current,
     // categories,
     // onCategoriesChange: handleCategoriesChange,
     // groups,
