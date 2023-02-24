@@ -12,6 +12,12 @@ import AppContext from "./AppContext";
 
 const defaultGroups = [
   {
+    name: "Direct Incomes"
+  },
+  {
+    name: "Indirect Incomes"
+  },
+  {
     name: "Direct Expenses"
   },
   {
@@ -70,14 +76,16 @@ const App = () => {
 
   // The App keeps a copy of data
   const [data, setData] = useState([]);
+
   const [ledgers, setLedgers] = useState([]);
   const [categories, setCategories] = useState(defaultCategories);
   const [groups, setGroups] = useState(defaultGroups);
+
   const [selectables, setSelectables] = useState(() => {
     return [
       {
         keyName: "group",
-        choices: ["Direct Expenses", "Direct Incomes", "Indirect Expenses", "Indirect Incomes"]
+        choices: defaultGroups.map(grp => grp.name)
       }
     ]
   });
@@ -145,7 +153,10 @@ const App = () => {
         }
       ];
 
-      console.log(`handleLedgersChange: newSelectables=${JSON.stringify(newSelectables, null, 2)}`)
+      if (debugLedgers) {
+        console.log(`handleLedgersChange: newSelectables=${JSON.stringify(newSelectables, null, 2)}`)
+      }
+
       return newSelectables;
     })
   }, []);
