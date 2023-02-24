@@ -85,7 +85,12 @@ const App = () => {
     return defaultGroups
   });
 
-  const [transactionSelectables, setTransactionSelectables] = useState([]);
+  const [transactionSelectables, setTransactionSelectables] = useState([
+    {
+      keyName: "category",
+      choices: defaultCategories.map(category => category.name)
+    }
+  ]);
 
   // The following two could be turned to refs
   const modifiedRows = useRef([]);
@@ -159,7 +164,9 @@ const App = () => {
 
     ledgersRef.current = newLedgers;
 
-    updateCategoriesInSelectables(newLedgers);
+    if (newLedgers && newLedgers.length > 0) {
+      updateCategoriesInSelectables(newLedgers);
+    }
   }, []);
 
   const handleCategoriesChange = useCallback((newCategories) => {
