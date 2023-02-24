@@ -96,12 +96,14 @@ const App = () => {
   const modifiedRowsRef = useRef([]);
   const deletedRowsRef = useRef([]);
   const tallySavedRef = useRef(false);
+  const tableRef = useRef();
 
   const clearMarkedRows = useCallback(() => {
+    console.log(`App: clearMarkedRows()`);
     modifiedRowsRef.current = [];
     deletedRowsRef.current = [];
-
   }, []);
+
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
   const handleDataChange = useCallback((data, updates, source) => {
@@ -134,6 +136,7 @@ const App = () => {
       // We need to check if all responses are accounted
       if (responseIds.length > 0) {
         clearMarkedRows();
+        tableRef.current.clearMarkedRows();
         tallySavedRef.current = true;
       }
 
@@ -219,6 +222,7 @@ const App = () => {
                       onDataChange={handleDataChange}
                       updateWithCommit={false}
                       selectables={transactionSelectables}
+                      ref={tableRef}
                   />
                 } />
 
