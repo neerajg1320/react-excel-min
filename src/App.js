@@ -78,8 +78,8 @@ const App = () => {
   // The App keeps a copy of data
   const [data, setData] = useState([]);
 
-  const [ledgers, setLedgers] = useState([]);
   const [categories, setCategories] = useState(defaultCategories);
+  const ledgersRef = useRef([]);
 
   const [groups, setGroups] = useState(defaultGroups);
 
@@ -134,17 +134,13 @@ const App = () => {
     setData(newData);
   }, []);
 
-  const handleLedgersChange = useCallback((ledgers) => {
-    if (debugLedgers) {
-      console.log(`App: handleLedgersChange:`, ledgers);
-    }
-    // setLedgers(ledgers);
+  const updateCategoriesInSelectables = (newCategories) => {
     setTransactionSelectables((prev) => {
       const newSelectables = [
-          ...prev.filter(selectable => selectable.keyName !== 'category'),
+        ...prev.filter(selectable => selectable.keyName !== 'category'),
         {
           keyName: "category",
-          choices: ledgers ? ledgers.map(ledger => ledger.name) : []
+          choices: newCategories ? newCategories.map(ledger => ledger.name) : []
         }
       ];
 
@@ -154,19 +150,35 @@ const App = () => {
 
       return newSelectables;
     })
+  };
+
+  const handleLedgersChange = useCallback((newLedgers) => {
+    if (debugLedgers) {
+      console.log(`App: handleLedgersChange:`, newLedgers);
+    }
+
+    ledgersRef.current = newLedgers;
+
+    updateCategoriesInSelectables(newLedgers);
   }, []);
 
-  const handleCategoriesChange = (categories) => {
-    console.log(`App: handleCategoriesChange:`, categories);
+  const handleCategoriesChange = useCallback((newCategories) => {
+    console.log(`App: handleCategoriesChange:`, newCategories);
 
-    setCategories(categories);
-  }
+    // The following changes the list in the Category tab
+    setCategories(newCategories);
+
+    // This changes the category selection in the Transactions tab
+    if (!ledgersRef.current || ledgersRef.current.length < 1) {
+      updateCategoriesInSelectables(newCategories);
+    }
+  }, []);
 
   // Currently we are not using the AppContext
   const appContext = {
     data,
     onDataChange: handleDataChange,
-    ledgers,
+    ledgers:ledgersRef.current,
     onLedgersChange: handleLedgersChange,
     tallySaved:tallySavedRef.current,
     modifiedRows: modifiedRows.current,
