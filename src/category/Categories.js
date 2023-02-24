@@ -5,16 +5,32 @@ import Select from "react-select";
 import {listToOptions} from "../utils/options";
 import {TableBulk} from "@glassball/table";
 
+const defaultGroups = [
+  {
+    name: "Direct Incomes"
+  },
+  {
+    name: "Indirect Incomes"
+  },
+  {
+    name: "Direct Expenses"
+  },
+  {
+    name: "Indirect Expenses"
+  },
+];
 
 export const Categories = ({
                              categories,
                              onCategoriesChange: updateCategories,
                              groups
                            }) => {
+
+  // Following three hooks are for creating a new group
   const [expanded, setExpanded] = useState(false);
   const [name, setName] = useState('');
   const [group, setGroup] = useState('');
-  
+
   const groupOptions = useMemo(() => {
     return listToOptions(groups.map(item => item.name), "Group")
   }, [groups]);
@@ -32,11 +48,19 @@ export const Categories = ({
     setExpanded(false);
   }, []);
 
+  const categorySelectables = useMemo(() => {
+    return [
+      {
+        keyName: "group",
+        choices: groups.map(grp => grp.name)
+      }
+    ]
+  }, [groups]);
 
-  const handleDataChange = useCallback((newData) => {
-    console.log(`newData=${JSON.stringify(newData)}`);
-    updateCategories(newData);
-  }, []);
+  // const handleDataChange = useCallback((newData) => {
+  //   console.log(`newData=${JSON.stringify(newData)}`);
+  //   updateCategories(newData);
+  // }, []);
 
   return (
     <div>
@@ -96,7 +120,11 @@ export const Categories = ({
         );
       })}
 
-      <TableBulk data={categories} onDataChange={handleDataChange}/>
+      <TableBulk
+          data={categories}
+          onDataChange={updateCategories}
+          selectables={categorySelectables}
+      />
     </div>
   );
 };

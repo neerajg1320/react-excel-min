@@ -10,6 +10,7 @@ import {TableBulk} from "@glassball/table";
 
 import AppContext from "./AppContext";
 
+// The groups are kept here so that the state can be preserved across Category component render
 const defaultGroups = [
   {
     name: "Direct Incomes"
@@ -81,14 +82,7 @@ const App = () => {
   const [categories, setCategories] = useState(defaultCategories);
   const [groups, setGroups] = useState(defaultGroups);
 
-  const [selectables, setSelectables] = useState(() => {
-    return [
-      {
-        keyName: "group",
-        choices: defaultGroups.map(grp => grp.name)
-      }
-    ]
-  });
+  const [transactionSelectables, setTransactionSelectables] = useState([]);
 
   // The following two could be turned to refs
   const modifiedRows = useRef([]);
@@ -144,7 +138,7 @@ const App = () => {
       console.log(`App: handleLedgersChange:`, ledgers);
     }
     // setLedgers(ledgers);
-    setSelectables((prev) => {
+    setTransactionSelectables((prev) => {
       const newSelectables = [
           ...prev.filter(selectable => selectable.keyName !== 'category'),
         {
@@ -199,7 +193,7 @@ const App = () => {
                       data={data}
                       onDataChange={handleDataChange}
                       updateWithCommit={false}
-                      {...{ledgers, categories, selectables}}
+                      selectables={transactionSelectables}
                   />
                 } />
 

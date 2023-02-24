@@ -108,7 +108,7 @@ export const accountingColumns = [
     ],
     width: 120,
     defaultValue: "Indirect Expenses",
-    required: true
+    required: false
   },
   {
     header: "Voucher Id",
