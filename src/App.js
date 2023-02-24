@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Routes, Route, redirect} from 'react-router-dom';
 import {ReadWrapper} from "./fileReader/ReadWrapper";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {debug} from "./components/config/debug";
 import {HomeLayout} from "./components/HomeLayout";
 import {TallyWrapper} from "./tally/TallyWrapper";
@@ -73,6 +73,15 @@ const App = () => {
   const [ledgers, setLedgers] = useState([]);
   const [categories, setCategories] = useState(defaultCategories);
   const [groups, setGroups] = useState(defaultGroups);
+  const [selectables, setSelectables] = useState(() => {
+    return [
+      {
+        keyName: "group",
+        choices: ["Direct Expenses", "Direct Incomes", "Indirect Expenses", "Indirect Incomes"]
+      }
+    ]
+  });
+
   // The following two could be turned to refs
   const modifiedRows = useRef([]);
   const deletedRows = useRef([]);
@@ -126,7 +135,19 @@ const App = () => {
     if (debugLedgers) {
       console.log(`App: handleLedgersChange:`, ledgers);
     }
-    setLedgers(ledgers);
+    // setLedgers(ledgers);
+    setSelectables((prev) => {
+      const newSelectables = [
+          ...prev.filter(selectable => selectable.keyName !== 'category'),
+        {
+          keyName: "category",
+          choices: ledgers ? ledgers.map(ledger => ledger.name) : []
+        }
+      ];
+
+      console.log(`handleLedgersChange: newSelectables=${JSON.stringify(newSelectables, null, 2)}`)
+      return newSelectables;
+    })
   }, []);
 
   const handleCategoriesChange = (categories) => {
@@ -167,7 +188,7 @@ const App = () => {
                       data={data}
                       onDataChange={handleDataChange}
                       updateWithCommit={false}
-                      {...{ledgers, categories}}
+                      {...{ledgers, categories, selectables}}
                   />
                 } />
 

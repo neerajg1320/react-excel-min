@@ -3,8 +3,6 @@ import Button from "react-bootstrap/Button";
 import ExpandableButton from "../components/expandableButton/ExpandableButton";
 import Select from "react-select";
 import {listToOptions} from "../utils/options";
-import {useContext} from "react";
-import AppContext from "../AppContext";
 import {TableBulk} from "@glassball/table";
 
 

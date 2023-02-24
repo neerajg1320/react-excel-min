@@ -97,6 +97,20 @@ export const accountingColumns = [
     required: true
   },
   {
+    header: "Group",
+    matchLabels: ["Group"],
+    keyName: "group",
+    edit: true,
+    bulk: true,
+    type: 'select', // This needs to be fixed now
+    choices: [
+      'Direct Expenses', 'Indirect Expenses', 'Direct Incomes', 'Indirect Incomes',
+    ],
+    width: 120,
+    defaultValue: "Indirect Expenses",
+    required: true
+  },
+  {
     header: "Voucher Id",
     matchLabels: ["VoucherId"],
     keyName: "voucherId",
