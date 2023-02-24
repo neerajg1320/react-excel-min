@@ -78,19 +78,19 @@ const App = () => {
   // The App keeps a copy of data
   const [data, setData] = useState([]);
 
+  // The App stores categories which are used in Transactions and Categories components
   const [categories, setCategories] = useState(defaultCategories);
   const ledgersRef = useRef([]);
-
-  const [groups, setGroups] = useState(defaultGroups);
+  const groups = useMemo(() => {
+    return defaultGroups
+  });
 
   const [transactionSelectables, setTransactionSelectables] = useState([]);
 
   // The following two could be turned to refs
   const modifiedRows = useRef([]);
   const deletedRows = useRef([]);
-
   const tallySavedRef = useRef(false);
-
 
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
