@@ -5,21 +5,6 @@ import Select from "react-select";
 import {listToOptions} from "../utils/options";
 import {TableBulk} from "@glassball/table";
 
-const defaultGroups = [
-  {
-    name: "Direct Incomes"
-  },
-  {
-    name: "Indirect Incomes"
-  },
-  {
-    name: "Direct Expenses"
-  },
-  {
-    name: "Indirect Expenses"
-  },
-];
-
 export const Categories = ({
                              categories,
                              onCategoriesChange: updateCategories,

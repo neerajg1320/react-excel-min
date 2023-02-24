@@ -80,6 +80,7 @@ const App = () => {
 
   const [ledgers, setLedgers] = useState([]);
   const [categories, setCategories] = useState(defaultCategories);
+
   const [groups, setGroups] = useState(defaultGroups);
 
   const [transactionSelectables, setTransactionSelectables] = useState([]);
