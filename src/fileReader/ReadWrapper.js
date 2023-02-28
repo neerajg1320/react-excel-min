@@ -10,6 +10,7 @@ import {Mappers} from "./mappers/Mappers";
 import * as React from "react";
 import * as hdfc from "../banks/hdfc";
 import * as kotak from "../banks/kotak";
+import * as kotak2 from "../banks/kotak2";
 import AppContext from "../AppContext";
 
 export const ReadWrapper = () => {
@@ -33,7 +34,8 @@ export const ReadWrapper = () => {
     const mappers = []
     // TBD: Put default mapper attributes
     mappers.push({name: hdfc.bankName, matchThreshold: 6, headerKeynameMap: hdfc.headerKeynameMap});
-    mappers.push({name: kotak.bankName, matchThreshold: 6, headerKeynameMap: kotak.headerKeynameMap});
+    // mappers.push({name: kotak.bankName, matchThreshold: 6, headerKeynameMap: kotak.headerKeynameMap});
+    mappers.push({name: kotak2.bankName, matchThreshold: 6, headerKeynameMap: kotak2.headerKeynameMap});
     return mappers;
   });
 
@@ -177,7 +179,7 @@ export const ReadWrapper = () => {
 
   const getMatchedMapper = (headers) => {
     const mappers = getMappers();
-    // console.log(`mappers=`, mappers);
+    console.log(`mappers=`, mappers);
 
     let matchedPresetMapper;
     let exactMapper;
@@ -202,14 +204,17 @@ export const ReadWrapper = () => {
         return [...prev];
       }, []);
 
-      // console.log(`headers.length:${headers.length} hdrKeyEntries.length:${hdrKeyEntries.length} headerKeynameMap.length:${headerKeynameMap.length}`)
+      console.log(`headers.length:${headers.length} hdrKeyEntries.length:${hdrKeyEntries.length} headerKeynameMap.length:${headerKeynameMap.length}`)
 
-      // If all the keys are matched then declare a match
+      // In case of exact match or matched keys are above threshold then we declare a match and stop matching loop
+      // The logic has to be modified.
+      // We need to pick the best match. Thresholds should be reported.
+      // Best would be to show the results here.
       if (hdrKeyEntries.length === headerKeynameMap.length || (matchThreshold && hdrKeyEntries.length > matchThreshold)) {
-        // console.log(`hdrKeyMap: ${JSON.stringify(hdrKeyEntries, null, 2)}`);
+        console.log(`hdrKeyMap: ${JSON.stringify(hdrKeyEntries, null, 2)}`);
         matchedPresetMapper = mappers[mprIdx];
         exactMapper = Object.fromEntries(hdrKeyEntries);
-        // console.log(`exactMapper: ${JSON.stringify(exactMapper, null, 2)}`);
+        console.log(`exactMapper: ${JSON.stringify(exactMapper, null, 2)}`);
         break;
       }
     }

@@ -7,51 +7,11 @@ import {HomeLayout} from "./components/HomeLayout";
 import {TallyWrapper} from "./tally/TallyWrapper";
 import {Categories} from "./category/Categories";
 import {TableBulk} from "@glassball/table";
-
+import {defaultCategories} from "./presets/categoires";
+import {defaultGroups} from "./presets/groups";
 import AppContext from "./AppContext";
 
 // The groups are kept here so that the state can be preserved across Category component render
-const defaultGroups = [
-  {
-    name: "Direct Incomes"
-  },
-  {
-    name: "Indirect Incomes"
-  },
-  {
-    name: "Direct Expenses"
-  },
-  {
-    name: "Indirect Expenses"
-  },
-];
-
-const defaultCategories = [
-  {
-    name: "Travel",
-    group: "Indirect Expenses"
-  },
-  {
-    name: "Salary",
-    group: "Indirect Expenses"
-  },
-  {
-    name: "Stationary",
-    group: "Indirect Expenses"
-  },
-  {
-    name: "Food",
-    group: "Indirect Expenses"
-  },
-  {
-    name: "Transport",
-    group: "Indirect Expenses"
-  },
-  {
-    name: "Cotton",
-    group: "Direct Expenses"
-  }
-];
 
 
 const App = () => {
@@ -107,7 +67,7 @@ const App = () => {
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
   const handleDataChange = useCallback((data, updates, source) => {
-    console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} data=${JSON.stringify(data, null, 2)}`);
+    // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} data=${JSON.stringify(data, null, 2)}`);
 
     let newData = data;
 
