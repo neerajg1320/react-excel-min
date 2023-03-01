@@ -66,14 +66,14 @@ const App = () => {
 
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
-  const handleDataChange = useCallback((transactionsData, updates, source) => {
+  const handleTransactionsDataChange = useCallback((txsData, updates, source) => {
     // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
 
     // TBD: We can do the below asynchronously
     // In case it is a data modify or delete action
 
     if (source === "dataSourceFileReader") {
-      const indices = transactionsData.map((item, index) => index);
+      const indices = txsData.map((item, index) => index);
       if (indices.length > 0) {
         // setModifiedRows(indices);
         tallySavedRef.current = false;
@@ -102,7 +102,7 @@ const App = () => {
       console.error(`handleDataChange: source '${source}' not supported`);
     }
 
-    setTransactionsData(transactionsData);
+    setTransactionsData(txsData);
   }, []);
 
   const updateCategoriesInSelectables = (newCategories) => {
@@ -150,7 +150,7 @@ const App = () => {
   // Currently we are not using the AppContext
   const appContext = {
     data: transactionsData,
-    onDataChange: handleDataChange,
+    onDataChange: handleTransactionsDataChange,
     ledgers:ledgersRef.current,
     onLedgersChange: handleLedgersChange,
     tallySaved:tallySavedRef.current,
@@ -166,7 +166,7 @@ const App = () => {
           <Route element={<HomeLayout />}>
 
             {/* Data read from excel file */}
-            <Route index element={<ReadWrapper />} />
+            <Route index element={<ReadWrapper onDataChange={handleTransactionsDataChange} />} />
 
             {/* Transactions are categorized by user */}
             <Route
@@ -174,7 +174,7 @@ const App = () => {
                 element={
                   <TableBulk
                       data={transactionsData}
-                      onDataChange={handleDataChange}
+                      onDataChange={handleTransactionsDataChange}
                       updateWithCommit={false}
                       selectables={transactionSelectables}
                       ref={tableRef}
@@ -187,7 +187,7 @@ const App = () => {
                 element={
                   <TableBulk
                       data={transactionsData}
-                      onDataChange={handleDataChange}
+                      onDataChange={handleTransactionsDataChange}
                       updateWithCommit={false}
                       selectables={transactionSelectables}
                       ref={tableRef}

@@ -11,16 +11,11 @@ import * as React from "react";
 import * as hdfc from "../banks/hdfc";
 import * as kotak from "../banks/kotak";
 import * as kotak2 from "../banks/kotak2";
-import AppContext from "../AppContext";
 
-export const ReadWrapper = () => {
+export const ReadWrapper = ({onDataChange: updateData}) => {
   if (debug.lifecycle) {
     console.log(`Rendering <Read>`);
   }
-
-  const {
-    onDataChange: updateData
-  } = useContext(AppContext);
 
   const debugFiltering = false;
   const debugRowIdx = debugFiltering ? 0 : -1;
