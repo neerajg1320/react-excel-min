@@ -23,7 +23,7 @@ export const ReadWrapper = () => {
   } = useContext(AppContext);
 
   const debugFiltering = false;
-  const debugRowIdx = debugFiltering ? 22 : -1;
+  const debugRowIdx = debugFiltering ? 0 : -1;
 
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ export const ReadWrapper = () => {
     const mappers = []
     // TBD: Put default mapper attributes
     mappers.push({name: hdfc.bankName, matchThreshold: 6, headerKeynameMap: hdfc.headerKeynameMap});
-    // mappers.push({name: kotak.bankName, matchThreshold: 6, headerKeynameMap: kotak.headerKeynameMap});
+    mappers.push({name: kotak.bankName, matchThreshold: 6, headerKeynameMap: kotak.headerKeynameMap});
     mappers.push({name: kotak2.bankName, matchThreshold: 6, headerKeynameMap: kotak2.headerKeynameMap});
     return mappers;
   });
@@ -211,10 +211,10 @@ export const ReadWrapper = () => {
       // We need to pick the best match. Thresholds should be reported.
       // Best would be to show the results here.
       if (hdrKeyEntries.length === headerKeynameMap.length || (matchThreshold && hdrKeyEntries.length > matchThreshold)) {
-        console.log(`hdrKeyMap: ${JSON.stringify(hdrKeyEntries, null, 2)}`);
+        // console.log(`hdrKeyMap: ${JSON.stringify(hdrKeyEntries, null, 2)}`);
         matchedPresetMapper = mappers[mprIdx];
         exactMapper = Object.fromEntries(hdrKeyEntries);
-        console.log(`exactMapper: ${JSON.stringify(exactMapper, null, 2)}`);
+        // console.log(`exactMapper: ${JSON.stringify(exactMapper, null, 2)}`);
         break;
       }
     }
@@ -240,6 +240,8 @@ export const ReadWrapper = () => {
   }
 
   const filterStatementRows = useCallback((data) => {
+    // console.log(`data=`, data);
+
     const filterThreshold = 6;
     let matchedPresetMapper, exactMapper;
     let matchRowSignature;
@@ -255,9 +257,14 @@ export const ReadWrapper = () => {
       }
 
       const signature = getRowSignature(row, rowIdx, matchedPresetMapper ? matchedPresetMapper.headerKeynameMap.length : -1);
+      // console.log(`[${rowIdx}] signature=`, signature);
+
       if (signature.length >= filterThreshold) {
         // All strings signature is a possible header
         if (isAllString(signature)) {
+          // Example: row=["Sl. No.","Transaction Date","Value Date","Description","Chq / Ref No.","Debit","Credit","Balance","Dr / Cr"]
+          console.log(`row=`, row);
+
           const headers = Object.entries(row).map(([k, val]) => val);
           const [resultMapper, resultExactMapper] = getMatchedMapper(headers);
 
@@ -272,7 +279,7 @@ export const ReadWrapper = () => {
             }
             headerRow = {...row};
 
-            if (debugFiltering) {
+            if (debugFiltering || true) {
               console.log(headerRow);
             }
 
@@ -308,6 +315,8 @@ export const ReadWrapper = () => {
                 return acceptedTypes;
               }
             });
+
+            console.log(`matchRowSignature=`, matchRowSignature);
           }
         } else {
           if (matchRowSignature) {
@@ -345,7 +354,13 @@ export const ReadWrapper = () => {
         }
 
         const headerName = header[i];
+        
+        if(!Object.keys(exactMapper).includes(headerName)) {
+          console.error(`header '${headerName}' not found in exactMapper`);
+        }
+
         const {keyName, format, statementColumn, parse, detectedTypes} =  exactMapper[headerName];
+
         if (skipUndefined && row[i] === undefined) {
           continue;
         }
