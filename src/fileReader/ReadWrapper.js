@@ -34,8 +34,8 @@ export const ReadWrapper = () => {
     const mappers = []
     // TBD: Put default mapper attributes
     mappers.push({name: hdfc.bankName, matchThreshold: 6, headerKeynameMap: hdfc.headerKeynameMap});
-    mappers.push({name: kotak.bankName, matchThreshold: 6, headerKeynameMap: kotak.headerKeynameMap});
-    mappers.push({name: kotak2.bankName, matchThreshold: 6, headerKeynameMap: kotak2.headerKeynameMap});
+    mappers.push({name: kotak.bankName, matchThreshold: 9, headerKeynameMap: kotak.headerKeynameMap});
+    mappers.push({name: kotak2.bankName, matchThreshold: 9, headerKeynameMap: kotak2.headerKeynameMap});
     return mappers;
   });
 
@@ -120,6 +120,10 @@ export const ReadWrapper = () => {
   }, [getMappers]);
 
   const addAccountingColumns = useCallback((data) => {
+    if (!data) {
+      return;
+    }
+
     return data.map((row) => {
       const accRow = {...row};
       const rowProps = Object.keys(accRow);
@@ -210,7 +214,7 @@ export const ReadWrapper = () => {
       // The logic has to be modified.
       // We need to pick the best match. Thresholds should be reported.
       // We need to show match percentage with the compared headers
-      if (hdrKeyEntries.length === headerKeynameMap.length || (matchThreshold && hdrKeyEntries.length > matchThreshold)) {
+      if (hdrKeyEntries.length === headerKeynameMap.length || (matchThreshold && hdrKeyEntries.length >= matchThreshold)) {
         // console.log(`hdrKeyMap: ${JSON.stringify(hdrKeyEntries, null, 2)}`);
         matchedPresetMapper = mappers[mprIdx];
         exactMapper = Object.fromEntries(hdrKeyEntries);
@@ -336,6 +340,10 @@ export const ReadWrapper = () => {
       }
     }
 
+    if (!matchedPresetMapper) {
+      console.error(`No matching mappers found`);
+    }
+
     return {headerRow, matchedRows, matchedPresetMapper, exactMapper};
 
   }, []);
@@ -343,6 +351,11 @@ export const ReadWrapper = () => {
   const createDataFromRows = (header, rows, matchedPresetMapper, exactMapper,
                               {skipUndefined, interpretValues, interpretHeaderTypes}
   ) => {
+    if (!matchedPresetMapper) {
+      console.error(`Invalid matchedPresetMapper:${matchedPresetMapper}`);
+      return;
+    }
+
     // header is an array of column names in file. We need to get keyNames
     const keyNames = matchedPresetMapper.headerKeynameMap.map(item => [item.keyName]);
 
