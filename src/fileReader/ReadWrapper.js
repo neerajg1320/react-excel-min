@@ -209,7 +209,7 @@ export const ReadWrapper = () => {
       // In case of exact match or matched keys are above threshold then we declare a match and stop matching loop
       // The logic has to be modified.
       // We need to pick the best match. Thresholds should be reported.
-      // Best would be to show the results here.
+      // We need to show match percentage with the compared headers
       if (hdrKeyEntries.length === headerKeynameMap.length || (matchThreshold && hdrKeyEntries.length > matchThreshold)) {
         // console.log(`hdrKeyMap: ${JSON.stringify(hdrKeyEntries, null, 2)}`);
         matchedPresetMapper = mappers[mprIdx];
@@ -354,9 +354,10 @@ export const ReadWrapper = () => {
         }
 
         const headerName = header[i];
-        
+
         if(!Object.keys(exactMapper).includes(headerName)) {
           console.error(`header '${headerName}' not found in exactMapper`);
+          continue;
         }
 
         const {keyName, format, statementColumn, parse, detectedTypes} =  exactMapper[headerName];
