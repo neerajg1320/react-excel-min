@@ -33,7 +33,7 @@ export const ReadWrapper = () => {
   const mappers = useMemo(() => {
     const mappers = []
     // TBD: Put default mapper attributes
-    mappers.push({name: hdfc.bankName, matchThreshold: 6, headerKeynameMap: hdfc.headerKeynameMap});
+    mappers.push({name: hdfc.bankName, matchThreshold: 7, headerKeynameMap: hdfc.headerKeynameMap});
     mappers.push({name: kotak.bankName, matchThreshold: 9, headerKeynameMap: kotak.headerKeynameMap});
     mappers.push({name: kotak2.bankName, matchThreshold: 9, headerKeynameMap: kotak2.headerKeynameMap});
     return mappers;
