@@ -36,7 +36,7 @@ const App = () => {
   }, []);
 
   // The App keeps a copy of data
-  const [data, setData] = useState([]);
+  const [transactionsData, setTransactionsData] = useState([]);
 
   // The App stores categories which are used in Transactions and Categories components
   const [categories, setCategories] = useState(defaultCategories);
@@ -66,16 +66,14 @@ const App = () => {
 
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
-  const handleDataChange = useCallback((data, updates, source) => {
-    // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} data=${JSON.stringify(data, null, 2)}`);
-
-    let newData = data;
+  const handleDataChange = useCallback((transactionsData, updates, source) => {
+    // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
 
     // TBD: We can do the below asynchronously
     // In case it is a data modify or delete action
 
     if (source === "dataSourceFileReader") {
-      const indices = data.map((item,index) => index);
+      const indices = transactionsData.map((item, index) => index);
       if (indices.length > 0) {
         // setModifiedRows(indices);
         tallySavedRef.current = false;
@@ -104,7 +102,7 @@ const App = () => {
       console.error(`handleDataChange: source '${source}' not supported`);
     }
 
-    setData(newData);
+    setTransactionsData(transactionsData);
   }, []);
 
   const updateCategoriesInSelectables = (newCategories) => {
@@ -151,7 +149,7 @@ const App = () => {
 
   // Currently we are not using the AppContext
   const appContext = {
-    data,
+    data: transactionsData,
     onDataChange: handleDataChange,
     ledgers:ledgersRef.current,
     onLedgersChange: handleLedgersChange,
@@ -175,10 +173,23 @@ const App = () => {
 
             {/* Transactions are categorized by user */}
             <Route
+                path="highlights"
+                element={
+                  <TableBulk
+                      data={transactionsData}
+                      onDataChange={handleDataChange}
+                      updateWithCommit={false}
+                      selectables={transactionSelectables}
+                      ref={tableRef}
+                  />
+                } />
+
+            {/* Transactions are categorized by user */}
+            <Route
                 path="transactions"
                 element={
                   <TableBulk
-                      data={data}
+                      data={transactionsData}
                       onDataChange={handleDataChange}
                       updateWithCommit={false}
                       selectables={transactionSelectables}
