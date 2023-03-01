@@ -466,7 +466,8 @@ export const ReadWrapper = () => {
       updateData(accountingData, [update], 'dataSourceFileReader');
     }
 
-    navigate('/transactions', { state: { data:accountingData, headersMap:JSON.stringify(exactMapper) } });
+    // navigate('/transactions', { state: { data:accountingData, headersMap:JSON.stringify(exactMapper) } });
+    navigate('/transactions');
   };
 
   return (

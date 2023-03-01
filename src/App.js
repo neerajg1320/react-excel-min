@@ -156,9 +156,6 @@ const App = () => {
     tallySaved:tallySavedRef.current,
     modifiedRows: modifiedRowsRef.current,
     deletedRows: deletedRowsRef.current,
-    // categories,
-    // onCategoriesChange: handleCategoriesChange,
-    // groups,
   }
 
   return (
