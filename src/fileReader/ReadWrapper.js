@@ -265,6 +265,8 @@ export const ReadWrapper = ({onDataChange: updateData}) => {
           console.log(`row=`, row);
 
           const headers = Object.entries(row).map(([k, val]) => val);
+          // TBD: We need to optimize the logic here.
+          // We need not look for every row from scratch
           const [resultMapper, resultExactMapper] = getMatchedMapper(headers);
 
           if (resultMapper) {
