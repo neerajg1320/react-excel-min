@@ -17,9 +17,7 @@ const App = () => {
     console.log(`Rendering <App>`);
   }
 
-  const debugData = false;
-  const debugLedgers = false;
-  const debugCategories = true;
+  const debugSelectables = false;
 
   useEffect(() => {
     if (debug.lifecycle) {
@@ -117,7 +115,7 @@ const App = () => {
         }
       ];
 
-      if (debugLedgers) {
+      if (debugSelectables) {
         console.log(`handleLedgersChange: newSelectables=${JSON.stringify(newSelectables, null, 2)}`)
       }
 
@@ -126,7 +124,7 @@ const App = () => {
   };
 
   const handleLedgersChange = useCallback((newLedgers) => {
-    if (debugLedgers) {
+    if (debugSelectables) {
       console.log(`App: handleLedgersChange:`, newLedgers);
     }
 
