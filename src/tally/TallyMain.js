@@ -182,7 +182,7 @@ export const TallyMain = ({children}) => {
             const newData = data.filter(item => !deletedIds.includes(item.id));
             if (updateData) {
               const update = {action: "SET", payload:response};
-              updateData(newData, [update], "dataSourceTally");
+              updateData(null, newData, [update], "dataSourceTally");
             }
           })
           .catch((error) => {
@@ -214,7 +214,7 @@ export const TallyMain = ({children}) => {
           });
           if (updateData) {
             const update = {action: "SET", payload:response};
-            updateData(newData, [update], "dataSourceTally");
+            updateData(null, newData, [update], "dataSourceTally");
           }
         })
         .catch((error) => {
@@ -245,7 +245,7 @@ export const TallyMain = ({children}) => {
 
           if (updateData) {
             const update = {action: 'SET', payload: responseIds}
-            updateData(dataWithServerIds, [update], "dataSourceTally");
+            updateData(null, dataWithServerIds, [update], "dataSourceTally");
           }
         })
         .catch(error => {
@@ -269,7 +269,7 @@ export const TallyMain = ({children}) => {
     const dataWithIds = data.map((item, index) => {return {...item, id: index}});
     const update = {action: 'SET', payload: {}}
     if (updateData) {
-      updateData(dataWithIds, [update], "dataSourceTally")
+      updateData(null, dataWithIds, [update], "dataSourceTally")
     }
 
     // We might have deleted the rows before submitting to server

@@ -69,7 +69,7 @@ const App = () => {
   // rows: All the rows of excel in json format
   // txsData: The extracted transactions.
   const handleTransactionsDataChange = useCallback((rows, txsData, updates, source) => {
-    // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
+    console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
 
     // TBD: We can do the below asynchronously
     // In case it is a data modify or delete action
@@ -172,18 +172,18 @@ const App = () => {
             {/* Data read from excel file */}
             <Route index element={<ReadWrapper onDataChange={handleTransactionsDataChange} />} />
 
-            {/* Transactions are categorized by user */}
-            <Route
-                path="highlights"
-                element={
-                  <TableBulk
-                      data={transactionsData}
-                      onDataChange={handleTransactionsDataChange}
-                      updateWithCommit={false}
-                      selectables={transactionSelectables}
-                      ref={tableRef}
-                  />
-                } />
+            {/*/!* Transactions are categorized by user *!/*/}
+            {/*<Route*/}
+            {/*    path="highlights"*/}
+            {/*    element={*/}
+            {/*      <TableBulk*/}
+            {/*          data={transactionsData}*/}
+            {/*          onDataChange={handleTransactionsDataChange}*/}
+            {/*          updateWithCommit={false}*/}
+            {/*          selectables={transactionSelectables}*/}
+            {/*          ref={tableRef}*/}
+            {/*      />*/}
+            {/*    } />*/}
 
             {/* Transactions are categorized by user */}
             <Route
