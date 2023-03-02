@@ -7,10 +7,18 @@ import {setServer, setStatus, setLedgers} from "./state/tallyActions";
 import TallySubmitBar from "./TallySubmitBar/TallySubmitBar";
 import Connection from "./ConnectionStatus/Connection";
 import {setCompanies, setCurrentCompany, setTargetCompany} from "./state/tallyActions";
-import AppContext from "../AppContext";
 import {listToOptions} from "../utils/options";
 
-export const TallyMain = ({children}) => {
+export const TallyMain = ({children, ...props}) => {
+  const {
+    data,
+    onDataChange: updateData,
+    onLedgersChange: updateLedgers,
+    tallySaved,
+    modifiedRows,
+    deletedRows
+  } = props;
+
   if (debug.lifecycle) {
     console.log(`Rendering <TallyMain>`);
   }
@@ -38,15 +46,6 @@ export const TallyMain = ({children}) => {
       }
     }
   }, []);
-
-  const {
-    data,
-    onDataChange: updateData,
-    onLedgersChange: updateLedgers,
-    tallySaved,
-    modifiedRows,
-    deletedRows
-  } = useContext(AppContext);
 
   const boxShadow = "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px";
   const dispatch = useDispatch();
