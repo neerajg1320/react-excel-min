@@ -435,6 +435,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
 
   const onLoadComplete = ({data}) => {
     let txsData=null;
+    let update={};
 
     if (transactions) {
       // console.log(`data=`, data);
@@ -452,14 +453,17 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
             interpretHeaderTypes: true
           }
       )
-      // console.log(`onLoadComplete: exactMapper=`, exactMapper);
-      // console.log(`filteredData:`, filteredData);
 
-      txsData = addAccountingColumns(filteredData);
+      if (!filteredData) {
+        alert('No transactions detected');
+      } else {
+        // console.log(`filteredData:`, filteredData);
+        txsData = addAccountingColumns(filteredData);
+        update = {action: 'ADD', payload:txsData};
+      }
     }
 
     if (updateData) {
-      const update = {action: 'ADD', payload:txsData};
       updateData(data, txsData, [update], 'dataSourceFileReader');
     }
 
