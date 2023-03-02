@@ -66,17 +66,21 @@ const App = () => {
 
   // The App component just maintains a copy of data.
   // The modification are done in table and tally components.
-  const handleTransactionsDataChange = useCallback((txsData, updates, source) => {
+  // rows: All the rows of excel in json format
+  // txsData: The extracted transactions.
+  const handleTransactionsDataChange = useCallback((rows, txsData, updates, source) => {
     // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
 
     // TBD: We can do the below asynchronously
     // In case it is a data modify or delete action
 
     if (source === "dataSourceFileReader") {
-      const indices = txsData.map((item, index) => index);
-      if (indices.length > 0) {
-        // setModifiedRows(indices);
-        tallySavedRef.current = false;
+      if (txsData) {
+        const indices = txsData.map((item, index) => index);
+        if (indices.length > 0) {
+          // setModifiedRows(indices);
+          tallySavedRef.current = false;
+        }
       }
     } else if (source === "dataSourceTable") {
         // For now we do nothing here.

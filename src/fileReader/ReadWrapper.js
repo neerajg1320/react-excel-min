@@ -12,7 +12,7 @@ import * as hdfc from "../banks/hdfc";
 import * as kotak from "../banks/kotak";
 import * as kotak2 from "../banks/kotak2";
 
-export const ReadWrapper = ({onDataChange: updateData}) => {
+export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
   if (debug.lifecycle) {
     console.log(`Rendering <Read>`);
   }
@@ -58,7 +58,7 @@ export const ReadWrapper = ({onDataChange: updateData}) => {
     return null;
   }, []);
 
-
+  // Kept for future use: Would be used for banks which aren't supported yet
   // The input data is an object of the form {..., excelHeader: value, ...}
   // The normalized data is an object of the form {..., keyName: value, ...}
   const dataNormalizeUsingCommon = useCallback((data) => {
@@ -87,6 +87,8 @@ export const ReadWrapper = ({onDataChange: updateData}) => {
     return null;
   }, []);
 
+
+  // The following is used when we read excel with a header row specified
   // The input data is an object of the form {..., excelHeader: value, ...}
   // The normalized data is an object of the form {..., keyName: value, ...}
   const dataNormalizeUsingMapper = useCallback((data) => {
@@ -432,35 +434,33 @@ export const ReadWrapper = ({onDataChange: updateData}) => {
   }
 
   const onLoadComplete = ({data}) => {
-    // console.log(`data=`, data);
-    const {headerRow, matchedRows, matchedPresetMapper, exactMapper} = filterStatementRows(data);
+    let txsData=null;
 
-    // Kept for future use: Would be used for banks which aren't supported yet
-    // const normalizedData = dataNormalizeUsingCommon(data);
+    if (transactions) {
+      // console.log(`data=`, data);
+      const {headerRow, matchedRows, matchedPresetMapper, exactMapper} = filterStatementRows(data);
 
-    // The following is used when we read excel with a header row specified
-    // const normalizedData = dataNormalizeUsingMapper(data);
+      // This takes excel rows and create data using a mappper
+      const filteredData = createDataFromRows(
+          headerRow,
+          matchedRows,
+          matchedPresetMapper,
+          exactMapper,
+          {
+            skipUndefined: false,
+            interpretValues,
+            interpretHeaderTypes: true
+          }
+      )
+      // console.log(`onLoadComplete: exactMapper=`, exactMapper);
+      // console.log(`filteredData:`, filteredData);
 
-    // This takes excel rows and create data using a mappper
-    const filteredData = createDataFromRows(
-        headerRow,
-        matchedRows,
-        matchedPresetMapper,
-        exactMapper,
-        {
-          skipUndefined: false,
-          interpretValues,
-          interpretHeaderTypes: true
-        }
-    )
-    // console.log(`onLoadComplete: exactMapper=`, exactMapper);
-    // console.log(`filteredData:`, filteredData);
-
-    const accountingData = addAccountingColumns(filteredData);
+      txsData = addAccountingColumns(filteredData);
+    }
 
     if (updateData) {
-      const update = {action: 'ADD', payload:accountingData};
-      updateData(accountingData, [update], 'dataSourceFileReader');
+      const update = {action: 'ADD', payload:txsData};
+      updateData(data, txsData, [update], 'dataSourceFileReader');
     }
 
     // navigate('/transactions', { state: { data:accountingData, headersMap:JSON.stringify(exactMapper) } });
