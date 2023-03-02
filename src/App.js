@@ -9,6 +9,7 @@ import {Categories} from "./category/Categories";
 import {TableBulk} from "@glassball/table";
 import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
+import Button from "react-bootstrap/Button";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -32,6 +33,7 @@ const App = () => {
   }, []);
 
   // The App keeps a copy of data
+  const [rows, setRows] = useState([]);
   const [transactionsData, setTransactionsData] = useState([]);
 
   // The App stores categories which are used in Transactions and Categories components
@@ -48,11 +50,41 @@ const App = () => {
     }
   ]);
 
+  const highlighters = useMemo(() => {
+    return [
+      {
+        name: 'First',
+        condition: (row) => {
+          if (Object.keys(row).length >= 7) {
+            return true;
+          }
+        },
+        style: {
+          backgroundColor: 'red',
+          opacity: "0.2"
+        }
+      },
+      {
+        name: 'Second',
+        condition: (row) => {
+          if (Object.keys(row).length >= 9) {
+            return true;
+          }
+        },
+        style: {
+          backgroundColor: 'red',
+          opacity: "0.2"
+        }
+      }
+    ];
+  }, []);
+
   // The following two could be turned to refs
   const modifiedRowsRef = useRef([]);
   const deletedRowsRef = useRef([]);
   const tallySavedRef = useRef(false);
-  const tableRef = useRef();
+  const transactionsTableRef = useRef();
+  const rowsTableRef = useRef();
 
   const clearMarkedRows = useCallback(() => {
     console.log(`App: clearMarkedRows()`);
@@ -78,6 +110,11 @@ const App = () => {
           tallySavedRef.current = false;
         }
       }
+
+      if (rows) {
+        console.log(`rows=`, rows);
+        setRows(rows);
+      }
     } else if (source === "dataSourceTable") {
         // For now we do nothing here.
       console.log(`handleDataChange:dataSourceTable updates=${JSON.stringify(updates, null, 2)}`);
@@ -94,7 +131,7 @@ const App = () => {
       // We need to check if all responses are accounted
       if (responseIds.length > 0) {
         clearMarkedRows();
-        tableRef.current.clearMarkedRows();
+        transactionsTableRef.current.clearMarkedRows();
         tallySavedRef.current = true;
       }
 
@@ -166,13 +203,23 @@ const App = () => {
             <Route
                 path="transactions"
                 element={
-                  <TableBulk
-                      data={transactionsData}
-                      onDataChange={handleTransactionsDataChange}
-                      updateWithCommit={false}
-                      selectables={transactionSelectables}
-                      ref={tableRef}
-                  />
+                  <div>
+                    <TableBulk
+                        data={transactionsData}
+                        onDataChange={handleTransactionsDataChange}
+                        updateWithCommit={false}
+                        selectables={transactionSelectables}
+                        ref={transactionsTableRef}
+                    />
+                    <Button onClick={() => {rowsTableRef.current.highlightRows()}}>
+                      Highlight
+                    </Button>
+                    <TableBulk
+                        data={rows}
+                        highlighters={highlighters}
+                        ref={rowsTableRef}
+                    />
+                  </div>
                 } />
 
             {/* Category information added by user */}

@@ -438,7 +438,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
     let update={};
 
     if (transactions) {
-      // console.log(`data=`, data);
+      console.log(`ReadWrapper:onLoadComplete data=`, data);
       const {headerRow, matchedRows, matchedPresetMapper, exactMapper} = filterStatementRows(data);
 
       // This takes excel rows and create data using a mappper
