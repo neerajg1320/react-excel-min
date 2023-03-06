@@ -61,8 +61,7 @@ const App = () => {
           }
         },
         style: {
-          backgroundColor: 'green',
-          opacity: "0.2"
+          backgroundColor: 'rgba(0, 255, 0, 0.2)'
         }
       },
       {
@@ -74,8 +73,7 @@ const App = () => {
           }
         },
         style: {
-          backgroundColor: 'blue',
-          opacity: "0.2"
+          backgroundColor: 'rgba(0, 0, 255, 0.2)'
         }
       }
     ];
