@@ -205,7 +205,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
         return [...prev];
       }, []);
 
-      console.log(`headers.length:${headers.length} hdrKeyEntries.length:${hdrKeyEntries.length} headerKeynameMap.length:${headerKeynameMap.length}`)
+      // console.log(`getMatchedMapper: headers.length:${headers.length} hdrKeyEntries.length:${hdrKeyEntries.length} headerKeynameMap.length:${headerKeynameMap.length}`)
 
       // In case of exact match or matched keys are above threshold then we declare a match and stop matching loop
       // The logic has to be modified.

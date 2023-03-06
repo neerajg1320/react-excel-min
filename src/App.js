@@ -54,25 +54,27 @@ const App = () => {
     return [
       {
         name: 'First',
-        condition: (row) => {
+        condition: (row, rIdx) => {
           if (Object.keys(row).length >= 7) {
+            console.log(`hightlighter['First']: rIdx=${rIdx}`);
             return true;
           }
         },
         style: {
-          backgroundColor: 'red',
+          backgroundColor: 'green',
           opacity: "0.2"
         }
       },
       {
         name: 'Second',
-        condition: (row) => {
+        condition: (row, rIdx) => {
           if (Object.keys(row).length >= 9) {
+            console.log(`hightlighter['Second']: rIdx=${rIdx}`);
             return true;
           }
         },
         style: {
-          backgroundColor: 'red',
+          backgroundColor: 'blue',
           opacity: "0.2"
         }
       }
@@ -203,23 +205,25 @@ const App = () => {
             <Route
                 path="transactions"
                 element={
-                  <div>
-                    <TableBulk
-                        data={transactionsData}
-                        onDataChange={handleTransactionsDataChange}
-                        updateWithCommit={false}
-                        selectables={transactionSelectables}
-                        ref={transactionsTableRef}
-                    />
-                    <Button onClick={() => {rowsTableRef.current.highlightRows()}}>
-                      Highlight
-                    </Button>
                     <TableBulk
                         data={rows}
                         highlighters={highlighters}
                         ref={rowsTableRef}
                     />
-                  </div>
+                  // <TableBulk
+                  //     data={transactionsData}
+                  //     onDataChange={handleTransactionsDataChange}
+                  //     updateWithCommit={false}
+                  //     selectables={transactionSelectables}
+                  //     ref={transactionsTableRef}
+                  // />
+                  // <div>
+                  //   <TableBulk
+                  //       data={rows}
+                  //       highlighters={highlighters}
+                  //       ref={rowsTableRef}
+                  //   />
+                  // </div>
                 } />
 
             {/* Category information added by user */}
