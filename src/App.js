@@ -56,7 +56,7 @@ const App = () => {
         name: 'First',
         condition: (row, rIdx) => {
           if (Object.keys(row).length >= 7) {
-            console.log(`hightlighter['First']: rIdx=${rIdx}`);
+            // console.log(`hightlighter['First']: rIdx=${rIdx}`);
             return true;
           }
         },
@@ -68,7 +68,7 @@ const App = () => {
         name: 'Second',
         condition: (row, rIdx) => {
           if (Object.keys(row).length >= 9) {
-            console.log(`hightlighter['Second']: rIdx=${rIdx}`);
+            // console.log(`hightlighter['Second']: rIdx=${rIdx}`);
             return true;
           }
         },
@@ -97,7 +97,7 @@ const App = () => {
   // rows: All the rows of excel in json format
   // txsData: The extracted transactions.
   const handleTransactionsDataChange = useCallback((rows, txsData, updates, source) => {
-    console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
+    // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
 
     // TBD: We can do the below asynchronously
     // In case it is a data modify or delete action
