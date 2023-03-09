@@ -206,7 +206,7 @@ const App = () => {
                   <>
                   <TableBulk
                       data={rows}
-                      highlighters={highlighters}
+                      stylerRules={highlighters}
                       ref={rowsTableRef}
                   />
                   <TableBulk
