@@ -203,25 +203,20 @@ const App = () => {
             <Route
                 path="transactions"
                 element={
-                    <TableBulk
-                        data={rows}
-                        highlighters={highlighters}
-                        ref={rowsTableRef}
-                    />
-                  // <TableBulk
-                  //     data={transactionsData}
-                  //     onDataChange={handleTransactionsDataChange}
-                  //     updateWithCommit={false}
-                  //     selectables={transactionSelectables}
-                  //     ref={transactionsTableRef}
-                  // />
-                  // <div>
-                  //   <TableBulk
-                  //       data={rows}
-                  //       highlighters={highlighters}
-                  //       ref={rowsTableRef}
-                  //   />
-                  // </div>
+                  <>
+                  <TableBulk
+                      data={rows}
+                      highlighters={highlighters}
+                      ref={rowsTableRef}
+                  />
+                  <TableBulk
+                      data={transactionsData}
+                      onDataChange={handleTransactionsDataChange}
+                      updateWithCommit={false}
+                      selectables={transactionSelectables}
+                      ref={transactionsTableRef}
+                  />
+                  </>
                 } />
 
             {/* Category information added by user */}
