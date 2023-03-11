@@ -7,6 +7,7 @@ import {generateKeyFromHeader} from "../schema/core";
 import {dateFromNumber, dateFromString, getValueType, isDate, isString, numberFromString} from "../utils/types";
 import ReadExcel from "./xlsx/ReadExcel";
 import {Mappers} from "./mappers/Mappers";
+import {getRowSignature} from "../utils/signature";
 import * as React from "react";
 import * as hdfc from "../banks/hdfc";
 import * as kotak from "../banks/kotak";
@@ -137,35 +138,6 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
   }, []);
 
 
-  const getType = (val) => {
-    if (isDate(val)) {
-      return 'date';
-    }
-    return typeof(val);
-  }
-
-  const getRowSignature = (row, rowIdx, numProps) => {
-    const propNames = Object.keys(row);
-
-    if (rowIdx === debugRowIdx) {
-      console.log(`getRowSignature:`, row);
-      console.log(`numProps=${numProps}`);
-      console.log(`propNames=`, propNames);
-    }
-
-    const signatureFullRow = [];
-    for (let i=0; i < Math.max(propNames.length, numProps); i++) {
-      signatureFullRow.push(getType(row[i]));
-    }
-
-    if (rowIdx === debugRowIdx) {
-      console.log(`signatureFullRow=`, signatureFullRow);
-    }
-
-    // return Object.entries(row).map(([k, val]) => typeof(val));
-    return signatureFullRow;
-  };
-
   const isAllString = (rowSignature) => {
     let result = true;
     for (let i=0; i < rowSignature.length; i++) {
@@ -264,7 +236,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
         // All strings signature is a possible header
         if (isAllString(signature)) {
           // Example: row=["Sl. No.","Transaction Date","Value Date","Description","Chq / Ref No.","Debit","Credit","Balance","Dr / Cr"]
-          console.log(`row=`, row);
+          // console.log(`row=`, row);
 
           const headers = Object.entries(row).map(([k, val]) => val);
           // TBD: We need to optimize the logic here.
@@ -282,7 +254,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
             }
             headerRow = {...row};
 
-            if (debugFiltering || true) {
+            if (debugFiltering) {
               console.log(headerRow);
             }
 
@@ -438,7 +410,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
     let update={};
 
     if (transactions) {
-      console.log(`ReadWrapper:onLoadComplete data=`, data);
+      // console.log(`ReadWrapper:onLoadComplete data=`, data);
       const {headerRow, matchedRows, matchedPresetMapper, exactMapper} = filterStatementRows(data);
 
       // This takes excel rows and create data using a mappper

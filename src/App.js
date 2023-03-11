@@ -10,6 +10,7 @@ import {TableBulk} from "@glassball/table";
 import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
 import Button from "react-bootstrap/Button";
+import {getRowSignature} from "./utils/signature";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -53,10 +54,15 @@ const App = () => {
   const highlighters = useMemo(() => {
     return [
       {
-        name: 'First',
+        name: '7+',
         condition: (row, rIdx) => {
-          if (Object.keys(row).length >= 7) {
-            // console.log(`hightlighter['First']: rIdx=${rIdx}`);
+
+          const rSig = getRowSignature(row, rIdx, -1);
+          const sCount = rSig.reduce((prev, sig) => sig === "string" ? prev + 1 : prev, 0)
+          if (rIdx === 12 || rIdx === 13) {
+            console.log(`highlighters:[${rIdx}]: rSig=${rSig} sCount=${sCount}`);
+          }
+          if (sCount > 7) {
             return true;
           }
         },
@@ -65,7 +71,7 @@ const App = () => {
         }
       },
       {
-        name: 'Second',
+        name: '9+',
         condition: (row, rIdx) => {
           if (Object.keys(row).length >= 9) {
             // console.log(`hightlighter['Second']: rIdx=${rIdx}`);
@@ -112,7 +118,7 @@ const App = () => {
       }
 
       if (rows) {
-        console.log(`rows=`, rows);
+        // console.log(`rows=`, rows);
         setRows(rows);
       }
     } else if (source === "dataSourceTable") {
