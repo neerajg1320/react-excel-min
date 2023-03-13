@@ -10,7 +10,7 @@ import {TableBulk} from "@glassball/table";
 import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
 import {getRowSignature} from "./utils/signature";
-import {kotakSignature} from "./kotakSig";
+import {kotakSignature} from "./extraction/kotakSig";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -72,15 +72,30 @@ const App = () => {
   const highlightersSignatureBased = useMemo(() => {
     return [
       {
-        name: '7+',
+        name: 'Header',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
-          const isMatch = isSignatureMatch(kotakSignature['header'], rSig, rIdx);
-
-          if (rIdx === 12 || rIdx === 13) {
-            console.log(`rSig=${rSig} isMatch=${isMatch}`);
-          }
+          return isSignatureMatch(kotakSignature['header'], rSig, rIdx);
+        },
+        style: {
+          backgroundColor: 'rgba(0, 0, 255, 0.2)'
+        }
+      },
+      {
+        name: 'Debit',
+        condition: (row, rIdx) => {
+          const rSig = getRowSignature(row, rIdx, -1);
+          return isSignatureMatch(kotakSignature['debit'], rSig, rIdx);
+        },
+        style: {
+          backgroundColor: 'rgba(255, 0, 0, 0.2)'
+        }
+      },
+      {
+        name: 'Credit',
+        condition: (row, rIdx) => {
+          const rSig = getRowSignature(row, rIdx, -1);
+          return isSignatureMatch(kotakSignature['credit'], rSig, rIdx);
         },
         style: {
           backgroundColor: 'rgba(0, 255, 0, 0.2)'
