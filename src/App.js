@@ -11,6 +11,7 @@ import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
 import {getRowSignature, isSignatureMatch} from "./utils/signature";
 import {kotakSignature} from "./extraction/kotakSig";
+import {rowStyles} from "./extraction/rowHighlight";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -53,36 +54,32 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
+    const acceptableSignature = kotakSignature;
+
     return [
       {
-        name: 'Header',
+        name: 'header',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(kotakSignature['header'], rSig, rIdx);
+          return isSignatureMatch(acceptableSignature['header'], rSig, rIdx);
         },
-        style: {
-          backgroundColor: 'rgba(0, 0, 255, 0.2)'
-        }
+        style: rowStyles['header']
       },
       {
-        name: 'Debit',
+        name: 'debit',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(kotakSignature['debit'], rSig, rIdx);
+          return isSignatureMatch(acceptableSignature['debit'], rSig, rIdx);
         },
-        style: {
-          backgroundColor: 'rgba(255, 0, 0, 0.2)'
-        }
+        style: rowStyles['debit']
       },
       {
-        name: 'Credit',
+        name: 'credit',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(kotakSignature['credit'], rSig, rIdx);
+          return isSignatureMatch(acceptableSignature['credit'], rSig, rIdx);
         },
-        style: {
-          backgroundColor: 'rgba(0, 255, 0, 0.2)'
-        }
+        style: rowStyles['credit']
       }
     ]
   }, []);
