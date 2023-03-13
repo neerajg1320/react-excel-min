@@ -56,13 +56,9 @@ const App = () => {
       {
         name: '7+',
         condition: (row, rIdx) => {
-
           const rSig = getRowSignature(row, rIdx, -1);
-          const sCount = rSig.reduce((prev, sig) => sig === "string" ? prev + 1 : prev, 0)
-          if (rIdx === 12 || rIdx === 13) {
-            console.log(`highlighters:[${rIdx}]: rSig=${rSig} sCount=${sCount}`);
-          }
-          if (sCount > 7) {
+          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
+          if (sCount >= 7) {
             return true;
           }
         },
@@ -73,8 +69,9 @@ const App = () => {
       {
         name: '9+',
         condition: (row, rIdx) => {
-          if (Object.keys(row).length >= 9) {
-            // console.log(`hightlighter['Second']: rIdx=${rIdx}`);
+          const rSig = getRowSignature(row, rIdx, -1);
+          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
+          if (sCount >= 9) {
             return true;
           }
         },
