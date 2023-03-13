@@ -12,6 +12,7 @@ import {defaultGroups} from "./presets/groups";
 import {getRowSignature, isSignatureMatch} from "./utils/signature";
 import {kotakSignature} from "./extraction/kotakSig";
 import {rowStyles} from "./extraction/rowHighlight";
+import {hdfcSignature} from "./extraction/hdfcSig";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -54,13 +55,17 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
-    const acceptableSignature = kotakSignature;
+    const acceptableSignature = hdfcSignature;
 
     return [
       {
         name: 'header',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
+          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
+          // if (sCount >= 7) {
+          //   console.log(`rIdx:${rIdx} sCount:${sCount}`);
+          // }
           return isSignatureMatch(acceptableSignature['header'], rSig, rIdx);
         },
         style: rowStyles['header']
