@@ -9,28 +9,11 @@ import {Categories} from "./category/Categories";
 import {TableBulk} from "@glassball/table";
 import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
-import {getRowSignature} from "./utils/signature";
+import {getRowSignature, isSignatureMatch} from "./utils/signature";
 import {kotakSignature} from "./extraction/kotakSig";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
-// Even though rIdx is not needed we are passing it for debugging purpose
-const isSignatureMatch = (acceptableSignature, signature, rIdx) => {
-  if (rIdx === -1) {
-    console.log(`acceptableSignature=${JSON.stringify(acceptableSignature)}`);
-    console.log(`signature=${signature}`);
-  }
-
-  let match = true;
-  for (let i=0; i < acceptableSignature.length; i++) {
-    if (acceptableSignature[i]['type'] !== signature[i]) {
-      match = false;
-      break;
-    }
-  }
-
-  return match;
-}
 
 const App = () => {
   if (debug.lifecycle) {

@@ -30,3 +30,21 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 
   return signatureFullRow;
 };
+
+// Even though rIdx is not needed we are passing it for debugging purpose
+export const isSignatureMatch = (acceptableSignature, signature, rIdx) => {
+  if (rIdx === -1) {
+    console.log(`acceptableSignature=${JSON.stringify(acceptableSignature)}`);
+    console.log(`signature=${signature}`);
+  }
+
+  let match = true;
+  for (let i=0; i < acceptableSignature.length; i++) {
+    if (acceptableSignature[i]['type'] !== signature[i]) {
+      match = false;
+      break;
+    }
+  }
+
+  return match;
+}
