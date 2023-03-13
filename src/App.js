@@ -9,10 +9,28 @@ import {Categories} from "./category/Categories";
 import {TableBulk} from "@glassball/table";
 import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
-import Button from "react-bootstrap/Button";
 import {getRowSignature} from "./utils/signature";
+import {kotakSignature} from "./kotakSig";
 
 // The groups are kept here so that the state can be preserved across Category component render
+
+// Even though rIdx is not needed we are passing it for debugging purpose
+const isSignatureMatch = (acceptableSignature, signature, rIdx) => {
+  if (rIdx === -1) {
+    console.log(`acceptableSignature=${JSON.stringify(acceptableSignature)}`);
+    console.log(`signature=${signature}`);
+  }
+
+  let match = true;
+  for (let i=0; i < acceptableSignature.length; i++) {
+    if (acceptableSignature[i]['type'] !== signature[i]) {
+      match = false;
+      break;
+    }
+  }
+
+  return match;
+}
 
 const App = () => {
   if (debug.lifecycle) {
@@ -51,13 +69,40 @@ const App = () => {
     }
   ]);
 
-  const highlighters = useMemo(() => {
+  const highlightersSignatureBased = useMemo(() => {
     return [
       {
         name: '7+',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
           const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
+          const isMatch = isSignatureMatch(kotakSignature['header'], rSig, rIdx);
+
+          if (rIdx === 12 || rIdx === 13) {
+            console.log(`rSig=${rSig} isMatch=${isMatch}`);
+          }
+        },
+        style: {
+          backgroundColor: 'rgba(0, 255, 0, 0.2)'
+        }
+      }
+    ]
+  }, []);
+
+  const highlightersCountBased = useMemo(() => {
+    return [
+      {
+        name: '7+',
+        condition: (row, rIdx) => {
+          const rSig = getRowSignature(row, rIdx, -1);
+          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
+
+          // Here we should have a signature match check instead of just a count
+          // The signature match will be different for different banks
+          if (rIdx === 12 || rIdx === 14 || rIdx === 15) {
+            console.log(`rSig=${JSON.stringify(rSig)}`);
+          }
+
           if (sCount >= 7) {
             return true;
           }
@@ -209,16 +254,16 @@ const App = () => {
                   <>
                   <TableBulk
                       data={rows}
-                      stylerRules={highlighters}
+                      stylerRules={highlightersSignatureBased}
                       ref={rowsTableRef}
                   />
-                  <TableBulk
-                      data={transactionsData}
-                      onDataChange={handleTransactionsDataChange}
-                      updateWithCommit={false}
-                      selectables={transactionSelectables}
-                      ref={transactionsTableRef}
-                  />
+                  {/*<TableBulk*/}
+                  {/*    data={transactionsData}*/}
+                  {/*    onDataChange={handleTransactionsDataChange}*/}
+                  {/*    updateWithCommit={false}*/}
+                  {/*    selectables={transactionSelectables}*/}
+                  {/*    ref={transactionsTableRef}*/}
+                  {/*/>*/}
                   </>
                 } />
 
