@@ -1,30 +1,37 @@
 // This has to be received for a bank
 const hdfcHdrSig = [
   {
+    choices: ['Date'],
     type: 'string',
     mandatory: true
   },
   {
+    choices: ['Narration'],
     type: 'string',
     mandatory: true
   },
   {
+    choices: ['Chq./Ref.No.'],
     type: 'string',
     mandatory: true
   },
   {
+    choices: ['Value Dt'],
     type: 'string',
     mandatory: true
   },
   {
+    choices: ['Withdrawal Amt.'],
     type: 'string',
     mandatory: true
   },
   {
+    choices: ['Deposit Amt.'],
     type: 'string',
     mandatory: true
   },
   {
+    choices: ['Closing Balance'],
     type: 'string',
     mandatory: true
   }
