@@ -57,7 +57,7 @@ const kotakDebitTxSig = [
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: false
   },
   {
     type: 'string',
@@ -96,7 +96,7 @@ const kotakCreditTxSig = [
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: false
   },
   {
     type: 'undefined',
