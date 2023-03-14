@@ -64,12 +64,12 @@ const App = () => {
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
           const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
-          // if (sCount >= 7) {
-          //   console.log(`rIdx:${rIdx} sCount:${sCount}`);
-          // }
           return isSignatureMatch(acceptableSignature['header'], rSig, row, rIdx);
         },
-        style: rowStyles['header']
+        style: rowStyles['header'],
+        action: (row, rIdx) => {
+          console.log(`rIdx:${rIdx} found header`);
+        }
       },
       {
         name: 'debit',
@@ -77,7 +77,10 @@ const App = () => {
           const rSig = getRowSignature(row, rIdx, -1);
           return isSignatureMatch(acceptableSignature['debit'], rSig, row, rIdx);
         },
-        style: rowStyles['debit']
+        style: rowStyles['debit'],
+        action: (row, rIdx) => {
+          console.log(`rIdx:${rIdx} found debit`);
+        }
       },
       {
         name: 'credit',
@@ -85,7 +88,10 @@ const App = () => {
           const rSig = getRowSignature(row, rIdx, -1);
           return isSignatureMatch(acceptableSignature['credit'], rSig, row, rIdx);
         },
-        style: rowStyles['credit']
+        style: rowStyles['credit'],
+        action: (row, rIdx) => {
+          console.log(`rIdx:${rIdx} found credit`);
+        }
       }
     ]
   }, []);

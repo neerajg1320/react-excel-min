@@ -26,6 +26,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
   const [interpretValues, setInterpretValues] = useState(true);
   const [showMappers, setShowMappers] = useState(false);
 
+  // Comment: The mapper based logic is not right. But we can use the key renaming logic
   const mappers = useMemo(() => {
     const mappers = []
     // TBD: Put default mapper attributes
@@ -195,6 +196,9 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
     return [matchedPresetMapper, exactMapper];
   }
 
+  // There are two isSignatureMatch.
+  // The other one is in utils/signature.js
+  // The other is better because it considers value as well.
   const isSignatureMatch = (mSignature, signature, rowIdx, matchType) => {
     let match = true;
     if (rowIdx === debugRowIdx) {
