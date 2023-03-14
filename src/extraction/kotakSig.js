@@ -2,39 +2,48 @@
 const kotakHdrSig = [
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: 'serialNum'
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "transactionDate"
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "valueDate"
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "description"
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "reference"
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "debit"
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "credit"
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "balance"
   },
   {
     type: 'string',
-    mandatory: true
+    mandatory: true,
+    keyName: "balanceType"
   }
 ];
 

@@ -8,6 +8,12 @@ export const getType = (val) => {
 }
 
 export const getRowSignature = (row, rowIdx, numProps) => {
+  const debugRowIdx = [14];
+
+  if (debugRowIdx.includes(rowIdx)) {
+    console.log(`getRowSignature: row:${row}`);
+  }
+
   const signatureFullRow = [];
 
   for (let i=0; i < Math.max(row.length, numProps); i++) {

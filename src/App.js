@@ -69,7 +69,17 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
-    // const acceptableSignature = hdfcSignature;
+    const createRowObj = (row, rIdx) => {
+      const headers = bufferRef.current.headerSignature;
+      const keys = headers.map(hdr => hdr.keyName);
+      // console.log(`row:${rIdx} keys:${keys}`);
+      // console.log(`row:${rIdx} values:${row}`);
+      const rowObj = {}
+      for (let i=0; i<keys.length; i++) {
+        rowObj[keys[i]] = row[i];
+      }
+      console.log(`row:${rIdx} rowObj:${JSON.stringify(rowObj, null, 2)}`);
+    };
 
     // We can make style as a function as well
     return [
@@ -95,7 +105,7 @@ const App = () => {
                   creditSignature: bankInfo['signature']['credit']
                 }
 
-                console.log(`bufferRef.current=${JSON.stringify(bufferRef.current)}`);
+                // console.log(`bufferRef.current=${JSON.stringify(bufferRef.current)}`);
                 return true;
               }
             }
@@ -119,9 +129,7 @@ const App = () => {
           return isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx);
         },
         style: rowStyles['debit'],
-        action: (row, rIdx) => {
-          // console.log(`rIdx:${rIdx} found debit`);
-        }
+        action: createRowObj
       },
       {
         name: 'credit',
@@ -133,9 +141,7 @@ const App = () => {
           return isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx);
         },
         style: rowStyles['credit'],
-        action: (row, rIdx) => {
-          // console.log(`rIdx:${rIdx} found credit`);
-        }
+        action: createRowObj
       }
     ]
   }, []);
