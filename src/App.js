@@ -36,6 +36,19 @@ const App = () => {
     }
   }, []);
 
+
+  // The App keeps a copy of signatures
+  const [bankInfoList, setBankInfoList] = useState([
+    {
+      name: 'Kotak',
+      signature: kotakSignature
+    },
+    {
+      name: 'HDFC',
+      signature: hdfcSignature
+    }
+  ]);
+
   // The App keeps a copy of data
   const [rows, setRows] = useState([]);
   const [transactionsData, setTransactionsData] = useState([]);
@@ -43,6 +56,7 @@ const App = () => {
   // The App stores categories which are used in Transactions and Categories components
   const [categories, setCategories] = useState(defaultCategories);
   const ledgersRef = useRef([]);
+  const bufferRef = useRef({});
   const groups = useMemo(() => {
     return defaultGroups
   });
@@ -63,12 +77,29 @@ const App = () => {
         name: 'header',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
-          return isSignatureMatch(acceptableSignature['header'], rSig, row, rIdx);
+          // const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
+          if (bankInfoList) {
+            for (const bankInfo of bankInfoList) {
+              const bankMatch = isSignatureMatch(bankInfo['signature']['header'], rSig, row, rIdx);
+              if (bankMatch) {
+                console.log(`bankMatched: bank=${JSON.stringify(bankInfo.name)}`);
+                bufferRef.current = {
+                  ...bufferRef.current,
+                  header: {
+                    mapper: {}
+                  }
+                }
+                return true;
+              }
+            }
+
+            return false;
+          }
+
         },
         style: rowStyles['header'],
         action: (row, rIdx) => {
-          console.log(`rIdx:${rIdx} found header`);
+          // console.log(`rIdx:${rIdx} found header: row=${row}`);
         }
       },
       {
@@ -79,7 +110,7 @@ const App = () => {
         },
         style: rowStyles['debit'],
         action: (row, rIdx) => {
-          console.log(`rIdx:${rIdx} found debit`);
+          // console.log(`rIdx:${rIdx} found debit`);
         }
       },
       {
@@ -90,7 +121,7 @@ const App = () => {
         },
         style: rowStyles['credit'],
         action: (row, rIdx) => {
-          console.log(`rIdx:${rIdx} found credit`);
+          // console.log(`rIdx:${rIdx} found credit`);
         }
       }
     ]
@@ -151,7 +182,7 @@ const App = () => {
   // The modification are done in table and tally components.
   // rows: All the rows of excel in json format
   // txsData: The extracted transactions.
-  const handleTransactionsDataChange = useCallback((rows, txsData, updates, source) => {
+  const handleDataChange = useCallback((rows, txsData, updates, source) => {
     console.log(`handleDataChange[${source}]: rows.length=${rows.length} transactionsData.length=${transactionsData.length}`);
 
     // TBD: We can do the below asynchronously
@@ -242,7 +273,7 @@ const App = () => {
   return (
       <TallyWrapper
             data={transactionsData}
-            onDataChange={handleTransactionsDataChange}
+            onDataChange={handleDataChange}
             onLedgersChange={handleLedgersChange}
             tallySaved={tallySavedRef.current}
             modifiedRows={modifiedRowsRef.current}
@@ -252,7 +283,7 @@ const App = () => {
           <Route element={<HomeLayout />}>
 
             {/* Data read from excel file */}
-            <Route index element={<ReadWrapper onDataChange={handleTransactionsDataChange} />} />
+            <Route index element={<ReadWrapper onDataChange={handleDataChange} />} />
 
             {/* Transactions are categorized by user */}
             <Route
@@ -266,7 +297,7 @@ const App = () => {
                   />
                   {/*<TableBulk*/}
                   {/*    data={transactionsData}*/}
-                  {/*    onDataChange={handleTransactionsDataChange}*/}
+                  {/*    onDataChange={handleDataChange}*/}
                   {/*    updateWithCommit={false}*/}
                   {/*    selectables={transactionSelectables}*/}
                   {/*    ref={transactionsTableRef}*/}

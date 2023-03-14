@@ -33,7 +33,9 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
-  if (rIdx === -1 || rIdx === -1) {
+  const debugRowIdx = -1;
+
+  if (rIdx === debugRowIdx || rIdx === debugRowIdx) {
     console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature)}`);
     console.log(`rIdx:${rIdx} signature=${signature}`);
   }
@@ -47,7 +49,7 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
 
     const choices = acceptableSignature[i]['choices'];
     if (choices) {
-      if (rIdx === -1) {
+      if (rIdx === debugRowIdx) {
         console.log(`choices=${choices}`);
       }
 
