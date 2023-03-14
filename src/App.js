@@ -69,7 +69,7 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
-    const acceptableSignature = hdfcSignature;
+    // const acceptableSignature = hdfcSignature;
 
     // We can make style as a function as well
     return [
@@ -77,18 +77,25 @@ const App = () => {
         name: 'header',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          // const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
+          if (bufferRef.current.headerSignature) {
+            return isSignatureMatch(bufferRef.current.headerSignature, rSig, row, rIdx);
+          }
+
           if (bankInfoList) {
             for (const bankInfo of bankInfoList) {
               const bankMatch = isSignatureMatch(bankInfo['signature']['header'], rSig, row, rIdx);
               if (bankMatch) {
-                console.log(`bankMatched: bank=${JSON.stringify(bankInfo.name)}`);
+                console.log(`bankMatched: bank:${bankInfo.name}`);
+                console.log(`bufferRef.current.headerSignature:${bufferRef.current.headerSignature}`)
+
                 bufferRef.current = {
                   ...bufferRef.current,
-                  header: {
-                    mapper: {}
-                  }
+                  headerSignature: bankInfo['signature']['header'],
+                  debitSignature: bankInfo['signature']['debit'],
+                  creditSignature: bankInfo['signature']['credit']
                 }
+
+                console.log(`bufferRef.current=${JSON.stringify(bufferRef.current)}`);
                 return true;
               }
             }
@@ -105,8 +112,11 @@ const App = () => {
       {
         name: 'debit',
         condition: (row, rIdx) => {
+          if (!bufferRef.current.debitSignature) {
+            return false;
+          }
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(acceptableSignature['debit'], rSig, row, rIdx);
+          return isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx);
         },
         style: rowStyles['debit'],
         action: (row, rIdx) => {
@@ -116,8 +126,11 @@ const App = () => {
       {
         name: 'credit',
         condition: (row, rIdx) => {
+          if (!bufferRef.current.creditSignature) {
+            return false;
+          }
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(acceptableSignature['credit'], rSig, row, rIdx);
+          return isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx);
         },
         style: rowStyles['credit'],
         action: (row, rIdx) => {
@@ -200,6 +213,7 @@ const App = () => {
       if (rows) {
         // console.log(`rows=`, rows);
         setRows(rows);
+        bufferRef.current = {};
       }
     } else if (source === "dataSourceTable") {
         // For now we do nothing here.
