@@ -55,11 +55,11 @@ const hdfcDebitTxSig = [
     mandatory: true
   },
   {
-    type: 'undefined',
+    type: 'number',
     mandatory: true
   },
   {
-    type: 'number',
+    type: 'undefined',
     mandatory: true
   },
   {
@@ -86,11 +86,11 @@ const hdfcCreditTxSig = [
     mandatory: true
   },
   {
-    type: 'number',
+    type: 'undefined',
     mandatory: true
   },
   {
-    type: 'undefined',
+    type: 'number',
     mandatory: true
   },
   {

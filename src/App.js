@@ -57,6 +57,7 @@ const App = () => {
   const highlightersSignatureBased = useMemo(() => {
     const acceptableSignature = hdfcSignature;
 
+    // We can make style as a function as well
     return [
       {
         name: 'header',
@@ -66,7 +67,7 @@ const App = () => {
           // if (sCount >= 7) {
           //   console.log(`rIdx:${rIdx} sCount:${sCount}`);
           // }
-          return isSignatureMatch(acceptableSignature['header'], rSig, rIdx);
+          return isSignatureMatch(acceptableSignature['header'], rSig, row, rIdx);
         },
         style: rowStyles['header']
       },
@@ -74,7 +75,7 @@ const App = () => {
         name: 'debit',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(acceptableSignature['debit'], rSig, rIdx);
+          return isSignatureMatch(acceptableSignature['debit'], rSig, row, rIdx);
         },
         style: rowStyles['debit']
       },
@@ -82,7 +83,7 @@ const App = () => {
         name: 'credit',
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(acceptableSignature['credit'], rSig, rIdx);
+          return isSignatureMatch(acceptableSignature['credit'], rSig, row, rIdx);
         },
         style: rowStyles['credit']
       }
@@ -145,7 +146,7 @@ const App = () => {
   // rows: All the rows of excel in json format
   // txsData: The extracted transactions.
   const handleTransactionsDataChange = useCallback((rows, txsData, updates, source) => {
-    // console.log(`handleDataChange: source=${source} tallySaved=${tallySavedRef.current} transactionsData=${JSON.stringify(transactionsData, null, 2)}`);
+    console.log(`handleDataChange[${source}]: rows.length=${rows.length} transactionsData.length=${transactionsData.length}`);
 
     // TBD: We can do the below asynchronously
     // In case it is a data modify or delete action
