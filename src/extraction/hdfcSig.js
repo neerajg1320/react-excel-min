@@ -5,43 +5,43 @@
 const hdfcHdrSig = [
   {
     choices: ['Date'],
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     keyName: "transactionDate"
   },
   {
     choices: ['Narration'],
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     keyName: "description"
   },
   {
     choices: ['Chq./Ref.No.'],
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     keyName: "reference",
   },
   {
     choices: ['Value Dt'],
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     keyName: "valueDate"
   },
   {
     choices: ['Withdrawal Amt.'],
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     keyName: "debit"
   },
   {
     choices: ['Deposit Amt.'],
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     keyName: "credit"
   },
   {
     choices: ['Closing Balance'],
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     keyName: "balance"
   }
@@ -50,35 +50,35 @@ const hdfcHdrSig = [
 // This can be auto discovered
 const hdfcDebitTxSig = [
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     type: "date",
     format: "dd/MM/yy"
   },
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true
   },
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true
   },
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     type: "date",
     format: "dd/MM/yy"
   },
   {
-    acceptableType: 'number',
+    acceptableTypes:['number'],
     mandatory: true
   },
   {
-    acceptableType: 'undefined',
+    acceptableTypes:['undefined'],
     mandatory: true
   },
   {
-    acceptableType: 'number',
+    acceptableTypes:['number'],
     mandatory: true
   }
 ];
@@ -87,35 +87,35 @@ const hdfcDebitTxSig = [
 // The following is again dependent
 const hdfcCreditTxSig = [
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     type: "date",
     format: "dd/MM/yy"
   },
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true
   },
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true
   },
   {
-    acceptableType: 'string',
+    acceptableTypes:['string'],
     mandatory: true,
     type: "date",
     format: "dd/MM/yy"
   },
   {
-    acceptableType: 'undefined',
+    acceptableTypes:['undefined'],
     mandatory: true
   },
   {
-    acceptableType: 'number',
+    acceptableTypes:['number'],
     mandatory: true
   },
   {
-    acceptableType: 'number',
+    acceptableTypes:['number'],
     mandatory: true
   }
 ];

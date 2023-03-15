@@ -124,7 +124,6 @@ const App = () => {
                   data: []
                 }
 
-                // console.log(`bufferRef.current=${JSON.stringify(bufferRef.current)}`);
                 return true;
               }
             }
