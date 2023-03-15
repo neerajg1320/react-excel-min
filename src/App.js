@@ -71,7 +71,7 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
-    const createObj = (headerSig, rowSig, values, rIdx) => {
+    const createRowObj = (headerSig, rowSig, values, rIdx) => {
       const debugRowsIdx = [13];
 
       const obj = {}
@@ -84,7 +84,7 @@ const App = () => {
         if (debugRowsIdx.includes(rIdx)) {
           console.log(`rIdx:${rIdx} key=${key} value=${value}`);
         }
-        // TBD: For now it is hardcoded later to be made schema based
+
         if (valueType && valueType === 'date') {
           obj[key] = dateFromString(value, valueFormat);
         } else {
@@ -93,14 +93,6 @@ const App = () => {
 
       }
       return obj;
-    };
-
-    const createRowObj = (headerSig, rowSig, row, rIdx) => {
-      const keys = headerSig.map(hdr => hdr.keyName);
-
-      // TBD: We should be com
-      const rowObj = createObj(headerSig, rowSig, row, rIdx);
-      return rowObj;
     };
 
     // We can make style as a function as well
