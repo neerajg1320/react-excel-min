@@ -71,21 +71,25 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
-    const createObj = (headers, values, rIdx) => {
+    const createObj = (headerSig, rowSig, values, rIdx) => {
       const debugRowsIdx = [13];
 
       const obj = {}
-      for (let i=0; i<headers.length; i++) {
-        const key = headers[i].keyName;
+      for (let i=0; i<headerSig.length; i++) {
+        const key = headerSig[i].keyName;
         const value = values[i];
+        const valueType = rowSig[i].type;
+        const valueFormat = rowSig[i].format;
 
         if (debugRowsIdx.includes(rIdx)) {
           console.log(`rIdx:${rIdx} key=${key} value=${value}`);
         }
         // TBD: For now it is hardcoded later to be made schema based
-        if (key.includes('Date')) {
+        // if (key.includes('Date')) {
+        if (valueType && valueType === 'date') {
           // TBD: This hardcoding has to be avoided
-          obj[key] = dateFromString(value, "dd-MM-yyyy");
+          // obj[key] = dateFromString(value, "dd-MM-yyyy");
+          obj[key] = dateFromString(value, valueFormat);
         } else {
           obj[key] = value;
         }
@@ -94,11 +98,11 @@ const App = () => {
       return obj;
     };
 
-    const createRowObj = (headerSig, row, rIdx) => {
+    const createRowObj = (headerSig, rowSig, row, rIdx) => {
       const keys = headerSig.map(hdr => hdr.keyName);
 
       // TBD: We should be com
-      const rowObj = createObj(headerSig, row, rIdx);
+      const rowObj = createObj(headerSig, rowSig, row, rIdx);
       return rowObj;
     };
 
@@ -158,6 +162,7 @@ const App = () => {
         action: (row, rowIdx) => {
           const rowObj = createRowObj(
               bufferRef.current.headerSignature,
+              bufferRef.current.debitSignature,
               row, rowIdx
           );
           rowObj['category'] = "";
@@ -178,6 +183,7 @@ const App = () => {
         action: (row, rowIdx) => {
           const rowObj = createRowObj(
               bufferRef.current.headerSignature,
+              bufferRef.current.creditSignature,
               row, rowIdx
           );
           rowObj['category'] = "";

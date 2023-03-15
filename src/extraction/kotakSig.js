@@ -54,11 +54,15 @@ const kotakDebitTxSig = [
   },
   {
     acceptableType: 'string',
-    mandatory: true
+    mandatory: true,
+    type: "date",
+    format: "dd-MM-yyyy"
   },
   {
     acceptableType: 'string',
-    mandatory: true
+    mandatory: true,
+    type: "date",
+    format: "dd-MM-yyyy"
   },
   {
     acceptableType: 'string',
@@ -93,11 +97,15 @@ const kotakCreditTxSig = [
   },
   {
     acceptableType: 'string',
-    mandatory: true
+    mandatory: true,
+    type: "date",
+    format: "dd-MM-yyyy"
   },
   {
     acceptableType: 'string',
-    mandatory: true
+    mandatory: true,
+    type: "date",
+    format: "dd-MM-yyyy"
   },
   {
     acceptableType: 'string',
