@@ -1,4 +1,4 @@
-import {isDate} from "./types";
+import {isDate, isString} from "./types";
 
 export const getType = (val) => {
   if (isDate(val)) {
@@ -8,7 +8,7 @@ export const getType = (val) => {
 }
 
 export const getRowSignature = (row, rowIdx, numProps) => {
-  const debugRowIdx = [14];
+  const debugRowIdx = [8,9];
 
   if (debugRowIdx.includes(rowIdx)) {
     console.log(`getRowSignature: row:${row}`);
@@ -25,10 +25,10 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
-  const debugRowIdx = [14];
+  const debugRowIdx = [9];
 
   if (debugRowIdx.includes(rIdx)) {
-    // console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature)}`);
+    console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature)}`);
     console.log(`rIdx:${rIdx} signature=${signature}`);
   }
 
@@ -36,9 +36,17 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
   for (let i=0; i < acceptableSignature.length; i++) {
     if (!acceptableSignature[i]['acceptableTypes'].includes(signature[i])) {
       if (acceptableSignature[i]['mandatory']) {
+        if (debugRowIdx.includes(rIdx)) {
+          console.log(`Not Found: ${signature[i]} not found in ${acceptableSignature[i]['acceptableTypes']}`);
+        }
         match = false;
         break;
       }
+    } else {
+      // if (isString(row[i]) && row[i].trim() === "" && !acceptableSignature[i]['blank']) {
+      //   match = false;
+      //   break;
+      // }
     }
 
     const choices = acceptableSignature[i]['choices'];

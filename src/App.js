@@ -14,7 +14,8 @@ import {kotakSignature} from "./extraction/kotakSig";
 import {rowStyles} from "./extraction/rowHighlight";
 import {hdfcSignature} from "./extraction/hdfcSig";
 import Button from "react-bootstrap/Button";
-import {dateFromString} from "./utils/types";
+import {dateFromString, isString} from "./utils/types";
+import {axisSignature} from "./extraction/axisSig";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -48,6 +49,10 @@ const App = () => {
     {
       name: 'HDFC',
       signature: hdfcSignature
+    },
+    {
+      name: 'Axis',
+      signature: axisSignature
     }
   ]);
 
@@ -77,12 +82,19 @@ const App = () => {
       const obj = {}
       for (let i=0; i<headerSig.length; i++) {
         const key = headerSig[i].keyName;
-        const value = values[i];
+
+        // Following is the final type to which the value has to be converted
         const valueType = rowSig[i].type;
         const valueFormat = rowSig[i].format;
+        let value = values[i];
 
         if (debugRowsIdx.includes(rIdx)) {
-          console.log(`rIdx:${rIdx} key=${key} value=${value}`);
+          if (isString(value)) {
+            value = value.trim();
+            console.log(`rIdx:${rIdx} key='${key}' value[${value.length}]='${value}'`);
+          } else {
+            console.log(`rIdx:${rIdx} key='${key}' value[${valueType}]='${value}'`);
+          }
         }
 
         if (valueType && valueType === 'date') {
