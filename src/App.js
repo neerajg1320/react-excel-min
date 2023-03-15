@@ -88,13 +88,14 @@ const App = () => {
         const valueFormat = rowSig[i].format;
         let value = values[i];
 
-        if (debugRowsIdx.includes(rIdx)) {
-          if (isString(value)) {
-            value = value.trim();
-            console.log(`rIdx:${rIdx} key='${key}' value[${value.length}]='${value}'`);
-          } else {
-            console.log(`rIdx:${rIdx} key='${key}' value[${valueType}]='${value}'`);
+        if (isString(value)) {
+          value = value.trim();
+          if (value === "") {
+            value = undefined;
           }
+          // console.log(`rIdx:${rIdx} key='${key}' value[${value.length}]='${value}'`);
+        } else {
+          // console.log(`rIdx:${rIdx} key='${key}' value[${valueType}]='${value}'`);
         }
 
         if (valueType && valueType === 'date') {

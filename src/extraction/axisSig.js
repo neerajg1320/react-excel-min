@@ -10,7 +10,7 @@ const axisHdrSig = [
     choices: ['Tran Date'],
     acceptableTypes:['string'],
     mandatory: true,
-    keyName: "transactionDate"
+    keyName: "valueDate"
   },
   {
     choices: ['CHQNO'],
