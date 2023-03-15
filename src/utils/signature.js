@@ -34,7 +34,7 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
 
   let match = true;
   for (let i=0; i < acceptableSignature.length; i++) {
-    if (acceptableSignature[i]['type'] !== signature[i]) {
+    if (acceptableSignature[i]['acceptableType'] !== signature[i]) {
       if (acceptableSignature[i]['mandatory']) {
         match = false;
         break;

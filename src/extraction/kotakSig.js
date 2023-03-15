@@ -1,47 +1,47 @@
 // This has to be received for a bank
 const kotakHdrSig = [
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: 'serialNum'
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "transactionDate"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "valueDate"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "description"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "reference"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "debit"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "credit"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "balance"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "balanceType"
   }
@@ -49,78 +49,78 @@ const kotakHdrSig = [
 
 const kotakDebitTxSig = [
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: false
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'undefined',
+    acceptableType: 'undefined',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   }
 ];
 
 const kotakCreditTxSig = [
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: false
   },
   {
-    type: 'undefined',
+    acceptableType: 'undefined',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   }
 ];

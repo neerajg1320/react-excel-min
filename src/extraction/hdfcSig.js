@@ -5,43 +5,43 @@
 const hdfcHdrSig = [
   {
     choices: ['Date'],
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "transactionDate"
   },
   {
     choices: ['Narration'],
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "description"
   },
   {
     choices: ['Chq./Ref.No.'],
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "reference",
   },
   {
     choices: ['Value Dt'],
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "valueDate"
   },
   {
     choices: ['Withdrawal Amt.'],
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "debit"
   },
   {
     choices: ['Deposit Amt.'],
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "credit"
   },
   {
     choices: ['Closing Balance'],
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     keyName: "balance"
   }
@@ -50,33 +50,33 @@ const hdfcHdrSig = [
 // This can be auto discovered
 const hdfcDebitTxSig = [
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     format: "dd/MM/yyyy"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     format: "dd/MM/yyyy"
   },
   {
-    type: 'number',
+    acceptableType: 'number',
     mandatory: true
   },
   {
-    type: 'undefined',
+    acceptableType: 'undefined',
     mandatory: true
   },
   {
-    type: 'number',
+    acceptableType: 'number',
     mandatory: true
   }
 ];
@@ -85,33 +85,33 @@ const hdfcDebitTxSig = [
 // The following is again dependent
 const hdfcCreditTxSig = [
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     format: "dd/MM/yyyy"
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true
   },
   {
-    type: 'string',
+    acceptableType: 'string',
     mandatory: true,
     format: "dd/MM/yyyy"
   },
   {
-    type: 'undefined',
+    acceptableType: 'undefined',
     mandatory: true
   },
   {
-    type: 'number',
+    acceptableType: 'number',
     mandatory: true
   },
   {
-    type: 'number',
+    acceptableType: 'number',
     mandatory: true
   }
 ];

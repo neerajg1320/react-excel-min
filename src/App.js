@@ -14,6 +14,7 @@ import {kotakSignature} from "./extraction/kotakSig";
 import {rowStyles} from "./extraction/rowHighlight";
 import {hdfcSignature} from "./extraction/hdfcSig";
 import Button from "react-bootstrap/Button";
+import {dateFromString} from "./utils/types";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -70,10 +71,25 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
-    const createObj = (keys, values) => {
+    const createObj = (headers, values, rIdx) => {
+      const debugRowsIdx = [13];
+
       const obj = {}
-      for (let i=0; i<keys.length; i++) {
-        obj[keys[i]] = values[i];
+      for (let i=0; i<headers.length; i++) {
+        const key = headers[i].keyName;
+        const value = values[i];
+
+        if (debugRowsIdx.includes(rIdx)) {
+          console.log(`rIdx:${rIdx} key=${key} value=${value}`);
+        }
+        // TBD: For now it is hardcoded later to be made schema based
+        if (key.includes('Date')) {
+          // TBD: This hardcoding has to be avoided
+          obj[key] = dateFromString(value, "dd-MM-yyyy");
+        } else {
+          obj[key] = value;
+        }
+
       }
       return obj;
     };
@@ -82,7 +98,8 @@ const App = () => {
       const headers = bufferRef.current.headerSignature;
       const keys = headers.map(hdr => hdr.keyName);
 
-      const rowObj = createObj(keys, row);
+      // TBD: We should be com
+      const rowObj = createObj(headers, row, rIdx);
       return rowObj;
     };
 
@@ -222,7 +239,12 @@ const App = () => {
   // rows: All the rows of excel in json format
   // txsData: The extracted transactions.
   const handleDataChange = useCallback((rows, txsData, updates, source) => {
-    console.log(`handleDataChange[${source}]: rows.length=${rows.length} transactionsData.length=${transactionsData.length}`);
+    if (rows) {
+      console.log(`handleDataChange[${source}]:  rows.length=${rows.length}`);
+    }
+    if (transactionsData) {
+      console.log(`handleDataChange[${source}]: transactionsData.length=${transactionsData.length}`);
+    }
 
     // TBD: We can do the below asynchronously
     // In case it is a data modify or delete action
