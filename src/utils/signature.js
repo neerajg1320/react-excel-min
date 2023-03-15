@@ -42,11 +42,6 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
         match = false;
         break;
       }
-    } else {
-      // if (isString(row[i]) && row[i].trim() === "" && !acceptableSignature[i]['blank']) {
-      //   match = false;
-      //   break;
-      // }
     }
 
     const choices = acceptableSignature[i]['choices'];
@@ -62,6 +57,16 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
         break;
       }
     }
+
+    const valueType = acceptableSignature[i]['type'];
+    if (valueType) {
+      if (valueType === 'date') {
+        const valueFormat = acceptableSignature[i]['format'];
+        // Check whether date is convertible here or not
+        // If not convertible then match is false.
+      }
+    }
+
   }
 
   return match;
