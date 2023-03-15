@@ -1,46 +1,55 @@
 // This has to be received for a bank
 const kotakHdrSig = [
   {
+    choices: ['Sl. No.'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: 'serialNum'
   },
   {
+    choices: ['Transaction Date'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "transactionDate"
   },
   {
+    choices: ['Value Date'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "valueDate"
   },
   {
+    choices: ['Description'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "description"
   },
   {
+    choices: ['Chq / Ref No.'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "reference"
   },
   {
+    choices: ['Debit'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "debit"
   },
   {
+    choices: ['Credit'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "credit"
   },
   {
+    choices: ['Balance'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "balance"
   },
   {
+    choices: ['Dr / Cr'],
     acceptableTypes:['string'],
     mandatory: true,
     keyName: "balanceType"
