@@ -13,6 +13,7 @@ import {getRowSignature, isSignatureMatch} from "./utils/signature";
 import {kotakSignature} from "./extraction/kotakSig";
 import {rowStyles} from "./extraction/rowHighlight";
 import {hdfcSignature} from "./extraction/hdfcSig";
+import Button from "react-bootstrap/Button";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -82,7 +83,7 @@ const App = () => {
       const keys = headers.map(hdr => hdr.keyName);
 
       const rowObj = createObj(keys, row);
-      console.log(`row:${rIdx} rowObj:${JSON.stringify(rowObj, null, 2)}`);
+      return rowObj;
     };
 
     // We can make style as a function as well
@@ -103,11 +104,15 @@ const App = () => {
                 console.log(`bufferRef.current.headerSignature:${bufferRef.current.headerSignature}`)
 
                 // Set the matched header with rows
+                // Columns will be set using the mapper array
+                // Data will be populated while traversing the rows
                 bufferRef.current = {
                   ...bufferRef.current,
                   headerSignature: bankInfo['signature']['header'],
                   debitSignature: bankInfo['signature']['debit'],
-                  creditSignature: bankInfo['signature']['credit']
+                  creditSignature: bankInfo['signature']['credit'],
+                  columns: [],
+                  data: []
                 }
 
                 // console.log(`bufferRef.current=${JSON.stringify(bufferRef.current)}`);
@@ -134,7 +139,12 @@ const App = () => {
           return isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx);
         },
         style: rowStyles['debit'],
-        action: createRowObj
+        action: (row, rowIdx) => {
+          const rowObj = createRowObj(row, rowIdx);
+          rowObj['meta'] = {tag: 'debit'};
+          // console.log(`row:${rowIdx} rowObj:${JSON.stringify(rowObj, null, 2)}`);
+          bufferRef.current.data.push(rowObj);
+        }
       },
       {
         name: 'credit',
@@ -146,7 +156,12 @@ const App = () => {
           return isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx);
         },
         style: rowStyles['credit'],
-        action: createRowObj
+        action: (row, rowIdx) => {
+          const rowObj = createRowObj(row, rowIdx);
+          rowObj['meta'] = {tag: 'credit'};
+          // console.log(`row:${rowIdx} rowObj:${JSON.stringify(rowObj, null, 2)}`);
+          bufferRef.current.data.push(rowObj);
+        }
       }
     ]
   }, []);
@@ -295,6 +310,20 @@ const App = () => {
     }
   }, []);
 
+  const handleShowData = () => {
+    console.log(`handleShowData: data:${JSON.stringify(bufferRef.current.data,null, 2)}`);
+  }
+
+  const handleClearData = () => {
+    bufferRef.current.data = undefined;
+  }
+
+  const handleRulesComplete = () => {
+    console.log(`handleRulesComplete():`);
+    // handleShowData();
+    setTransactionsData(bufferRef.current.data);
+  }
+
   return (
       <TallyWrapper
             data={transactionsData}
@@ -315,19 +344,33 @@ const App = () => {
                 path="transactions"
                 element={
                   <>
-                  <TableBulk
-                      data={rows}
-                      stylerRules={highlightersSignatureBased}
-                      ref={rowsTableRef}
-                  />
-                  {/*<TableBulk*/}
-                  {/*    data={transactionsData}*/}
-                  {/*    onDataChange={handleDataChange}*/}
-                  {/*    updateWithCommit={false}*/}
-                  {/*    selectables={transactionSelectables}*/}
-                  {/*    ref={transactionsTableRef}*/}
-                  {/*/>*/}
-                  </>
+                    <div>
+                      <Button className="btn-outline-info" onClick={handleShowData}>
+                        Show Data
+                      </Button>
+                      <Button className="btn-outline-info" onClick={handleClearData}>
+                        Clear Data
+                      </Button>
+                    </div>
+
+                    <TableBulk
+                        data={rows}
+                        stylerRules={highlightersSignatureBased}
+                        onRulesComplete={handleRulesComplete}
+                        ref={rowsTableRef}
+                    />
+                    {
+                      bufferRef.current.data?.length > 0 &&
+                      <TableBulk
+                          data={transactionsData}
+                          onDataChange={handleDataChange}
+                          updateWithCommit={false}
+                          selectables={transactionSelectables}
+                          ref={transactionsTableRef}
+                      />
+                    }
+
+                    </>
                 } />
 
             {/* Category information added by user */}
