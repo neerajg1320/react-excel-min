@@ -85,10 +85,7 @@ const App = () => {
           console.log(`rIdx:${rIdx} key=${key} value=${value}`);
         }
         // TBD: For now it is hardcoded later to be made schema based
-        // if (key.includes('Date')) {
         if (valueType && valueType === 'date') {
-          // TBD: This hardcoding has to be avoided
-          // obj[key] = dateFromString(value, "dd-MM-yyyy");
           obj[key] = dateFromString(value, valueFormat);
         } else {
           obj[key] = value;
