@@ -69,15 +69,19 @@ const App = () => {
   ]);
 
   const highlightersSignatureBased = useMemo(() => {
+    const createObj = (keys, values) => {
+      const obj = {}
+      for (let i=0; i<keys.length; i++) {
+        obj[keys[i]] = values[i];
+      }
+      return obj;
+    };
+
     const createRowObj = (row, rIdx) => {
       const headers = bufferRef.current.headerSignature;
       const keys = headers.map(hdr => hdr.keyName);
-      // console.log(`row:${rIdx} keys:${keys}`);
-      // console.log(`row:${rIdx} values:${row}`);
-      const rowObj = {}
-      for (let i=0; i<keys.length; i++) {
-        rowObj[keys[i]] = row[i];
-      }
+
+      const rowObj = createObj(keys, row);
       console.log(`row:${rIdx} rowObj:${JSON.stringify(rowObj, null, 2)}`);
     };
 
@@ -98,6 +102,7 @@ const App = () => {
                 console.log(`bankMatched: bank:${bankInfo.name}`);
                 console.log(`bufferRef.current.headerSignature:${bufferRef.current.headerSignature}`)
 
+                // Set the matched header with rows
                 bufferRef.current = {
                   ...bufferRef.current,
                   headerSignature: bankInfo['signature']['header'],
