@@ -94,12 +94,11 @@ const App = () => {
       return obj;
     };
 
-    const createRowObj = (row, rIdx) => {
-      const headers = bufferRef.current.headerSignature;
-      const keys = headers.map(hdr => hdr.keyName);
+    const createRowObj = (headerSig, row, rIdx) => {
+      const keys = headerSig.map(hdr => hdr.keyName);
 
       // TBD: We should be com
-      const rowObj = createObj(headers, row, rIdx);
+      const rowObj = createObj(headerSig, row, rIdx);
       return rowObj;
     };
 
@@ -157,7 +156,10 @@ const App = () => {
         },
         style: rowStyles['debit'],
         action: (row, rowIdx) => {
-          const rowObj = createRowObj(row, rowIdx);
+          const rowObj = createRowObj(
+              bufferRef.current.headerSignature,
+              row, rowIdx
+          );
           rowObj['category'] = "";
           rowObj['meta'] = {tag: 'debit'};
           bufferRef.current.data.push(rowObj);
@@ -174,7 +176,10 @@ const App = () => {
         },
         style: rowStyles['credit'],
         action: (row, rowIdx) => {
-          const rowObj = createRowObj(row, rowIdx);
+          const rowObj = createRowObj(
+              bufferRef.current.headerSignature,
+              row, rowIdx
+          );
           rowObj['category'] = "";
           rowObj['meta'] = {tag: 'credit'};
           bufferRef.current.data.push(rowObj);
