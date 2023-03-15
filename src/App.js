@@ -141,8 +141,8 @@ const App = () => {
         style: rowStyles['debit'],
         action: (row, rowIdx) => {
           const rowObj = createRowObj(row, rowIdx);
+          rowObj['category'] = "";
           rowObj['meta'] = {tag: 'debit'};
-          // console.log(`row:${rowIdx} rowObj:${JSON.stringify(rowObj, null, 2)}`);
           bufferRef.current.data.push(rowObj);
         }
       },
@@ -158,8 +158,8 @@ const App = () => {
         style: rowStyles['credit'],
         action: (row, rowIdx) => {
           const rowObj = createRowObj(row, rowIdx);
+          rowObj['category'] = "";
           rowObj['meta'] = {tag: 'credit'};
-          // console.log(`row:${rowIdx} rowObj:${JSON.stringify(rowObj, null, 2)}`);
           bufferRef.current.data.push(rowObj);
         }
       }
