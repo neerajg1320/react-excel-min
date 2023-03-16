@@ -85,5 +85,11 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
 
   }
 
-  return match;
+  if (match) {
+    return {
+      match
+    };
+  }
+
+  return null;
 }
