@@ -118,6 +118,7 @@ const App = () => {
           const rSig = getRowSignature(row, rIdx, -1);
           let tag;
           let matchRowSignature;
+          let finalRow;
 
           // If header is already found. This would work for one table per file
           if (bufferRef.current.headerFound) {
@@ -125,13 +126,17 @@ const App = () => {
               matchRowSignature = bufferRef.current.headerSignature;
               tag = 'header';
             } else {
-              if(isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx)) {
-                matchRowSignature = bufferRef.current.debitSignature;
+              let result = isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx);
+              if (result) {
                 tag = 'debit';
+                matchRowSignature = bufferRef.current.debitSignature;
+                finalRow = result.finalRow;
               } else {
-                if(isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx)) {
-                  matchRowSignature = bufferRef.current.creditSignature;
+                let result = isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx);
+                if (result) {
                   tag = 'credit';
+                  matchRowSignature = bufferRef.current.creditSignature;
+                  finalRow = result.finalRow;
                 }
               }
             }
