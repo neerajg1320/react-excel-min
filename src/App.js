@@ -120,6 +120,7 @@ const App = () => {
             return isSignatureMatch(bufferRef.current.headerSignature, rSig, row, rIdx);
           }
 
+          // Find header if not found yet
           if (bankInfoList) {
             for (const bankInfo of bankInfoList) {
               const bankMatch = isSignatureMatch(bankInfo['signature']['header'], rSig, row, rIdx);
@@ -208,7 +209,7 @@ const App = () => {
     ]
   }, []);
 
-  
+
   // The following two could be turned to refs
   const modifiedRowsRef = useRef([]);
   const deletedRowsRef = useRef([]);
