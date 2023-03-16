@@ -101,7 +101,7 @@ const App = () => {
     return [
       {
         name: 'header',
-        condition: (row, rIdx) => {
+        rule: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
           let tag;
           let matchRowSignature;
@@ -137,7 +137,6 @@ const App = () => {
                   tag = 'header';
 
                   console.log(`bankMatched: bank:${bankInfo.name}`);
-                  console.log(`bufferRef.current.headerSignature:${bufferRef.current.headerSignature}`)
 
                   // Set the matched header with rows
                   // Columns will be set using the mapper array

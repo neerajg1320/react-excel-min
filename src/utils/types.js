@@ -49,7 +49,7 @@ export function dateFromString(value, format) {
     try {
       date = fnsParse(value, format, new Date());
       if (!fnsIsValid(date)) {
-        console.error(`dateFromString: '[${typeof(date)}]${date}' is not a valid date`);
+        // console.error(`dateFromString: '[${typeof(date)}]${date}' is not a valid date`);
         date = null;
       }
     } catch (e) {
