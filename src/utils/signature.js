@@ -25,7 +25,7 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
-  const debugRowIdx = [];
+  const debugRowIdx = [9];
 
   if (debugRowIdx.includes(rIdx)) {
     console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature)}`);
@@ -63,11 +63,11 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
     if (valueType) {
       if (valueType === 'date') {
         const valueFormat = acceptableSignature[i]['format'];
-        // Check whether date is convertible here or not
-        // If not convertible then match is false.
         const finalValue = dateFromString(rowValue, valueFormat);
-        if (debugRowIdx.includes(rIdx)) {
-          console.log(`rIdx:${rIdx} finalValue[${typeof(finalValue)}]=${finalValue}`);
+        if (!finalValue) {
+          console.log(`isSignatureMatch: rIdx:${rIdx} '${rowValue}' is not a valid date`);
+          match = false;
+          break;
         }
       }
     }
