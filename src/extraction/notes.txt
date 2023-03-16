@@ -3,3 +3,5 @@
 // Something which is not required might be mandatory in a signature.
 // Signature is used for detection.
 // Schema is the final shape the date is in.
+
+We have defined a schema for bankStatement. The signature for a bank have to be compliant with the Schema. That means the signatures should lead to schema even if they are not exactly as a schema. For example the schema has a room for transactionDate but it might not be there in a signature as the bank statement might not support it.
