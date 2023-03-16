@@ -34,6 +34,8 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
   }
 
   let match = true;
+  const finalRow = [];
+
   for (let i=0; i < acceptableSignature.length; i++) {
     const rowValue = row[i];
 
@@ -60,7 +62,6 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
       }
     }
 
-
     // Check if the rowValue is convertible to expected type if though it is read as a string
     const valueType = acceptableSignature[i]['finalType'];
     if (valueType) {
@@ -81,13 +82,17 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
         match = false;
         break;
       }
-    }
 
+      finalRow.push(finalValue);
+    } else {
+      finalRow.push(rowValue);
+    }
   }
 
   if (match) {
     return {
-      match
+      match,
+      finalRow
     };
   }
 
