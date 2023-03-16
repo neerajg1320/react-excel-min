@@ -10,12 +10,12 @@ import {TableBulk} from "@glassball/table";
 import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
 import {getRowSignature, isSignatureMatch} from "./utils/signature";
-import {kotakSignature} from "./extraction/kotakSignature";
+import {kotakSignature} from "./extraction/parsers/kotakSignature";
 import {rowStyles} from "./extraction/rowHighlight";
-import {hdfcSignature} from "./extraction/hdfcSignature";
+import {hdfcSignature} from "./extraction/parsers/hdfcSignature";
 import Button from "react-bootstrap/Button";
 import {dateFromString, isString} from "./utils/types";
-import {axisSignature} from "./extraction/axisSignature";
+import {axisSignature} from "./extraction/parsers/axisSignature";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
