@@ -42,23 +42,23 @@ const App = () => {
 
 
   // The App keeps a copy of signatures
-  const [bankInfoList, setBankInfoList] = useState([
+  const [signatureList, setSignatureList] = useState([
     {
       signature: kotakSignature,
       name: 'Kotak',
-      range:{},
+      dateRange:{},
       schema: bankStatementSchema,
     },
     {
       signature: hdfcSignature,
       name: 'HDFC',
-      range:{},
+      dateRange:{},
       schema: bankStatementSchema,
     },
     {
       signature: axisSignature,
       name: 'Axis',
-      range:{},
+      dateRange:{},
       schema: bankStatementSchema,
     }
   ]);
@@ -136,21 +136,23 @@ const App = () => {
             }
           } else {
             // Find header if not found yet
-            if (bankInfoList) {
-              for (const bankInfo of bankInfoList) {
-                const bankMatch = isSignatureMatch(bankInfo['signature']['header'], rSig, row, rIdx);
+            if (signatureList) {
+
+              for (let i=0; i < signatureList.length; i++) {
+                const signatureInfo = signatureList[i];
+                const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx);
                 if (bankMatch) {
                   tag = 'header';
-                  matchRowSignature = bankInfo['signature']['header'];
+                  matchRowSignature = signatureInfo['signature']['header'];
 
-                  console.log(`bankMatched: bank:${bankInfo.name}`);
+                  console.log(`Signature Matched: bank:${signatureInfo.name}`);
 
                   bufferRef.current = {
                     ...bufferRef.current,
                     headerFound: true,
-                    headerSignature: bankInfo['signature']['header'],
-                    debitSignature: bankInfo['signature']['debit'],
-                    creditSignature: bankInfo['signature']['credit'],
+                    headerSignature: signatureInfo['signature']['header'],
+                    debitSignature: signatureInfo['signature']['debit'],
+                    creditSignature: signatureInfo['signature']['credit'],
                     columns: [],
                     data: []
                   }
