@@ -117,7 +117,48 @@ const App = () => {
         condition: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
           if (bufferRef.current.headerSignature) {
-            return isSignatureMatch(bufferRef.current.headerSignature, rSig, row, rIdx);
+            if (isSignatureMatch(bufferRef.current.headerSignature, rSig, row, rIdx)) {
+              console.log(`highlightersCombinedSignature: Found header again`);
+              // This is repeated below as well
+              return {
+                style: rowStyles['header']
+              };
+            } else {
+              let tag;
+              let matchRowSignature;
+              const rSig = getRowSignature(row, rIdx, -1);
+
+              console.log(`highlightersCombinedSignature: rIdx:${rIdx}`);
+
+              if (bufferRef.current.debitSignature) {
+                if(isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx)) {
+                  matchRowSignature = bufferRef.current.debitSignature;
+                  tag = 'debit';
+                }
+              }
+
+              if (bufferRef.current.creditSignature) {
+                if(isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx)) {
+                  matchRowSignature = bufferRef.current.creditSignature;
+                  tag = 'credit';
+                }
+              }
+
+              if(matchRowSignature) {
+                const rowObj = createRowObj(
+                    bufferRef.current.headerSignature,
+                    matchRowSignature,
+                    row, rIdx
+                );
+                rowObj['category'] = "";
+                rowObj['meta'] = {tag};
+                bufferRef.current.data.push(rowObj);
+                return {
+                  style: rowStyles[tag]
+                }
+              }
+            }
+            return false;
           }
 
           // Find header if not found yet
@@ -145,10 +186,9 @@ const App = () => {
                 };
               }
             }
-
-            return false;
           }
 
+          return false;
         },
         action: (row, rIdx) => {
           // console.log(`rIdx:${rIdx} found header: row=${row}`);
@@ -162,6 +202,14 @@ const App = () => {
           }
           const rSig = getRowSignature(row, rIdx, -1);
           if(isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx)) {
+            const rowObj = createRowObj(
+                bufferRef.current.headerSignature,
+                bufferRef.current.debitSignature,
+                row, rIdx
+            );
+            rowObj['category'] = "";
+            rowObj['meta'] = {tag: 'debit'};
+            bufferRef.current.data.push(rowObj);
             return {
               style: rowStyles['debit']
             }
@@ -169,16 +217,7 @@ const App = () => {
             return false;
           }
         },
-        action: (row, rowIdx) => {
-          const rowObj = createRowObj(
-              bufferRef.current.headerSignature,
-              bufferRef.current.debitSignature,
-              row, rowIdx
-          );
-          rowObj['category'] = "";
-          rowObj['meta'] = {tag: 'debit'};
-          bufferRef.current.data.push(rowObj);
-        }
+        // action: (row, rowIdx) => {}
       },
       {
         name: 'credit',
@@ -188,6 +227,15 @@ const App = () => {
           }
           const rSig = getRowSignature(row, rIdx, -1);
           if(isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx)) {
+            const rowObj = createRowObj(
+                bufferRef.current.headerSignature,
+                bufferRef.current.creditSignature,
+                row, rIdx
+            );
+            rowObj['category'] = "";
+            rowObj['meta'] = {tag: 'credit'};
+            bufferRef.current.data.push(rowObj);
+
             return {
               style: rowStyles['credit']
             }
@@ -195,16 +243,7 @@ const App = () => {
             return false;
           }
         },
-        action: (row, rowIdx) => {
-          const rowObj = createRowObj(
-              bufferRef.current.headerSignature,
-              bufferRef.current.creditSignature,
-              row, rowIdx
-          );
-          rowObj['category'] = "";
-          rowObj['meta'] = {tag: 'credit'};
-          bufferRef.current.data.push(rowObj);
-        }
+        // action: (row, rowIdx) => {}
       }
     ]
   }, []);
