@@ -76,36 +76,23 @@ const App = () => {
   ]);
 
   const highlightersCombinedSignature = useMemo(() => {
-    const createRowObj = (headerSig, rowSig, values, rIdx) => {
+    const createRowObj = (headerSig, rowSig, values, finalValues, rIdx) => {
       const debugRowsIdx = [13];
 
       const obj = {}
       for (let i=0; i<headerSig.length; i++) {
         const key = headerSig[i].keyName;
 
-        // Following is the final type to which the value has to be converted
-        const valueType = rowSig[i].finalType;
-        const valueFormat = rowSig[i].format;
-        let value = values[i];
+        let value = finalValues[i];
 
         if (isString(value)) {
           value = value.trim();
           if (value === "") {
             value = undefined;
           }
-          // console.log(`rIdx:${rIdx} key='${key}' value[${value.length}]='${value}'`);
-        } else {
-          // console.log(`rIdx:${rIdx} key='${key}' value[${valueType}]='${value}'`);
         }
 
-        if (valueType && valueType === 'date') {
-          const date = dateFromString(value, valueFormat);
-          // console.log(`highlightersMultiSignature: rIdx:${rIdx} '[${typeof(date)}]${date}'`);
-          obj[key] = date;
-        } else {
-          obj[key] = value;
-        }
-
+        obj[key] = value;
       }
       return obj;
     };
@@ -179,7 +166,7 @@ const App = () => {
               const rowObj = createRowObj(
                   bufferRef.current.headerSignature,
                   matchRowSignature,
-                  row, rIdx
+                  row, finalRow, rIdx
               );
               rowObj['category'] = "";
               rowObj['meta'] = {tag};
