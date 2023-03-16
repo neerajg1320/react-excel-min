@@ -133,8 +133,8 @@ const App = () => {
               for (const bankInfo of bankInfoList) {
                 const bankMatch = isSignatureMatch(bankInfo['signature']['header'], rSig, row, rIdx);
                 if (bankMatch) {
-                  matchRowSignature = bankInfo['signature']['header'];
                   tag = 'header';
+                  matchRowSignature = bankInfo['signature']['header'];
 
                   console.log(`bankMatched: bank:${bankInfo.name}`);
 
@@ -150,10 +150,9 @@ const App = () => {
                     columns: [],
                     data: []
                   }
-
-                  return {
-                    style: rowStyles['header']
-                  };
+                  // return {
+                  //   style: rowStyles['header']
+                  // };
                 }
               }
             }
