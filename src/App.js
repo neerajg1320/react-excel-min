@@ -99,7 +99,9 @@ const App = () => {
         }
 
         if (valueType && valueType === 'date') {
-          obj[key] = dateFromString(value, valueFormat);
+          const date = dateFromString(value, valueFormat);
+          console.log(`highlightersSignatureBased: rIdx:${rIdx} '[${typeof(date)}]${date}'`);
+          obj[key] = date;
         } else {
           obj[key] = value;
         }

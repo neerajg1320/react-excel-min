@@ -1,4 +1,4 @@
-import {isDate, isString} from "./types";
+import {dateFromString, isDate, isString} from "./types";
 
 export const getType = (val) => {
   if (isDate(val)) {
@@ -8,7 +8,7 @@ export const getType = (val) => {
 }
 
 export const getRowSignature = (row, rowIdx, numProps) => {
-  const debugRowIdx = [8,9];
+  const debugRowIdx = [];
 
   if (debugRowIdx.includes(rowIdx)) {
     console.log(`getRowSignature: row:${row}`);
@@ -25,7 +25,7 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
-  const debugRowIdx = [9];
+  const debugRowIdx = [];
 
   if (debugRowIdx.includes(rIdx)) {
     console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature)}`);
@@ -34,6 +34,8 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
 
   let match = true;
   for (let i=0; i < acceptableSignature.length; i++) {
+    const rowValue = row[i];
+
     if (!acceptableSignature[i]['acceptableTypes'].includes(signature[i])) {
       if (acceptableSignature[i]['mandatory']) {
         if (debugRowIdx.includes(rIdx)) {
@@ -50,9 +52,8 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
         console.log(`choices=${choices}`);
       }
 
-      const value = row[i];
-      if (!choices.includes(value)) {
-        // console.log(`rIdx:${rIdx} value:${value} not in choices:${choices}`);
+      if (!choices.includes(rowValue)) {
+        // console.log(`rIdx:${rIdx} rowValue:${rowValue} not in choices:${choices}`);
         match = false;
         break;
       }
@@ -64,6 +65,10 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
         const valueFormat = acceptableSignature[i]['format'];
         // Check whether date is convertible here or not
         // If not convertible then match is false.
+        const finalValue = dateFromString(rowValue, valueFormat);
+        if (debugRowIdx.includes(rIdx)) {
+          console.log(`rIdx:${rIdx} finalValue[${typeof(finalValue)}]=${finalValue}`);
+        }
       }
     }
 

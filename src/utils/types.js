@@ -1,4 +1,10 @@
-import {format as fnsFormat, parse as fnsParse, isDate as fnsIsDate, addHours, addMinutes, addSeconds} from "date-fns";
+import {
+  format as fnsFormat,
+  parse as fnsParse,
+  isDate as fnsIsDate,
+  isValid as fnsIsValid,
+  addHours, addMinutes, addSeconds
+} from "date-fns";
 
 export const isoDateFormat = "yyyy-MM-dd";
 export const indiaDateFormat = "dd/MM/yyyy";
@@ -33,10 +39,21 @@ export function getValueType(value) {
 }
 
 export function dateFromString(value, format) {
+  let date;
+
   if (value && isString(value)) {
-    return fnsParse(value, format, new Date());
+    try {
+      date = fnsParse(value, format, new Date());
+      if (!fnsIsValid(date)) {
+        console.error(`dateFromString: '[${typeof(date)}]${date}' is not a valid date`);
+        date = null;
+      }
+    } catch (e) {
+      console.error(`dateFromString: ${e}`);
+    }
   }
-  return value;
+
+  return date;
 }
 
 export function dateFromNumber(value) {
