@@ -52,7 +52,7 @@ const hdfcDebitTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "date",
+    finalType: "date",
     format: "dd/MM/yy"
   },
   {
@@ -66,7 +66,7 @@ const hdfcDebitTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "date",
+    finalType: "date",
     format: "dd/MM/yy"
   },
   {
@@ -89,7 +89,7 @@ const hdfcCreditTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "date",
+    finalType: "date",
     format: "dd/MM/yy"
   },
   {
@@ -103,7 +103,7 @@ const hdfcCreditTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "date",
+    finalType: "date",
     format: "dd/MM/yy"
   },
   {

@@ -84,7 +84,7 @@ const App = () => {
         const key = headerSig[i].keyName;
 
         // Following is the final type to which the value has to be converted
-        const valueType = rowSig[i].type;
+        const valueType = rowSig[i].finalType;
         const valueFormat = rowSig[i].format;
         let value = values[i];
 

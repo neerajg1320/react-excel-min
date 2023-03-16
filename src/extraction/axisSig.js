@@ -58,7 +58,7 @@ const axisDebitTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "date",
+    finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
@@ -72,7 +72,7 @@ const axisDebitTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "number"
+    finalType: "number"
   },
   {
     choices: [' '],
@@ -82,7 +82,7 @@ const axisDebitTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "number"
+    finalType: "number"
   },
   {
     acceptableTypes:['string'],
@@ -98,7 +98,7 @@ const axisCreditTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "date",
+    finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
@@ -117,12 +117,12 @@ const axisCreditTxSig = [
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "number"
+    finalType: "number"
   },
   {
     acceptableTypes:['string'],
     mandatory: true,
-    type: "number"
+    finalType: "number"
   },
   {
     acceptableTypes:['string'],

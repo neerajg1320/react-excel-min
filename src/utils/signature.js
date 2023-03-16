@@ -62,7 +62,7 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
 
 
     // Check if the rowValue is convertible to expected type if though it is read as a string
-    const valueType = acceptableSignature[i]['type'];
+    const valueType = acceptableSignature[i]['finalType'];
     if (valueType) {
       let finalValue = null;
       if (valueType === 'date') {
