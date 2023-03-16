@@ -71,7 +71,8 @@ const axisDebitTxSig = [
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    mandatory: true,
+    type: "number"
   },
   {
     choices: [' '],
@@ -114,7 +115,8 @@ const axisCreditTxSig = [
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    mandatory: true,
+    type: "number"
   },
   {
     acceptableTypes:['string'],

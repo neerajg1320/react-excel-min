@@ -1,4 +1,4 @@
-import {dateFromString, isDate, isString} from "./types";
+import {dateFromString, isDate, isString, numberFromString} from "./types";
 
 export const getType = (val) => {
   if (isDate(val)) {
@@ -25,7 +25,8 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
-  const debugRowIdx = [9];
+  const debugRowIdx = [];
+  const debugColIdx = []
 
   if (debugRowIdx.includes(rIdx)) {
     console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature)}`);
@@ -59,16 +60,26 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
       }
     }
 
+
+    // Check if the rowValue is convertible to expected type if though it is read as a string
     const valueType = acceptableSignature[i]['type'];
     if (valueType) {
+      let finalValue = null;
       if (valueType === 'date') {
         const valueFormat = acceptableSignature[i]['format'];
-        const finalValue = dateFromString(rowValue, valueFormat);
-        if (!finalValue) {
-          console.log(`isSignatureMatch: rIdx:${rIdx} '${rowValue}' is not a valid date`);
-          match = false;
-          break;
-        }
+        finalValue = dateFromString(rowValue, valueFormat);
+      } else if (valueType === 'number') {
+        finalValue = numberFromString(rowValue);
+      }
+
+      if (debugRowIdx.includes(rIdx) && debugColIdx.includes(i)) {
+        console.log(`isSignatureMatch: rIdx:${rIdx} i:${i} finalValue:[${typeof(finalValue)}]${finalValue}`);
+      }
+
+      if (!finalValue) {
+        // console.log(`isSignatureMatch: rIdx:${rIdx} '${rowValue}' is not a valid ${valueType}`);
+        match = false;
+        break;
       }
     }
 

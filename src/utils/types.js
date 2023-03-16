@@ -38,6 +38,10 @@ export function getValueType(value) {
   return valueType;
 }
 
+// dateFromString:
+// returns
+//    a date object if input is a valid date string
+//    null if input is not a valid date string
 export function dateFromString(value, format) {
   let date;
 
@@ -83,15 +87,20 @@ export function dateFromNumber(value) {
 }
 
 export function numberFromString(value) {
+  let num;
   if (value && isString(value)) {
-    return parseFloat(value.replaceAll(',',''));
+    num = parseFloat(value.replaceAll(',',''));
+    if (isNaN(num)) {
+      num = null;
+    }
   }
 
-  return value;
+  return num;
 }
 
 // Strangely Sheetjs reads the data and reduces 5:30 hrs and an adiitional 10 seconds
 export function fixDatesInObject(obj) {
+
   const adjustedObj = Object.fromEntries(Object.entries(obj).map(([key, value]) =>{
     if (isDate(value)) {
       // console.log(`key=${key} value=${JSON.stringify(value)}`);
