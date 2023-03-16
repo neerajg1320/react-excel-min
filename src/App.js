@@ -16,6 +16,7 @@ import {hdfcSignature} from "./extraction/parsers/hdfcSignature";
 import Button from "react-bootstrap/Button";
 import {dateFromString, isString} from "./utils/types";
 import {axisSignature} from "./extraction/parsers/axisSignature";
+import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -43,16 +44,22 @@ const App = () => {
   // The App keeps a copy of signatures
   const [bankInfoList, setBankInfoList] = useState([
     {
+      signature: kotakSignature,
       name: 'Kotak',
-      signature: kotakSignature
+      range:{},
+      schema: bankStatementSchema,
     },
     {
+      signature: hdfcSignature,
       name: 'HDFC',
-      signature: hdfcSignature
+      range:{},
+      schema: bankStatementSchema,
     },
     {
+      signature: axisSignature,
       name: 'Axis',
-      signature: axisSignature
+      range:{},
+      schema: bankStatementSchema,
     }
   ]);
 
