@@ -138,9 +138,6 @@ const App = () => {
 
                   console.log(`bankMatched: bank:${bankInfo.name}`);
 
-                  // Set the matched header with rows
-                  // Columns will be set using the mapper array
-                  // Data will be populated while traversing the rows
                   bufferRef.current = {
                     ...bufferRef.current,
                     headerFound: true,
@@ -150,9 +147,6 @@ const App = () => {
                     columns: [],
                     data: []
                   }
-                  // return {
-                  //   style: rowStyles['header']
-                  // };
                 }
               }
             }
@@ -173,9 +167,6 @@ const App = () => {
           }
 
           return false;
-        },
-        action: (row, rIdx) => {
-          // console.log(`rIdx:${rIdx} found header: row=${row}`);
         }
       }
     ]
