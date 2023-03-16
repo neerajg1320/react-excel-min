@@ -81,7 +81,8 @@ const axisDebitTxSig = [
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    mandatory: true,
+    type: "number"
   },
   {
     acceptableTypes:['string'],
@@ -120,7 +121,8 @@ const axisCreditTxSig = [
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    mandatory: true,
+    type: "number"
   },
   {
     acceptableTypes:['string'],
