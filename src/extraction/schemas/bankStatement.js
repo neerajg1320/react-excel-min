@@ -1,71 +1,72 @@
 import {indiaDateFormat} from "../../utils/types";
 
-export const BankStatementSchema = [
+export const bankStatementSchema = [
   {
-    header: "SNo",
     keyName: "serialNum",
+    header: "SNo",
     width: 50,
     type: "number",
     required: false,
     alignment: "center"
   },
   {
-    header: "Transaction Date",
     keyName: "transactionDate",
+    header: "Transaction Date",
     width: 100,
     type: "date",
     required: false
   },
   {
-    header: "Value Date",
     keyName: "valueDate",
+    header: "Value Date",
     width: 100,
     type: "date",
     format: indiaDateFormat,
     required: false
   },
   {
-    header: "Description",
     keyName: "description",
+    header: "Description",
     width: 250,
     type: "string",
     required: true,
     format: "yyyy-MM-dd",
   },
   {
-    header: "Reference",
     keyName: "reference",
+    header: "Reference",
     width: 80,
     type: "string",
     acceptedTypes: ["string", "number"],
     required: false
   },
   {
-    header: "Debit",
     keyName: "debit",
+    header: "Debit",
     width: 80,
     type: "number",
     required: false,
   },
   {
-    header: "Credit",
     keyName: "credit",
+    header: "Credit",
     width: 80,
     type: "number",
     required: false
   },
   {
-    header: "Balance",
     keyName: "balance",
+    header: "Balance",
     width: 100,
     type: "number",
     required: true
   },
   {
-    header: "DrCr",
     keyName: "drCr",
+    header: "DrCr",
     width: 50,
     type: "string",
+    choices: ["DR", "CR"],
     required: false,
     alignment: "center"
   }
