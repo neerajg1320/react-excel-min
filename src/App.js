@@ -75,7 +75,7 @@ const App = () => {
     }
   ]);
 
-  const highlightersSignatureBased = useMemo(() => {
+  const highlightersMultiSignature = useMemo(() => {
     const createRowObj = (headerSig, rowSig, values, rIdx) => {
       const debugRowsIdx = [13];
 
@@ -100,7 +100,7 @@ const App = () => {
 
         if (valueType && valueType === 'date') {
           const date = dateFromString(value, valueFormat);
-          // console.log(`highlightersSignatureBased: rIdx:${rIdx} '[${typeof(date)}]${date}'`);
+          // console.log(`highlightersMultiSignature: rIdx:${rIdx} '[${typeof(date)}]${date}'`);
           obj[key] = date;
         } else {
           obj[key] = value;
@@ -139,7 +139,9 @@ const App = () => {
                   data: []
                 }
 
-                return true;
+                return {
+                  style: rowStyles['header']
+                };
               }
             }
 
@@ -147,7 +149,6 @@ const App = () => {
           }
 
         },
-        style: rowStyles['header'],
         action: (row, rIdx) => {
           // console.log(`rIdx:${rIdx} found header: row=${row}`);
         }
@@ -159,9 +160,14 @@ const App = () => {
             return false;
           }
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx);
+          if(isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx)) {
+            return {
+              style: rowStyles['debit']
+            }
+          } else {
+            return false;
+          }
         },
-        style: rowStyles['debit'],
         action: (row, rowIdx) => {
           const rowObj = createRowObj(
               bufferRef.current.headerSignature,
@@ -180,9 +186,14 @@ const App = () => {
             return false;
           }
           const rSig = getRowSignature(row, rIdx, -1);
-          return isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx);
+          if(isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx)) {
+            return {
+              style: rowStyles['credit']
+            }
+          } else {
+            return false;
+          }
         },
-        style: rowStyles['credit'],
         action: (row, rowIdx) => {
           const rowObj = createRowObj(
               bufferRef.current.headerSignature,
@@ -197,44 +208,7 @@ const App = () => {
     ]
   }, []);
 
-  const highlightersCountBased = useMemo(() => {
-    return [
-      {
-        name: '7+',
-        condition: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1);
-          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
-
-          // Here we should have a signature match check instead of just a count
-          // The signature match will be different for different banks
-          if (rIdx === 12 || rIdx === 14 || rIdx === 15) {
-            console.log(`rSig=${JSON.stringify(rSig)}`);
-          }
-
-          if (sCount >= 7) {
-            return true;
-          }
-        },
-        style: {
-          backgroundColor: 'rgba(0, 255, 0, 0.2)'
-        }
-      },
-      {
-        name: '9+',
-        condition: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1);
-          const sCount = rSig.reduce((prev, sig) => sig !== "undefined" ? prev + 1 : prev, 0)
-          if (sCount >= 9) {
-            return true;
-          }
-        },
-        style: {
-          backgroundColor: 'rgba(0, 0, 255, 0.2)'
-        }
-      }
-    ];
-  }, []);
-
+  
   // The following two could be turned to refs
   const modifiedRowsRef = useRef([]);
   const deletedRowsRef = useRef([]);
@@ -391,7 +365,7 @@ const App = () => {
 
                     <TableBulk
                         data={rows}
-                        stylerRules={highlightersSignatureBased}
+                        stylerRules={highlightersMultiSignature}
                         onRulesComplete={handleRulesComplete}
                         ref={rowsTableRef}
                     />
