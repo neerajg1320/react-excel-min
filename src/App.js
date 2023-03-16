@@ -76,7 +76,7 @@ const App = () => {
   ]);
 
   const highlightersCombinedSignature = useMemo(() => {
-    const createRowObj = (headerSig, rowSig, values, finalValues, rIdx) => {
+    const createRowObj = (headerSig, finalValues, rIdx) => {
       const debugRowsIdx = [13];
 
       const obj = {}
@@ -163,11 +163,7 @@ const App = () => {
           if(matchRowSignature) {
             // Add row to data if it is a debit or credit row
             if (['debit', 'credit'].includes(tag)) {
-              const rowObj = createRowObj(
-                  bufferRef.current.headerSignature,
-                  matchRowSignature,
-                  row, finalRow, rIdx
-              );
+              const rowObj = createRowObj(bufferRef.current.headerSignature, finalRow, rIdx);
               rowObj['category'] = "";
               rowObj['meta'] = {tag};
               bufferRef.current.data.push(rowObj);
