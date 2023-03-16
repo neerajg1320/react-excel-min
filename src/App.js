@@ -135,53 +135,54 @@ const App = () => {
                 }
               }
             }
+          } else {
+            // Find header if not found yet
+            if (bankInfoList) {
+              for (const bankInfo of bankInfoList) {
+                const bankMatch = isSignatureMatch(bankInfo['signature']['header'], rSig, row, rIdx);
+                if (bankMatch) {
+                  matchRowSignature = bankInfo['signature']['header'];
+                  tag = 'header';
 
-            if(matchRowSignature) {
-              // Add row to data if it is a debit or credit row
-              if (['debit', 'credit'].includes(tag)) {
-                const rowObj = createRowObj(
-                    bufferRef.current.headerSignature,
-                    matchRowSignature,
-                    row, rIdx
-                );
-                rowObj['category'] = "";
-                rowObj['meta'] = {tag};
-                bufferRef.current.data.push(rowObj);
-              }
+                  console.log(`bankMatched: bank:${bankInfo.name}`);
+                  console.log(`bufferRef.current.headerSignature:${bufferRef.current.headerSignature}`)
 
-              return {
-                style: rowStyles[tag]
+                  // Set the matched header with rows
+                  // Columns will be set using the mapper array
+                  // Data will be populated while traversing the rows
+                  bufferRef.current = {
+                    ...bufferRef.current,
+                    headerFound: true,
+                    headerSignature: bankInfo['signature']['header'],
+                    debitSignature: bankInfo['signature']['debit'],
+                    creditSignature: bankInfo['signature']['credit'],
+                    columns: [],
+                    data: []
+                  }
+
+                  return {
+                    style: rowStyles['header']
+                  };
+                }
               }
             }
-
-            return false;
           }
 
-          // Find header if not found yet
-          if (bankInfoList) {
-            for (const bankInfo of bankInfoList) {
-              const bankMatch = isSignatureMatch(bankInfo['signature']['header'], rSig, row, rIdx);
-              if (bankMatch) {
-                console.log(`bankMatched: bank:${bankInfo.name}`);
-                console.log(`bufferRef.current.headerSignature:${bufferRef.current.headerSignature}`)
+          if(matchRowSignature) {
+            // Add row to data if it is a debit or credit row
+            if (['debit', 'credit'].includes(tag)) {
+              const rowObj = createRowObj(
+                  bufferRef.current.headerSignature,
+                  matchRowSignature,
+                  row, rIdx
+              );
+              rowObj['category'] = "";
+              rowObj['meta'] = {tag};
+              bufferRef.current.data.push(rowObj);
+            }
 
-                // Set the matched header with rows
-                // Columns will be set using the mapper array
-                // Data will be populated while traversing the rows
-                bufferRef.current = {
-                  ...bufferRef.current,
-                  headerFound: true,
-                  headerSignature: bankInfo['signature']['header'],
-                  debitSignature: bankInfo['signature']['debit'],
-                  creditSignature: bankInfo['signature']['credit'],
-                  columns: [],
-                  data: []
-                }
-
-                return {
-                  style: rowStyles['header']
-                };
-              }
+            return {
+              style: rowStyles[tag]
             }
           }
 
