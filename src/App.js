@@ -14,7 +14,7 @@ import {kotakSignature} from "./extraction/parsers/kotakSignature";
 import {rowStyles} from "./extraction/rowHighlight";
 import {hdfcSignature} from "./extraction/parsers/hdfcSignature";
 import Button from "react-bootstrap/Button";
-import {dateFromString, isString} from "./utils/types";
+import {isString} from "./utils/types";
 import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 
@@ -42,6 +42,7 @@ const App = () => {
 
 
   // The App keeps a copy of signatures
+  // TBD: We are yet to verify the json created using a rule with the related schema
   const [signatureList, setSignatureList] = useState([
     {
       signature: kotakSignature,
