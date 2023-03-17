@@ -19,6 +19,8 @@ import {isString} from "./utils/types";
 import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 import Switch from "react-switch";
+import ExpandableButton from "./components/expandableButton/ExpandableButton";
+import {HeaderCreator} from "./extraction/components/HeaderCreator";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -68,6 +70,9 @@ const App = () => {
 
   //
   const [highlighterDetected, setHighlighterDetected] = useState(false);
+  const [headersDetected, setHeadersDetected] = useState(false);
+  const [selectedHeader, setSelectedHeader] = useState(undefined);
+  const [createHeaderExpanded, setCreateHeaderExpanded] = useState(false);
   const [highlighterApplied, setHighlighterApplied] = useState(false);
 
   // The App keeps a copy of data
@@ -75,13 +80,17 @@ const App = () => {
   const [transactionsData, setTransactionsData] = useState([]);
 
   const rawTableRef = useRef();
+  const detectionBufferRef = useRef({
+    headerProbables: []
+  });
   const highlightedTableRef = useRef();
+  const transactionsBufferRef = useRef({});
   const transactionsTableRef = useRef();
 
   // The App stores categories which are used in Transactions and Categories components
   const [categories, setCategories] = useState(defaultCategories);
   const ledgersRef = useRef([]);
-  const bufferRef = useRef({});
+
   const groups = useMemo(() => {
     return defaultGroups
   });
@@ -106,8 +115,8 @@ const App = () => {
           if (bankMatch) {
             console.log(`Signature Matched: bank:${signatureInfo.name}`);
 
-            bufferRef.current = {
-              ...bufferRef.current,
+            transactionsBufferRef.current = {
+              ...transactionsBufferRef.current,
               headerFound: true,
               headerSignature: signatureInfo['signature']['header'],
               debitSignature: signatureInfo['signature']['debit'],
@@ -130,7 +139,7 @@ const App = () => {
 
 
   // Rules for highlighter detection
-  const highlighterConstructionRules = useMemo(() => {
+  const headerDetectionRules = useMemo(() => {
     const debugRowIdx = [3,4];
     const headerMemberThreshold = 5;
 
@@ -145,7 +154,12 @@ const App = () => {
             console.log(`rIdx:${rIdx} rSig=${rSig} rSigSet[${rSigSet.length}]=${JSON.stringify([...rSigSet], null, 2)}`);
           }
 
+          // Below is the detection condition for the header.
+          // For now we just need to detect the header.
+          // Later we will add support to detect headerless tables
           if (rSigSet.length === 1 && rSigSet.includes('string') && rSig.length > headerMemberThreshold) {
+            detectionBufferRef.current.headerProbables.push(row);
+
             return {
               style: detectionStyles['header']
             }
@@ -156,6 +170,31 @@ const App = () => {
       }
     ]
   }, []);
+
+  const handleDetectionRulesEvent = (event) => {
+    console.log(`handleDetectionRulesEvent: ${JSON.stringify(event)}`);
+
+    switch (event.name) {
+      case 'complete':
+        console.log(`detectionBufferRef:${JSON.stringify(detectionBufferRef.current, null, 2)}`);
+        if (detectionBufferRef.current.headerProbables.length > 0) {
+          setHeadersDetected(true);
+          if (detectionBufferRef.current.headerProbables.length === 1) {
+            setSelectedHeader(detectionBufferRef.current.headerProbables[0])
+          }
+        }
+        break;
+
+      case 'start':
+        detectionBufferRef.current.headerProbables = [];
+        setHeadersDetected(false);
+        break;
+
+      default:
+        console.error(`event '${event.name}' not supported`);
+    }
+
+  }
 
   // Highlight Rows using hardcoded header parsers
   const rowHighlightingRules = useMemo(() => {
@@ -191,21 +230,21 @@ const App = () => {
           let finalRow;
 
           // If header is already found. This would work for one table per file
-          if (bufferRef.current.headerFound) {
-            if (isSignatureMatch(bufferRef.current.headerSignature, rSig, row, rIdx)) {
-              matchRowSignature = bufferRef.current.headerSignature;
+          if (transactionsBufferRef.current.headerFound) {
+            if (isSignatureMatch(transactionsBufferRef.current.headerSignature, rSig, row, rIdx)) {
+              matchRowSignature = transactionsBufferRef.current.headerSignature;
               tag = 'header';
             } else {
-              let result = isSignatureMatch(bufferRef.current.debitSignature, rSig, row, rIdx);
+              let result = isSignatureMatch(transactionsBufferRef.current.debitSignature, rSig, row, rIdx);
               if (result) {
                 tag = 'debit';
-                matchRowSignature = bufferRef.current.debitSignature;
+                matchRowSignature = transactionsBufferRef.current.debitSignature;
                 finalRow = result.finalRow;
               } else {
-                let result = isSignatureMatch(bufferRef.current.creditSignature, rSig, row, rIdx);
+                let result = isSignatureMatch(transactionsBufferRef.current.creditSignature, rSig, row, rIdx);
                 if (result) {
                   tag = 'credit';
-                  matchRowSignature = bufferRef.current.creditSignature;
+                  matchRowSignature = transactionsBufferRef.current.creditSignature;
                   finalRow = result.finalRow;
                 }
               }
@@ -215,10 +254,10 @@ const App = () => {
           if(matchRowSignature) {
             // Add row to data if it is a debit or credit row
             if (['debit', 'credit'].includes(tag)) {
-              const rowObj = createRowObj(bufferRef.current.headerSignature, finalRow, rIdx);
+              const rowObj = createRowObj(transactionsBufferRef.current.headerSignature, finalRow, rIdx);
               rowObj['category'] = "";
               rowObj['meta'] = {tag};
-              bufferRef.current.data.push(rowObj);
+              transactionsBufferRef.current.data.push(rowObj);
             }
 
             return {
@@ -271,7 +310,7 @@ const App = () => {
       if (rows) {
         // console.log(`rows=`, rows);
         setRows(rows);
-        bufferRef.current = {};
+        transactionsBufferRef.current = {};
       }
     } else if (source === "dataSourceTable") {
         // For now we do nothing here.
@@ -343,11 +382,11 @@ const App = () => {
   }, []);
 
   const handleShowData = () => {
-    console.log(`handleShowData: data:${JSON.stringify(bufferRef.current.data,null, 2)}`);
+    console.log(`handleShowData: data:${JSON.stringify(transactionsBufferRef.current.data,null, 2)}`);
   }
 
   const clearTransactionsData = () => {
-    bufferRef.current.data = [];
+    transactionsBufferRef.current.data = [];
     setTransactionsData([]);
   }
 
@@ -355,9 +394,13 @@ const App = () => {
     clearTransactionsData();
   }
 
-  const handleHighlightingRulesComplete = () => {
-    setTransactionsData(bufferRef.current.data);
-    setHighlighterApplied(true);
+
+
+  const handleHighlightingRulesEvent = (event) => {
+    if (event.name === 'complete') {
+      setTransactionsData(transactionsBufferRef.current.data);
+      setHighlighterApplied(true);
+    }
   }
 
   const handleToggleHighlighterDetected = (value) => {
@@ -366,6 +409,10 @@ const App = () => {
       clearTransactionsData();
     }
     setHighlighterDetected(value);
+  }
+
+  const handleCreateHeader = () => {
+    console.log(`handleCreateHeader: show pop-up`);
   }
 
   return (
@@ -397,6 +444,17 @@ const App = () => {
                       <Button className="btn-outline-info" onClick={handleClearData}>
                         Clear Data
                       </Button>
+                      <ExpandableButton
+                          title="Create Header"
+                          expanded={createHeaderExpanded}
+                          onChange={setCreateHeaderExpanded}
+                          popupPosition={{right: "0px", top: "35px"}}
+                      >
+                        <div>
+                          <p>Fill this in</p>
+                        </div>
+                      </ExpandableButton>
+
                       <span>Highlighter Detected</span>
                       <Switch checked={highlighterDetected} onChange={handleToggleHighlighterDetected} />
                     </div>
@@ -406,13 +464,17 @@ const App = () => {
                       <h4>Raw Table</h4>
                       <TableBulk
                           data={rows}
-                          stylerRules={highlighterConstructionRules}
-                          onRulesComplete={handleHighlightingRulesComplete}
+                          stylerRules={headerDetectionRules}
+                          onRulesEvent={handleDetectionRulesEvent}
                           ref={rawTableRef}
                       />
                       </>
                     }
 
+                    {
+                      selectedHeader &&
+                      <HeaderCreator row={selectedHeader} schema={bankStatementSchema}/>
+                    }
 
                     {
                       highlighterDetected &&
@@ -421,7 +483,7 @@ const App = () => {
                       <TableBulk
                           data={rows}
                           stylerRules={rowHighlightingRules}
-                          onRulesComplete={handleHighlightingRulesComplete}
+                          onRulesEvent={handleHighlightingRulesEvent}
                           ref={highlightedTableRef}
                       />
                       </>
