@@ -12,7 +12,7 @@ import {defaultGroups} from "./presets/groups";
 import {getRowSignature, isSignatureMatch} from "./utils/signature";
 import {kotakSignature} from "./extraction/parsers/kotakSignature";
 import {rowStyles} from "./extraction/highlighters/statementHighlight";
-import {detectionSyles} from "./extraction/highlighters/detectionHighlight";
+import {detectionStyles} from "./extraction/highlighters/detectionHighlight";
 import {hdfcSignature} from "./extraction/parsers/hdfcSignature";
 import Button from "react-bootstrap/Button";
 import {isString} from "./utils/types";
@@ -139,15 +139,15 @@ const App = () => {
         name: 'constructor',
         rule: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          const rSigSet = new Set(rSig);
+          const rSigSet = [...new Set(rSig)];
 
           if (debugRowIdx.includes(rIdx)) {
-            console.log(`rIdx:${rIdx} rSig=${rSig} rSigSet=${JSON.stringify([...rSigSet], null, 2)}`);
+            console.log(`rIdx:${rIdx} rSig=${rSig} rSigSet[${rSigSet.length}]=${JSON.stringify([...rSigSet], null, 2)}`);
           }
 
-          if (rSigSet.length === 1 && rSigSet.includes('string') && rSig.length >= headerMemberThreshold) {
+          if (rSigSet.length === 1 && rSigSet.includes('string') && rSig.length > headerMemberThreshold) {
             return {
-              style: detectionSyles['header']
+              style: detectionStyles['header']
             }
           }
 

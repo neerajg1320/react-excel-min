@@ -10,7 +10,7 @@ const creditStyle = {
   backgroundColor: 'rgba(0, 255, 0, 0.2)'
 }
 
-export const detectionSyles = {
+export const detectionStyles = {
   'header': headerStyle,
   'debit': debitStyle,
   'credit': creditStyle
