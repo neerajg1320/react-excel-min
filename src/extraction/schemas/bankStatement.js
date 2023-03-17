@@ -22,7 +22,7 @@ export const bankStatementSchema = [
     width: 100,
     type: "date",
     format: indiaDateFormat,
-    required: false
+    required: true
   },
   {
     keyName: "description",
@@ -45,21 +45,21 @@ export const bankStatementSchema = [
     header: "Debit",
     width: 80,
     type: "number",
-    required: false,
+    required: true,
   },
   {
     keyName: "credit",
     header: "Credit",
     width: 80,
     type: "number",
-    required: false
+    required: true
   },
   {
     keyName: "balance",
     header: "Balance",
     width: 100,
     type: "number",
-    required: true
+    required: false
   },
   {
     keyName: "drCr",
