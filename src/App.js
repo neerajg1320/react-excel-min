@@ -64,9 +64,16 @@ const App = () => {
     }
   ]);
 
+  //
+  const [headerDetected, setHeaderDetected] = useState(true);
+  const [highlighted, setHighlighted] = useState(false);
+
   // The App keeps a copy of data
   const [rows, setRows] = useState([]);
   const [transactionsData, setTransactionsData] = useState([]);
+
+  const highlightedTableRef = useRef();
+  const transactionsTableRef = useRef();
 
   // The App stores categories which are used in Transactions and Categories components
   const [categories, setCategories] = useState(defaultCategories);
@@ -157,6 +164,8 @@ const App = () => {
                     columns: [],
                     data: []
                   }
+
+                  setHighlighted(true);
                 }
               }
             }
@@ -186,8 +195,9 @@ const App = () => {
   const modifiedRowsRef = useRef([]);
   const deletedRowsRef = useRef([]);
   const tallySavedRef = useRef(false);
-  const transactionsTableRef = useRef();
-  const rowsTableRef = useRef();
+
+
+
 
   const clearMarkedRows = useCallback(() => {
     console.log(`App: clearMarkedRows()`);
@@ -336,14 +346,18 @@ const App = () => {
                       </Button>
                     </div>
 
-                    <TableBulk
-                        data={rows}
-                        stylerRules={highlightersCombinedSignature}
-                        onRulesComplete={handleRulesComplete}
-                        ref={rowsTableRef}
-                    />
                     {
-                      bufferRef.current.data?.length > 0 &&
+                      headerDetected &&
+                      <TableBulk
+                          data={rows}
+                          stylerRules={highlightersCombinedSignature}
+                          onRulesComplete={handleRulesComplete}
+                          ref={highlightedTableRef}
+                      />
+                    }
+
+                    {
+                      highlighted &&
                       <TableBulk
                           data={transactionsData}
                           onDataChange={handleDataChange}
