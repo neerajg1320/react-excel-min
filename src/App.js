@@ -411,8 +411,8 @@ const App = () => {
     setHighlighterDetected(value);
   }
 
-  const handleCreateHeader = () => {
-    console.log(`handleCreateHeader: show pop-up`);
+  const handleCreatorEvent = (event, mapper) => {
+    console.log(`event:${JSON.stringify(event)} mapper:${JSON.stringify(mapper, null, 2)}`);
   }
 
   return (
@@ -473,7 +473,11 @@ const App = () => {
 
                     {
                       selectedHeader &&
-                      <HeaderCreator row={selectedHeader} schema={bankStatementSchema}/>
+                      <HeaderCreator
+                          row={selectedHeader}
+                          schema={bankStatementSchema}
+                          onEvent={handleCreatorEvent}
+                      />
                     }
 
                     {

@@ -3,7 +3,7 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import Select from "react-select";
 import {listToOptions} from "../../utils/options";
 
-export const HeaderCreator = ({row, schema}) => {
+export const HeaderCreator = ({row, schema, onEvent}) => {
   console.log(`HeaderCreator:rendered row=${JSON.stringify(row)}`);
   const mandatoryKeys = useMemo(() => {
     return schema.filter(elm => elm.required).map(elm => elm.keyName);
@@ -24,11 +24,12 @@ export const HeaderCreator = ({row, schema}) => {
     }
   }, [])
 
-  const HeaderElement = ({hdrName, choices}) => {
+  const HeaderElement = ({hdrName, choices, initialValue}) => {
+    const [value, setValue] = useState(initialValue);
+
     const schemaKeyOptions = useMemo(() => {
       return listToOptions(choices, "")
     }, [choices]);
-    const [value, setValue] = useState();
     const debug = false;
 
     const handleSelectChange = (option) => {
@@ -42,6 +43,9 @@ export const HeaderCreator = ({row, schema}) => {
         bufferRef.current.mapper[hdrName] = option.value;
       }
 
+      setValue(option.value);
+
+      // This part can be taken out by using a callback
       const schemaKeys = Object.keys(bufferRef.current.mapper).map((k) => bufferRef.current.mapper[k]);
 
       if (debug) {
@@ -53,10 +57,11 @@ export const HeaderCreator = ({row, schema}) => {
       if (schemaKeys.length >= mandatoryKeys.length) {
         if (mandatoryKeys.every(sKey => schemaKeys.includes(sKey))) {
           setMapperSufficient(true);
+          if (onEvent) {
+            onEvent({name:'complete'}, {...bufferRef.current.mapper});
+          }
         }
       }
-
-      setValue(option.value);
     }
 
     return (
@@ -67,7 +72,7 @@ export const HeaderCreator = ({row, schema}) => {
         <span style={{width:"50%"}}>{hdrName}</span>
         <span style={{width:"50%"}}>
           <Select
-              value={schemaKeyOptions.filter(opt => opt.value === bufferRef.current.mapper[hdrName])}
+              value={schemaKeyOptions.filter(opt => opt.value === value)}
               options={schemaKeyOptions}
               onChange={handleSelectChange}
           />
@@ -84,7 +89,12 @@ export const HeaderCreator = ({row, schema}) => {
       {
         row.map((elm, elmIdx) => {
           return (
-            <HeaderElement key={elmIdx} hdrName={elm} choices={schema.map(item => item.keyName)}/>
+            <HeaderElement
+                key={elmIdx}
+                hdrName={elm}
+                choices={schema.map(item => item.keyName)}
+                initialValue={bufferRef.current.mapper[elm]}
+            />
           );
         })
       }
