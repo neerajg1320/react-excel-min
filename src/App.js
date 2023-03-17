@@ -11,7 +11,8 @@ import {defaultCategories} from "./presets/categoires";
 import {defaultGroups} from "./presets/groups";
 import {getRowSignature, isSignatureMatch} from "./utils/signature";
 import {kotakSignature} from "./extraction/parsers/kotakSignature";
-import {rowStyles} from "./extraction/rowHighlight";
+import {rowStyles} from "./extraction/highlighters/statementHighlight";
+import {detectionSyles} from "./extraction/highlighters/detectionHighlight";
 import {hdfcSignature} from "./extraction/parsers/hdfcSignature";
 import Button from "react-bootstrap/Button";
 import {isString} from "./utils/types";
@@ -130,12 +131,27 @@ const App = () => {
 
   // Rules for highlighter detection
   const highlighterConstructionRules = useMemo(() => {
+    const debugRowIdx = [3,4];
+    const headerMemberThreshold = 5;
+
     return [
       {
         name: 'constructor',
         rule: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1);
-          console.log(`rSig=${rSig}`);
+          const rSigSet = new Set(rSig);
+
+          if (debugRowIdx.includes(rIdx)) {
+            console.log(`rIdx:${rIdx} rSig=${rSig} rSigSet=${JSON.stringify([...rSigSet], null, 2)}`);
+          }
+
+          if (rSigSet.length === 1 && rSigSet.includes('string') && rSig.length >= headerMemberThreshold) {
+            return {
+              style: detectionSyles['header']
+            }
+          }
+
+          return false;
         }
       }
     ]
@@ -387,7 +403,7 @@ const App = () => {
 
                     {
                       <>
-                        <h4>Raw Table</h4>
+                      <h4>Raw Table</h4>
                       <TableBulk
                           data={rows}
                           stylerRules={highlighterConstructionRules}
@@ -412,7 +428,7 @@ const App = () => {
                     }
 
                     {
-                      highlighterApplied &&
+                      (transactionsData && transactionsData.length > 0)  &&
                       <>
                       <h4>Transactions Table</h4>
                       <TableBulk
