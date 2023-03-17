@@ -53,6 +53,7 @@
     "xlsx": "^0.18.5"
   },
   "dependencies": {
-    "@glassball/table": "^0.1.5"
+    "@glassball/table": "^0.1.5",
+    "react-switch": "^7.0.0"
   }
 }

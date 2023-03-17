@@ -17,6 +17,7 @@ import Button from "react-bootstrap/Button";
 import {isString} from "./utils/types";
 import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
+import Switch from "react-switch";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -65,8 +66,8 @@ const App = () => {
   ]);
 
   //
-  const [headerDetected, setHeaderDetected] = useState(true);
-  const [highlighted, setHighlighted] = useState(false);
+  const [highlighterDetected, setHighlighterDetected] = useState(false);
+  const [highlighterApplied, setHighlighterApplied] = useState(false);
 
   // The App keeps a copy of data
   const [rows, setRows] = useState([]);
@@ -165,6 +166,9 @@ const App = () => {
                     columns: [],
                     data: []
                   }
+
+                  console.log(`rowHighlightingRules: rIdx:${rIdx} header detected`);
+                  setHighlighterDetected(true);
                 }
               }
             }
@@ -312,7 +316,12 @@ const App = () => {
     console.log(`handleRulesComplete():`);
     // handleShowData();
     setTransactionsData(bufferRef.current.data);
-    setHighlighted(true);
+    setHighlighterApplied(true);
+  }
+
+  const handleSwitchChange = (value) => {
+    console.log(`value=${value}`);
+    setHighlighterDetected(value);
   }
 
   return (
@@ -335,17 +344,21 @@ const App = () => {
                 path="transactions"
                 element={
                   <>
-                    <div>
+                    <div style={{
+                      display: "flex", flexDirection: "row", alignItems: "center", gap: "20px"
+                    }}>
                       <Button className="btn-outline-info" onClick={handleShowData}>
                         Show Data
                       </Button>
                       <Button className="btn-outline-info" onClick={handleClearData}>
                         Clear Data
                       </Button>
+                      <span>Highlighter Detected</span>
+                      <Switch checked={highlighterDetected} onChange={handleSwitchChange} />
                     </div>
 
                     {
-                      headerDetected &&
+                      highlighterDetected &&
                       <TableBulk
                           data={rows}
                           stylerRules={rowHighlightingRules}
@@ -355,7 +368,7 @@ const App = () => {
                     }
 
                     {
-                      highlighted &&
+                      highlighterApplied &&
                       <TableBulk
                           data={transactionsData}
                           onDataChange={handleDataChange}
