@@ -90,7 +90,8 @@ const App = () => {
     }
   ]);
 
-  const highlightersCombinedSignature = useMemo(() => {
+  // Highlight Rows using hardcoded header parsers
+  const rowHighlightingRules = useMemo(() => {
     const createRowObj = (headerSig, finalValues, rIdx) => {
       const debugRowsIdx = [13];
 
@@ -164,8 +165,6 @@ const App = () => {
                     columns: [],
                     data: []
                   }
-
-                  setHighlighted(true);
                 }
               }
             }
@@ -195,8 +194,6 @@ const App = () => {
   const modifiedRowsRef = useRef([]);
   const deletedRowsRef = useRef([]);
   const tallySavedRef = useRef(false);
-
-
 
 
   const clearMarkedRows = useCallback(() => {
@@ -315,6 +312,7 @@ const App = () => {
     console.log(`handleRulesComplete():`);
     // handleShowData();
     setTransactionsData(bufferRef.current.data);
+    setHighlighted(true);
   }
 
   return (
@@ -350,7 +348,7 @@ const App = () => {
                       headerDetected &&
                       <TableBulk
                           data={rows}
-                          stylerRules={highlightersCombinedSignature}
+                          stylerRules={rowHighlightingRules}
                           onRulesComplete={handleRulesComplete}
                           ref={highlightedTableRef}
                       />
