@@ -73,6 +73,7 @@ const App = () => {
   const [rows, setRows] = useState([]);
   const [transactionsData, setTransactionsData] = useState([]);
 
+  const rawTableRef = useRef();
   const highlightedTableRef = useRef();
   const transactionsTableRef = useRef();
 
@@ -90,6 +91,55 @@ const App = () => {
       choices: defaultCategories.map(category => category.name)
     }
   ]);
+
+  const detectHighlighter = useCallback((data) => {
+    // console.log(`data:${JSON.stringify(data)}`);
+
+    data.map((row, rIdx) => {
+      if (signatureList) {
+        const rSig = getRowSignature(row, rIdx, -1);
+
+        for (let i=0; i < signatureList.length; i++) {
+          const signatureInfo = signatureList[i];
+          const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx);
+          if (bankMatch) {
+            console.log(`Signature Matched: bank:${signatureInfo.name}`);
+
+            bufferRef.current = {
+              ...bufferRef.current,
+              headerFound: true,
+              headerSignature: signatureInfo['signature']['header'],
+              debitSignature: signatureInfo['signature']['debit'],
+              creditSignature: signatureInfo['signature']['credit'],
+              columns: [],
+              data: []
+            }
+
+            console.log(`rowHighlightingRules: rIdx:${rIdx} highlighter detected from hardcoded signatures`);
+            setHighlighterDetected(true);
+          }
+        }
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    detectHighlighter(rows);
+  }, [rows]);
+
+
+  // Rules for highlighter detection
+  const highlighterConstructionRules = useMemo(() => {
+    return [
+      {
+        name: 'constructor',
+        rule: (row, rIdx) => {
+          const rSig = getRowSignature(row, rIdx, -1);
+          console.log(`rSig=${rSig}`);
+        }
+      }
+    ]
+  }, []);
 
   // Highlight Rows using hardcoded header parsers
   const rowHighlightingRules = useMemo(() => {
@@ -141,34 +191,6 @@ const App = () => {
                   tag = 'credit';
                   matchRowSignature = bufferRef.current.creditSignature;
                   finalRow = result.finalRow;
-                }
-              }
-            }
-          } else {
-            // Find header if not found yet
-            if (signatureList) {
-
-              for (let i=0; i < signatureList.length; i++) {
-                const signatureInfo = signatureList[i];
-                const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx);
-                if (bankMatch) {
-                  tag = 'header';
-                  matchRowSignature = signatureInfo['signature']['header'];
-
-                  console.log(`Signature Matched: bank:${signatureInfo.name}`);
-
-                  bufferRef.current = {
-                    ...bufferRef.current,
-                    headerFound: true,
-                    headerSignature: signatureInfo['signature']['header'],
-                    debitSignature: signatureInfo['signature']['debit'],
-                    creditSignature: signatureInfo['signature']['credit'],
-                    columns: [],
-                    data: []
-                  }
-
-                  console.log(`rowHighlightingRules: rIdx:${rIdx} header detected`);
-                  setHighlighterDetected(true);
                 }
               }
             }
@@ -312,7 +334,7 @@ const App = () => {
     bufferRef.current.data = undefined;
   }
 
-  const handleRulesComplete = () => {
+  const handleHighlightingRulesComplete = () => {
     console.log(`handleRulesComplete():`);
     // handleShowData();
     setTransactionsData(bufferRef.current.data);
@@ -357,18 +379,30 @@ const App = () => {
                       <Switch checked={highlighterDetected} onChange={handleSwitchChange} />
                     </div>
 
+                    <TableBulk
+                        data={rows}
+                        stylerRules={highlighterConstructionRules}
+                        onRulesComplete={handleHighlightingRulesComplete}
+                        ref={rawTableRef}
+                    />
+
                     {
                       highlighterDetected &&
+                      <>
+                      <h4>Highlighted Table</h4>
                       <TableBulk
                           data={rows}
                           stylerRules={rowHighlightingRules}
-                          onRulesComplete={handleRulesComplete}
+                          onRulesComplete={handleHighlightingRulesComplete}
                           ref={highlightedTableRef}
                       />
+                      </>
                     }
 
                     {
                       highlighterApplied &&
+                      <>
+                      <h4>Transactions Table</h4>
                       <TableBulk
                           data={transactionsData}
                           onDataChange={handleDataChange}
@@ -376,6 +410,7 @@ const App = () => {
                           selectables={transactionSelectables}
                           ref={transactionsTableRef}
                       />
+                      </>
                     }
 
                     </>
