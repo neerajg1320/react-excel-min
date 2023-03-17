@@ -330,19 +330,25 @@ const App = () => {
     console.log(`handleShowData: data:${JSON.stringify(bufferRef.current.data,null, 2)}`);
   }
 
+  const clearTransactionsData = () => {
+    bufferRef.current.data = [];
+    setTransactionsData([]);
+  }
+
   const handleClearData = () => {
-    bufferRef.current.data = undefined;
+    clearTransactionsData();
   }
 
   const handleHighlightingRulesComplete = () => {
-    console.log(`handleRulesComplete():`);
-    // handleShowData();
     setTransactionsData(bufferRef.current.data);
     setHighlighterApplied(true);
   }
 
-  const handleSwitchChange = (value) => {
-    console.log(`value=${value}`);
+  const handleToggleHighlighterDetected = (value) => {
+    if (!value) {
+      setHighlighterApplied(value);
+      clearTransactionsData();
+    }
     setHighlighterDetected(value);
   }
 
@@ -376,15 +382,21 @@ const App = () => {
                         Clear Data
                       </Button>
                       <span>Highlighter Detected</span>
-                      <Switch checked={highlighterDetected} onChange={handleSwitchChange} />
+                      <Switch checked={highlighterDetected} onChange={handleToggleHighlighterDetected} />
                     </div>
 
-                    <TableBulk
-                        data={rows}
-                        stylerRules={highlighterConstructionRules}
-                        onRulesComplete={handleHighlightingRulesComplete}
-                        ref={rawTableRef}
-                    />
+                    {
+                      <>
+                        <h4>Raw Table</h4>
+                      <TableBulk
+                          data={rows}
+                          stylerRules={highlighterConstructionRules}
+                          onRulesComplete={handleHighlightingRulesComplete}
+                          ref={rawTableRef}
+                      />
+                      </>
+                    }
+
 
                     {
                       highlighterDetected &&
