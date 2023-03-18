@@ -12,7 +12,14 @@ export const HeaderCreator = ({row, schema, onEvent}) => {
   // console.log(`mandatoryKeys=${mandatoryKeys}`);
 
   const bufferRef = useRef({
-    mapper: {}
+    mapper: {
+      "SRL NO": "serialNum",
+      "Tran Date": "valueDate",
+      "CHQNO": "reference",
+      "PARTICULARS": "description",
+      "DR": "debit",
+      "CR": "credit"
+    }
   });
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
