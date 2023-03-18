@@ -9,7 +9,7 @@ export const HeaderCreator = ({row, schema, onEvent}) => {
     return schema.filter(elm => elm.required).map(elm => elm.keyName);
   }, [schema]);
 
-  console.log(`mandatoryKeys=${mandatoryKeys}`);
+  // console.log(`mandatoryKeys=${mandatoryKeys}`);
 
   const bufferRef = useRef({
     mapper: {}
@@ -55,8 +55,10 @@ export const HeaderCreator = ({row, schema, onEvent}) => {
       }
 
       if (schemaKeys.length >= mandatoryKeys.length) {
-        if (mandatoryKeys.every(sKey => schemaKeys.includes(sKey))) {
-          setMapperSufficient(true);
+        const allMandatoryKeysMapped = mandatoryKeys.every(sKey => schemaKeys.includes(sKey))
+        setMapperSufficient(allMandatoryKeysMapped);
+
+        if (allMandatoryKeysMapped) {
           if (onEvent) {
             onEvent({name:'complete'}, {...bufferRef.current.mapper});
           }

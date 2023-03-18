@@ -413,6 +413,16 @@ const App = () => {
 
   const handleCreatorEvent = (event, mapper) => {
     console.log(`event:${JSON.stringify(event)} mapper:${JSON.stringify(mapper, null, 2)}`);
+    const detector = Object.entries(mapper).map(([k,v]) => {
+        // console.log(`item:${k}, ${v}`);
+        return {
+          acceptableTypes: ['string'],
+          keyName: v,
+          required: true,
+          finalType: 'string'
+        };
+    });
+    console.log(`detector=${JSON.stringify(detector, null, 2)}`);
   }
 
   return (
