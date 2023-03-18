@@ -60,12 +60,12 @@ const App = () => {
       dateRange:{},
       schema: bankStatementSchema,
     },
-    {
-      signature: axisSignature,
-      name: 'Axis',
-      dateRange:{},
-      schema: bankStatementSchema,
-    }
+    // {
+    //   signature: axisSignature,
+    //   name: 'Axis',
+    //   dateRange:{},
+    //   schema: bankStatementSchema,
+    // }
   ]);
 
   //
@@ -102,15 +102,15 @@ const App = () => {
     }
   ]);
 
-  const detectHighlighter = useCallback((data) => {
+  const detectHighlighter = useCallback((data, signatures) => {
     // console.log(`data:${JSON.stringify(data)}`);
 
     data.map((row, rIdx) => {
-      if (signatureList) {
+      if (signatures) {
         const rSig = getRowSignature(row, rIdx, -1);
 
-        for (let i=0; i < signatureList.length; i++) {
-          const signatureInfo = signatureList[i];
+        for (let i=0; i < signatures.length; i++) {
+          const signatureInfo = signatures[i];
           const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx);
           if (bankMatch) {
             console.log(`Signature Matched: bank:${signatureInfo.name}`);
@@ -134,8 +134,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    detectHighlighter(rows);
-  }, [rows]);
+    console.log(`useEffect[row, signatureList] signatureList[${signatureList.length}]`);
+
+    detectHighlighter(rows, signatureList);
+  }, [rows, signatureList]);
 
 
   // Rules for highlighter detection
@@ -235,17 +237,25 @@ const App = () => {
               matchRowSignature = transactionsBufferRef.current.headerSignature;
               tag = 'header';
             } else {
-              let result = isSignatureMatch(transactionsBufferRef.current.debitSignature, rSig, row, rIdx);
-              if (result) {
-                tag = 'debit';
-                matchRowSignature = transactionsBufferRef.current.debitSignature;
-                finalRow = result.finalRow;
-              } else {
-                let result = isSignatureMatch(transactionsBufferRef.current.creditSignature, rSig, row, rIdx);
+              let result;
+
+              if (transactionsBufferRef.current.debitSignature) {
+                result = isSignatureMatch(transactionsBufferRef.current.debitSignature, rSig, row, rIdx);
                 if (result) {
-                  tag = 'credit';
-                  matchRowSignature = transactionsBufferRef.current.creditSignature;
+                  tag = 'debit';
+                  matchRowSignature = transactionsBufferRef.current.debitSignature;
                   finalRow = result.finalRow;
+                }
+              }
+
+              if (!result) {
+                if (transactionsBufferRef.current.debitSignature) {
+                  result = isSignatureMatch(transactionsBufferRef.current.creditSignature, rSig, row, rIdx);
+                  if (result) {
+                    tag = 'credit';
+                    matchRowSignature = transactionsBufferRef.current.creditSignature;
+                    finalRow = result.finalRow;
+                  }
                 }
               }
             }
@@ -413,16 +423,28 @@ const App = () => {
 
   const handleCreatorEvent = (event, mapper) => {
     console.log(`event:${JSON.stringify(event)} mapper:${JSON.stringify(mapper, null, 2)}`);
-    const detector = Object.entries(mapper).map(([k,v]) => {
+    const detectedSignature = Object.entries(mapper).map(([k,v]) => {
         // console.log(`item:${k}, ${v}`);
         return {
           acceptableTypes: ['string'],
           keyName: v,
-          required: true,
-          finalType: 'string'
+          mandatory: true
         };
     });
-    console.log(`detector=${JSON.stringify(detector, null, 2)}`);
+    console.log(`detector=${JSON.stringify(detectedSignature, null, 2)}`);
+
+    const sigObj = {
+      signature: {
+        'header': detectedSignature
+      },
+      name: 'Axis',
+      dateRange:{},
+      schema: bankStatementSchema,
+    };
+
+    setSignatureList((prev) => {
+      return [...prev, sigObj]
+    });
   }
 
   return (
