@@ -179,6 +179,12 @@ const App = () => {
       case 'complete':
         console.log(`detectionBufferRef:${JSON.stringify(detectionBufferRef.current, null, 2)}`);
         if (detectionBufferRef.current.headerProbables.length > 0) {
+          // This should not be done automatically
+          // This should be marked from the table using a click button with choices
+          // Mark as Header
+          // Mark as Debit
+          // Mark as Credit
+          // Mark as <Custom>
           if (detectionBufferRef.current.headerProbables.length === 1) {
             setSelectedHeader(detectionBufferRef.current.headerProbables[0])
           }
