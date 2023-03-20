@@ -1,6 +1,6 @@
 // Relation between Signature and Schema has to be understood.
 // Something which is required in a schema has to be provided at the end of processing.
-// Something which is not required might be mandatory in a signature.
+// Something which is not required in a schema might be required in a signature.
 // Signature is used for detection.
 // Schema is the final shape the date is in.
 
