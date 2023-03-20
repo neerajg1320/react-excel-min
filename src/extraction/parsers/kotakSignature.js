@@ -3,55 +3,55 @@ const kotakHdrSig = [
   {
     choices: ['Sl. No.'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: 'serialNum'
   },
   {
     choices: ['Transaction Date'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "transactionDate"
   },
   {
     choices: ['Value Date'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "valueDate"
   },
   {
     choices: ['Description'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "description"
   },
   {
     choices: ['Chq / Ref No.'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "reference"
   },
   {
     choices: ['Debit'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "debit"
   },
   {
     choices: ['Credit'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "credit"
   },
   {
     choices: ['Balance'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "balance"
   },
   {
     choices: ['Dr / Cr'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "balanceType"
   }
 ];
@@ -59,86 +59,86 @@ const kotakHdrSig = [
 const kotakDebitTxSig = [
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: false
+    required: false
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['undefined'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   }
 ];
 
 const kotakCreditTxSig = [
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: false
+    required: false
   },
   {
     acceptableTypes:['undefined'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   }
 ];
 

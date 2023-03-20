@@ -6,43 +6,43 @@ const hdfcHdrSig = [
   {
     choices: ['Date'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "transactionDate"
   },
   {
     choices: ['Narration'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "description"
   },
   {
     choices: ['Chq./Ref.No.'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "reference",
   },
   {
     choices: ['Value Dt'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "valueDate"
   },
   {
     choices: ['Withdrawal Amt.'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "debit"
   },
   {
     choices: ['Deposit Amt.'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "credit"
   },
   {
     choices: ['Closing Balance'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "balance"
   }
 ];
@@ -51,35 +51,35 @@ const hdfcHdrSig = [
 const hdfcDebitTxSig = [
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd/MM/yy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd/MM/yy"
   },
   {
     acceptableTypes:['number'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['undefined'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['number'],
-    mandatory: true
+    required: true
   }
 ];
 
@@ -88,35 +88,35 @@ const hdfcDebitTxSig = [
 const hdfcCreditTxSig = [
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd/MM/yy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd/MM/yy"
   },
   {
     acceptableTypes:['undefined'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['number'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['number'],
-    mandatory: true
+    required: true
   }
 ];
 

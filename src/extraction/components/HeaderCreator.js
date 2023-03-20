@@ -5,11 +5,11 @@ import {listToOptions} from "../../utils/options";
 
 export const HeaderCreator = ({row, schema, onEvent}) => {
   console.log(`HeaderCreator:rendered row=${JSON.stringify(row)}`);
-  const mandatoryKeys = useMemo(() => {
+  const requiredKeys = useMemo(() => {
     return schema.filter(elm => elm.required).map(elm => elm.keyName);
   }, [schema]);
 
-  // console.log(`mandatoryKeys=${mandatoryKeys}`);
+  // console.log(`requiredKeys=${requiredKeys}`);
 
   const bufferRef = useRef({
     mapper: {
@@ -58,11 +58,11 @@ export const HeaderCreator = ({row, schema, onEvent}) => {
       if (debug) {
         console.log(`mapper:${JSON.stringify(bufferRef.current.mapper, null, 2)}`);
         console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
-        console.log(`mandatoryKeys=${mandatoryKeys}`);
+        console.log(`requiredKeys=${requiredKeys}`);
       }
 
-      if (schemaKeys.length >= mandatoryKeys.length) {
-        const allMandatoryKeysMapped = mandatoryKeys.every(sKey => schemaKeys.includes(sKey))
+      if (schemaKeys.length >= requiredKeys.length) {
+        const allMandatoryKeysMapped = requiredKeys.every(sKey => schemaKeys.includes(sKey))
         setMapperSufficient(allMandatoryKeysMapped);
 
         if (allMandatoryKeysMapped) {

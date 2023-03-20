@@ -428,7 +428,7 @@ const App = () => {
         return {
           acceptableTypes: ['string'],
           keyName: v,
-          mandatory: true
+          required: true
         };
     });
     console.log(`detector=${JSON.stringify(detectedSignature, null, 2)}`);

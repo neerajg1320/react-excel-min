@@ -6,49 +6,49 @@ const axisHdrSig = [
   {
     choices: ['SRL NO'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: 'serialNum'
   },
   {
     choices: ['Tran Date'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "valueDate"
   },
   {
     choices: ['CHQNO'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "reference"
   },
   {
     choices: ['PARTICULARS'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "description"
   },
   {
     choices: ['DR'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "debit"
   },
   {
     choices: ['CR'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "credit"
   },
   {
     choices: ['BAL'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "balance"
   },
   {
     choices: ['SOL'],
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     keyName: "sol"
   }
 ];
@@ -56,80 +56,80 @@ const axisHdrSig = [
 const axisDebitTxSig = [
   {
     acceptableTypes:['number'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "number"
   },
   {
     choices: [' '],
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "number"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   }
 ];
 
 const axisCreditTxSig = [
   {
     acceptableTypes:['number'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "date",
     format: "dd-MM-yyyy"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     choices: [' '],
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "number"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true,
+    required: true,
     finalType: "number"
   },
   {
     acceptableTypes:['string'],
-    mandatory: true
+    required: true
   }
 ];
 

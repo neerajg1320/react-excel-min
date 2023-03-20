@@ -40,7 +40,7 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx) => {
     const rowValue = row[i];
 
     if (!acceptableSignature[i]['acceptableTypes'].includes(signature[i])) {
-      if (acceptableSignature[i]['mandatory']) {
+      if (acceptableSignature[i]['required']) {
         if (debugRowIdx.includes(rIdx)) {
           console.log(`Not Found: ${signature[i]} not found in ${acceptableSignature[i]['acceptableTypes']}`);
         }
