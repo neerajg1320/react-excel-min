@@ -70,7 +70,6 @@ const App = () => {
 
   //
   const [highlighterDetected, setHighlighterDetected] = useState(false);
-  const [headersDetected, setHeadersDetected] = useState(false);
   const [selectedHeader, setSelectedHeader] = useState(undefined);
   const [createHeaderExpanded, setCreateHeaderExpanded] = useState(false);
   const [highlighterApplied, setHighlighterApplied] = useState(false);
@@ -180,7 +179,6 @@ const App = () => {
       case 'complete':
         console.log(`detectionBufferRef:${JSON.stringify(detectionBufferRef.current, null, 2)}`);
         if (detectionBufferRef.current.headerProbables.length > 0) {
-          setHeadersDetected(true);
           if (detectionBufferRef.current.headerProbables.length === 1) {
             setSelectedHeader(detectionBufferRef.current.headerProbables[0])
           }
@@ -189,7 +187,6 @@ const App = () => {
 
       case 'start':
         detectionBufferRef.current.headerProbables = [];
-        setHeadersDetected(false);
         break;
 
       default:
