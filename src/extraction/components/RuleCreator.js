@@ -36,13 +36,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
 
-
-  const HeaderElement = ({hdrName, choices, initialValue}) => {
-    const [value, setValue] = useState(initialValue);
+  // Header Element
+  const HeaderElement = ({elmValue, keyNameChoices, keyNameInitialValue}) => {
+    const [value, setValue] = useState(keyNameInitialValue);
 
     const schemaKeyOptions = useMemo(() => {
-      return listToOptions(choices, "")
-    }, [choices]);
+      return listToOptions(keyNameChoices, "")
+    }, [keyNameChoices]);
     const debug = false;
 
     const handleSelectChange = (option) => {
@@ -51,9 +51,9 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
       }
 
       if (option.value === "") {
-        delete bufferRef.current.mapper[hdrName];
+        delete bufferRef.current.mapper[elmValue];
       } else {
-        bufferRef.current.mapper[hdrName] = option.value;
+        bufferRef.current.mapper[elmValue] = option.value;
       }
 
       setValue(option.value);
@@ -81,14 +81,14 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
           }
         }
       }
-    }
+    };
 
     return (
       <div style={{
         width: "100%",
         display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
       }}>
-        <span style={{width:"50%"}}>{hdrName}</span>
+        <span style={{width:"50%"}}>{elmValue}</span>
         <span style={{width:"50%"}}>
           <Select
               value={schemaKeyOptions.filter(opt => opt.value === value)}
@@ -100,20 +100,95 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
     );
   }
 
+  // Row Element
+  const RowElement = ({elmValue, keyNameChoices, keyNameInitialValue}) => {
+    const [value, setValue] = useState(keyNameInitialValue);
+
+    const schemaKeyOptions = useMemo(() => {
+      return listToOptions(keyNameChoices, "")
+    }, [keyNameChoices]);
+    const debug = false;
+
+    const handleSelectChange = (option) => {
+      if (debug) {
+        console.log(`option.value=${option.value}`);
+      }
+
+      if (option.value === "") {
+        delete bufferRef.current.mapper[elmValue];
+      } else {
+        bufferRef.current.mapper[elmValue] = option.value;
+      }
+
+      setValue(option.value);
+
+      // This part can be taken out by using a callback
+      const schemaKeys = Object.keys(bufferRef.current.mapper).map((k) => bufferRef.current.mapper[k]);
+
+      if (debug) {
+        console.log(`mapper:${JSON.stringify(bufferRef.current.mapper, null, 2)}`);
+        console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
+        console.log(`requiredKeys=${requiredKeys}`);
+      }
+
+      if (schemaKeys.length >= requiredKeys.length) {
+        const allMandatoryKeysMapped = requiredKeys.every(sKey => schemaKeys.includes(sKey))
+        setMapperSufficient(allMandatoryKeysMapped);
+
+        if (allMandatoryKeysMapped) {
+          if (onEvent) {
+            // [tag ? tag : type]
+            onEvent({name:'complete'}, {
+              tag: 'header',
+              mapper: {...bufferRef.current.mapper}
+            });
+          }
+        }
+      }
+    };
+
+    return (
+        <div style={{
+          width: "100%",
+          display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
+        }}>
+          <span style={{width:"50%"}}>{elmValue}</span>
+          <span style={{width:"50%"}}>
+          <Select
+              value={schemaKeyOptions.filter(opt => opt.value === value)}
+              options={schemaKeyOptions}
+              onChange={handleSelectChange}
+          />
+        </span>
+        </div>
+    );
+  }
+
   return (
     <div style={{
       display: "flex", flexDirection:"column", gap: "10px",
       textAlign: "center"
     }}>
-      {
+      <pre>{JSON.stringify(row, null, 2)}</pre>
+      {(row && row.length > 0) &&
         row.map((elm, elmIdx) => {
           return (
-            <HeaderElement
-                key={elmIdx}
-                hdrName={elm}
-                choices={schema.map(item => item.keyName)}
-                initialValue={bufferRef.current.mapper[elm]}
-            />
+              (type === 'header' ?
+                <HeaderElement
+                    key={elmIdx}
+                    elmValue={elm}
+                    keyNameChoices={schema.map(item => item.keyName)}
+                    keyNameInitialValue={bufferRef.current.mapper[elm]}
+                />
+                :
+                <RowElement
+                    key={elmIdx}
+                    elmValue={elm}
+                    keyNameChoices={schema.map(item => item.keyName)}
+                    keyNameInitialValue={bufferRef.current.mapper[elm]}
+                />
+              )
+
           );
         })
       }

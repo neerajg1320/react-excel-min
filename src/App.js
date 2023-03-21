@@ -15,7 +15,7 @@ import {rowStyles} from "./extraction/highlighters/statementHighlight";
 import {detectionStyles} from "./extraction/highlighters/detectionHighlight";
 import {hdfcSignature} from "./extraction/parsers/hdfcSignature";
 import Button from "react-bootstrap/Button";
-import {isString} from "./utils/types";
+import {getValueType, isString} from "./utils/types";
 import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 import Switch from "react-switch";
@@ -436,9 +436,11 @@ const App = () => {
     const createdRule = Object.entries(mapper).map(([k,v]) => {
         // console.log(`item:${k}, ${v}`);
         return {
-          acceptableTypes: ['string'],
+          acceptableTypes: tag === 'header' ? ['string'] : getValueType(v),
           keyName: v,
-          required: true
+          required: true,
+          // finalType has to be added
+          // format has to be added
         };
     });
     console.log(`rule=${JSON.stringify(createdRule, null, 2)}`);
@@ -462,11 +464,24 @@ const App = () => {
     setSelectedRows(selRows);
   }
 
-  const handleCreateRule = useCallback((type, selRows) => {
-    console.log(`handleCreateRule: type=${type} selRows=`, selRows.map(row => row.original));
-    if (type === 'header') {
-      setRuleType('header');
-      setRuleSampleRows(selRows.map(row => row.original));
+  const handleCreateRule = useCallback((tag, selRows) => {
+    console.log(`handleCreateRule: tag=${tag} selRows=`, selRows.map(row => row.original));
+    switch (tag) {
+      case 'header':
+        setRuleType(tag);
+        setRuleTag(tag);
+        setRuleSampleRows(selRows.map(row => row.original));
+        break;
+
+      case 'debit':
+      case 'credit':
+        setRuleType('data');
+        setRuleTag(tag)
+        setRuleSampleRows(selRows.map(row => row.original));
+        break;
+
+      default:
+        console.log(`handleCreateRule: tag:${tag} is not supported`)
     }
   }, []);
 
