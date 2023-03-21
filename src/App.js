@@ -431,7 +431,7 @@ const App = () => {
     setHighlighterDetected(value);
   }
 
-  const handleCreatorEvent = (event, mapper) => {
+  const handleCreatorEvent = (event, {tag, mapper}) => {
     console.log(`event:${JSON.stringify(event)} mapper:${JSON.stringify(mapper, null, 2)}`);
     const createdRule = Object.entries(mapper).map(([k,v]) => {
         // console.log(`item:${k}, ${v}`);
@@ -445,7 +445,7 @@ const App = () => {
 
     const sigObj = {
       signature: {
-        'header': createdRule
+        [tag]: createdRule
       },
       name: 'Axis',
       dateRange:{},

@@ -74,7 +74,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
         if (allMandatoryKeysMapped) {
           if (onEvent) {
             // [tag ? tag : type]
-            onEvent({name:'complete'}, {...bufferRef.current.mapper});
+            onEvent({name:'complete'}, {
+              tag: 'header',
+              mapper: {...bufferRef.current.mapper}
+            });
           }
         }
       }
