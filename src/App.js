@@ -74,7 +74,9 @@ const App = () => {
   const [highlighterApplied, setHighlighterApplied] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 
+  // Currently we have two rule types: 'header', 'data'
   const [ruleType, setRuleType] = useState(undefined);
+  // Tag signifies type of data like 'debit', 'credit'. There is no limitation on number of tags
   const [ruleTag, setRuleTag] = useState({});
   const [ruleSampleRows, setRuleSampleRows] = useState([]);
 
@@ -431,7 +433,7 @@ const App = () => {
 
   const handleCreatorEvent = (event, mapper) => {
     console.log(`event:${JSON.stringify(event)} mapper:${JSON.stringify(mapper, null, 2)}`);
-    const detectedSignature = Object.entries(mapper).map(([k,v]) => {
+    const createdRule = Object.entries(mapper).map(([k,v]) => {
         // console.log(`item:${k}, ${v}`);
         return {
           acceptableTypes: ['string'],
@@ -439,11 +441,11 @@ const App = () => {
           required: true
         };
     });
-    console.log(`detector=${JSON.stringify(detectedSignature, null, 2)}`);
+    console.log(`rule=${JSON.stringify(createdRule, null, 2)}`);
 
     const sigObj = {
       signature: {
-        'header': detectedSignature
+        'header': createdRule
       },
       name: 'Axis',
       dateRange:{},
@@ -463,6 +465,7 @@ const App = () => {
   const handleCreateRule = useCallback((type, selRows) => {
     console.log(`handleCreateRule: type=${type} selRows=`, selRows.map(row => row.original));
     if (type === 'header') {
+      setRuleType('header');
       setRuleSampleRows(selRows.map(row => row.original));
     }
   }, []);
@@ -543,6 +546,8 @@ const App = () => {
                     {
                       (ruleSampleRows && ruleSampleRows.length > 0) &&
                       <RuleCreator
+                          type={ruleType}
+                          tag={ruleTag}
                           rows={ruleSampleRows}
                           schema={bankStatementSchema}
                           onEvent={handleCreatorEvent}

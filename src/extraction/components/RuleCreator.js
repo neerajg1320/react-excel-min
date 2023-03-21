@@ -3,7 +3,7 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import Select from "react-select";
 import {listToOptions} from "../../utils/options";
 
-export const RuleCreator = ({rows, schema, onEvent}) => {
+export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
   console.log(`HeaderCreator:rendered rows=`, rows);
 
   useEffect(() => {
@@ -73,6 +73,7 @@ export const RuleCreator = ({rows, schema, onEvent}) => {
 
         if (allMandatoryKeysMapped) {
           if (onEvent) {
+            // [tag ? tag : type]
             onEvent({name:'complete'}, {...bufferRef.current.mapper});
           }
         }
