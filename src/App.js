@@ -73,6 +73,7 @@ const App = () => {
   const [selectedHeader, setSelectedHeader] = useState(undefined);
   const [createHeaderExpanded, setCreateHeaderExpanded] = useState(false);
   const [highlighterApplied, setHighlighterApplied] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // The App keeps a copy of data
   const [rows, setRows] = useState([]);
@@ -185,6 +186,7 @@ const App = () => {
           // Mark as Debit
           // Mark as Credit
           // Mark as <Custom>
+          // Can we make event handler for selected rows change
           if (detectionBufferRef.current.headerProbables.length === 1) {
             setSelectedHeader(detectionBufferRef.current.headerProbables[0])
           }
@@ -450,6 +452,16 @@ const App = () => {
     });
   }
 
+  const handleSelectionChange = (selRows) => {
+    // console.log(`handleSelectionChange: selRows=`, selRows);
+    setSelectedRows(selRows);
+  }
+
+  const handleCreateRule = useCallback((type, selRows) => {
+    console.log(`handleCreateRule: type=${type} selRows=`, selRows.map(row => row.original));
+  }, []);
+
+
   return (
       <TallyWrapper
             data={transactionsData}
@@ -471,27 +483,19 @@ const App = () => {
                 element={
                   <>
                     <div style={{
-                      display: "flex", flexDirection: "row", alignItems: "center", gap: "20px"
+                      display: "flex", flexDirection: "column", alignItems: "center", gap: "20px"
                     }}>
-                      <Button className="btn-outline-info" onClick={handleShowData}>
-                        Show Data
-                      </Button>
-                      <Button className="btn-outline-info" onClick={handleClearData}>
-                        Clear Data
-                      </Button>
-                      <ExpandableButton
-                          title="Create Header"
-                          expanded={createHeaderExpanded}
-                          onChange={setCreateHeaderExpanded}
-                          popupPosition={{right: "0px", top: "35px"}}
-                      >
-                        <div>
-                          <p>Fill this in</p>
-                        </div>
-                      </ExpandableButton>
-
-                      <span>Highlighter Detected</span>
-                      <Switch checked={highlighterDetected} onChange={handleToggleHighlighterDetected} />
+                      <div style={{
+                        width: "100%",
+                        display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"20px"
+                      }}>
+                        <Button className="btn-outline-info" onClick={handleShowData}>
+                          Show Data
+                        </Button>
+                        <Button className="btn-outline-info" onClick={handleClearData}>
+                          Clear Data
+                        </Button>
+                      </div>
                     </div>
 
                     {
@@ -502,7 +506,31 @@ const App = () => {
                           stylerRules={headerDetectionRules}
                           onRulesEvent={handleDetectionRulesEvent}
                           ref={rawTableRef}
+                          onSelectionChange={handleSelectionChange}
                       />
+                      <div style={{
+                        width: "100%",
+                        display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"20px"
+                      }}>
+                        <div style={{
+                          display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"5px"
+                        }}>
+                          <Button className="btn-outline-info" onClick={() => handleCreateRule('header', selectedRows)} disabled={selectedRows.length < 1}>
+                            Mark Header
+                          </Button>
+                          <Button className="btn-outline-info" onClick={() => handleCreateRule('debit', selectedRows)} disabled={selectedRows.length < 1}>
+                            Mark Debit
+                          </Button>
+                          <Button className="btn-outline-info" onClick={() => handleCreateRule('credit', selectedRows)} disabled={selectedRows.length < 1}>
+                            Mark Credit
+                          </Button>
+                        </div>
+
+                        <span>Highlighter Detected</span>
+                        <Switch checked={highlighterDetected} onChange={handleToggleHighlighterDetected} />
+                      </div>
+                      <div style={{marginBottom:"50px"}}>
+                      </div>
                       </>
                     }
 
