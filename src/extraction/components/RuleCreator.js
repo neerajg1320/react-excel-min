@@ -3,13 +3,25 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import Select from "react-select";
 import {listToOptions} from "../../utils/options";
 
-export const RuleCreator = ({row, schema, onEvent}) => {
-  console.log(`HeaderCreator:rendered row=${JSON.stringify(row)}`);
+export const RuleCreator = ({rows, schema, onEvent}) => {
+  console.log(`HeaderCreator:rendered rows=`, rows);
+
+  useEffect(() => {
+    console.log(`HeaderCreator:mounted`);
+
+    return () => {
+      console.log(`HeaderCreator:destroyed`);
+    }
+  }, []);
+
+  const row = useMemo(() => {
+    // Here we need to make a composite row
+    return rows[0];
+  }, [rows]);
+
   const requiredKeys = useMemo(() => {
     return schema.filter(elm => elm.required).map(elm => elm.keyName);
   }, [schema]);
-
-  // console.log(`requiredKeys=${requiredKeys}`);
 
   const bufferRef = useRef({
     mapper: {
@@ -23,13 +35,7 @@ export const RuleCreator = ({row, schema, onEvent}) => {
   });
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
-  useEffect(() => {
-    console.log(`HeaderCreator:mounted`);
 
-    return () => {
-      console.log(`HeaderCreator:destroyed`);
-    }
-  }, [])
 
   const HeaderElement = ({hdrName, choices, initialValue}) => {
     const [value, setValue] = useState(initialValue);

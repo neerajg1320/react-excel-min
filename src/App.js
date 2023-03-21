@@ -19,7 +19,6 @@ import {isString} from "./utils/types";
 import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 import Switch from "react-switch";
-import ExpandableButton from "./components/expandableButton/ExpandableButton";
 import {RuleCreator} from "./extraction/components/RuleCreator";
 
 // The groups are kept here so that the state can be preserved across Category component render
@@ -74,6 +73,10 @@ const App = () => {
   const [createHeaderExpanded, setCreateHeaderExpanded] = useState(false);
   const [highlighterApplied, setHighlighterApplied] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
+
+  const [ruleType, setRuleType] = useState(undefined);
+  const [ruleTag, setRuleTag] = useState({});
+  const [ruleSampleRows, setRuleSampleRows] = useState([]);
 
   // The App keeps a copy of data
   const [rows, setRows] = useState([]);
@@ -187,9 +190,9 @@ const App = () => {
           // Mark as Credit
           // Mark as <Custom>
           // Can we make event handler for selected rows change
-          if (detectionBufferRef.current.headerProbables.length === 1) {
-            setSelectedHeader(detectionBufferRef.current.headerProbables[0])
-          }
+          // if (detectionBufferRef.current.headerProbables.length === 1) {
+          //   setSelectedHeader(detectionBufferRef.current.headerProbables[0])
+          // }
         }
         break;
 
@@ -459,6 +462,9 @@ const App = () => {
 
   const handleCreateRule = useCallback((type, selRows) => {
     console.log(`handleCreateRule: type=${type} selRows=`, selRows.map(row => row.original));
+    if (type === 'header') {
+      setRuleSampleRows(selRows.map(row => row.original));
+    }
   }, []);
 
 
@@ -535,9 +541,9 @@ const App = () => {
                     }
 
                     {
-                      selectedHeader &&
+                      (ruleSampleRows && ruleSampleRows.length > 0) &&
                       <RuleCreator
-                          row={selectedHeader}
+                          rows={ruleSampleRows}
                           schema={bankStatementSchema}
                           onEvent={handleCreatorEvent}
                       />
