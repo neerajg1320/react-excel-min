@@ -3,7 +3,7 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import Select from "react-select";
 import {listToOptions} from "../../utils/options";
 
-export const HeaderCreator = ({row, schema, onEvent}) => {
+export const RuleCreator = ({row, schema, onEvent}) => {
   console.log(`HeaderCreator:rendered row=${JSON.stringify(row)}`);
   const requiredKeys = useMemo(() => {
     return schema.filter(elm => elm.required).map(elm => elm.keyName);

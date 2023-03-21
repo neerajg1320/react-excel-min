@@ -20,7 +20,7 @@ import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 import Switch from "react-switch";
 import ExpandableButton from "./components/expandableButton/ExpandableButton";
-import {HeaderCreator} from "./extraction/components/HeaderCreator";
+import {RuleCreator} from "./extraction/components/RuleCreator";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -509,20 +509,20 @@ const App = () => {
                           onSelectionChange={handleSelectionChange}
                       />
                       <div style={{
-                        width: "100%",
-                        display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"20px"
+                        width: "100%", margin: "20px 0 10px 0",
+                        display: "flex", flexDirection: "row", justifyContent:"center", gap:"20px"
                       }}>
                         <div style={{
-                          display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"5px"
+                          display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"10px"
                         }}>
                           <Button className="btn-outline-info" onClick={() => handleCreateRule('header', selectedRows)} disabled={selectedRows.length < 1}>
-                            Mark Header
+                            Create Header
                           </Button>
                           <Button className="btn-outline-info" onClick={() => handleCreateRule('debit', selectedRows)} disabled={selectedRows.length < 1}>
-                            Mark Debit
+                            Create Debit
                           </Button>
                           <Button className="btn-outline-info" onClick={() => handleCreateRule('credit', selectedRows)} disabled={selectedRows.length < 1}>
-                            Mark Credit
+                            Create Credit
                           </Button>
                         </div>
 
@@ -536,7 +536,7 @@ const App = () => {
 
                     {
                       selectedHeader &&
-                      <HeaderCreator
+                      <RuleCreator
                           row={selectedHeader}
                           schema={bankStatementSchema}
                           onEvent={handleCreatorEvent}
