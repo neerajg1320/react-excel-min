@@ -40,22 +40,25 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
 
   const bufferRef = useRef({
     mapper: {
-      // "SRL NO": "serialNum",
-      // "Tran Date": "valueDate",
-      // "CHQNO": "reference",
-      // "PARTICULARS": "description",
-      // "DR": "debit",
-      // "CR": "credit"
+      "SRL NO": "serialNum",
+      "Tran Date": "valueDate",
+      "CHQNO": "reference",
+      "PARTICULARS": "description",
+      "DR": "debit",
+      "CR": "credit"
     }
   });
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
-  const handleSaveMapperClick = () => {
+  const handleSaveMapperClick = (type, tag) => {
+    console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
+
     if (onEvent) {
       onEvent(
           {name:'complete'},
           {
             tag,
+            // When we want to use data from multiple rows we will use reduce
             rule: row.map((elm) => {
               const keyName = bufferRef.current.mapper[elm] !== undefined ? bufferRef.current.mapper[elm] : 'none';
 
@@ -233,7 +236,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
             <p style={{backgroundColor:'rgba(0, 255, 0, 0.2)'}}>Mapper Complete</p> :
             <p style={{backgroundColor:'rgba(255, 0, 0, 0.2)'}}>Mapper Incomplete</p>
       }
-      <Button onClick={handleSaveMapperClick} disabled={!mapperSufficient}>
+      <Button onClick={() => handleSaveMapperClick(type, tag)} disabled={!mapperSufficient}>
         Save Mapper
       </Button>
       <p>Header Creator Kept for display correction</p>
