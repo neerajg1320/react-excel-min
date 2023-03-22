@@ -69,10 +69,9 @@ const App = () => {
 
   //
   const [highlighterDetected, setHighlighterDetected] = useState(false);
-  const [selectedHeader, setSelectedHeader] = useState(undefined);
-  const [createHeaderExpanded, setCreateHeaderExpanded] = useState(false);
   const [highlighterApplied, setHighlighterApplied] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [headerRule, setHeaderRule] = useState(undefined);
 
   // Currently we have two rule types: 'header', 'data'
   const [ruleType, setRuleType] = useState(undefined);
@@ -434,6 +433,10 @@ const App = () => {
   const handleRuleCreatorEvent = (event, {tag, rule}) => {
     console.log(`handleRuleCreatorEvent:${JSON.stringify(event)} rule:${JSON.stringify(rule, null, 2)}`);
 
+    if (tag === 'header') {
+      setHeaderRule(rule);
+    }
+
     const sigObj = {
       signature: {
         [tag]: rule
@@ -528,13 +531,25 @@ const App = () => {
                         <div style={{
                           display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"10px"
                         }}>
-                          <Button className="btn-outline-info" onClick={() => handleCreateRule('header', selectedRows)} disabled={selectedRows.length < 1}>
+                          <Button
+                              className="btn-outline-info"
+                              onClick={() => handleCreateRule('header', selectedRows)}
+                              disabled={!(headerRule === undefined && selectedRows.length > 0)}
+                          >
                             Create Header
                           </Button>
-                          <Button className="btn-outline-info" onClick={() => handleCreateRule('debit', selectedRows)} disabled={selectedRows.length < 1}>
+                          <Button
+                              className="btn-outline-info"
+                              onClick={() => handleCreateRule('debit', selectedRows)}
+                              disabled={!(headerRule !== undefined && selectedRows.length > 0)}
+                          >
                             Create Debit
                           </Button>
-                          <Button className="btn-outline-info" onClick={() => handleCreateRule('credit', selectedRows)} disabled={selectedRows.length < 1}>
+                          <Button
+                              className="btn-outline-info"
+                              onClick={() => handleCreateRule('credit', selectedRows)}
+                              disabled={!(headerRule !== undefined && selectedRows.length > 0)}
+                          >
                             Create Credit
                           </Button>
                         </div>
@@ -553,6 +568,7 @@ const App = () => {
                           type={ruleType}
                           tag={ruleTag}
                           rows={ruleSampleRows}
+                          headerRule={headerRule}
                           schema={bankStatementSchema}
                           onEvent={handleRuleCreatorEvent}
                       />

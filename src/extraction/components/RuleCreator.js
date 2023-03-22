@@ -10,7 +10,8 @@ import Button from "react-bootstrap/Button";
 // The RuleCreator is first called to create HeaderElement
 // Then it is called to create RowElements. So the RowElements can make use of a filtered Schema
 // We will pass a schemaMap which carries the info of which index maps to which row
-export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
+// The headerRule is required. It will be passed to type=data rows
+export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
   console.log(`HeaderCreator:rendered rows=`, rows);
 
   useEffect(() => {
@@ -39,13 +40,15 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
   }, [schema]);
 
   const bufferRef = useRef({
-    mapper: {
+    headerMapper: {
       "SRL NO": "serialNum",
       "Tran Date": "valueDate",
       "CHQNO": "reference",
       "PARTICULARS": "description",
       "DR": "debit",
       "CR": "credit"
+    },
+    rowMapper: {
     }
   });
   const [mapperSufficient, setMapperSufficient] = useState(false);
@@ -60,7 +63,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
             tag,
             // When we want to use data from multiple rows we will use reduce
             rule: row.map((elm) => {
-              const keyName = bufferRef.current.mapper[elm] !== undefined ? bufferRef.current.mapper[elm] : 'none';
+              const keyName = bufferRef.current.headerMapper[elm] !== undefined ? bufferRef.current.headerMapper[elm] : 'none';
 
               return {
                 // acceptableTypes: tag === 'header' ? ['string'] : getValueType(v),
@@ -90,18 +93,18 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
       }
 
       if (option.value === "") {
-        delete bufferRef.current.mapper[elmValue];
+        delete bufferRef.current.headerMapper[elmValue];
       } else {
-        bufferRef.current.mapper[elmValue] = option.value;
+        bufferRef.current.headerMapper[elmValue] = option.value;
       }
 
       setValue(option.value);
 
       // This part can be taken out by using a callback
-      const schemaKeys = Object.keys(bufferRef.current.mapper).map((k) => bufferRef.current.mapper[k]);
+      const schemaKeys = Object.keys(bufferRef.current.headerMapper).map((k) => bufferRef.current.headerMapper[k]);
 
       if (debug) {
-        console.log(`mapper:${JSON.stringify(bufferRef.current.mapper, null, 2)}`);
+        console.log(`mapper:${JSON.stringify(bufferRef.current.headerMapper, null, 2)}`);
         console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
         console.log(`requiredKeys=${requiredKeys}`);
       }
@@ -146,18 +149,18 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
       }
 
       if (option.value === "") {
-        delete bufferRef.current.mapper[elmValue];
+        delete bufferRef.current.headerMapper[elmValue];
       } else {
-        bufferRef.current.mapper[elmValue] = option.value;
+        bufferRef.current.headerMapper[elmValue] = option.value;
       }
 
       setTypeValue(option.value);
 
       // This part can be taken out by using a callback
-      const schemaKeys = Object.keys(bufferRef.current.mapper);
+      const schemaKeys = Object.keys(bufferRef.current.headerMapper);
 
       if (debug) {
-        console.log(`mapper:${JSON.stringify(bufferRef.current.mapper, null, 2)}`);
+        console.log(`mapper:${JSON.stringify(bufferRef.current.headerMapper, null, 2)}`);
         console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
         console.log(`requiredKeys=${requiredKeys}`);
       }
@@ -170,8 +173,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
           // if (onEvent) {
           //   onEvent({name:'complete'}, {
           //     tag,
-          //     mapper: Object.fromEntries(row.map((elm) => {
-          //       const keyName = bufferRef.current.mapper[elm] !== undefined ? bufferRef.current.mapper[elm] : 'notfound';
+          //     headerMapper: Object.fromEntries(row.map((elm) => {
+          //       const keyName = bufferRef.current.headerMapper[elm] !== undefined ? bufferRef.current.headerMapper[elm] : 'notfound';
           //       return [elm,  keyName]
           //     }))
           //   });
@@ -205,11 +208,16 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
       display: "flex", flexDirection:"column", gap: "10px",
       textAlign: "center"
     }}>
-      {/*<pre>{JSON.stringify(row, null, 2)}</pre>*/}
       {(row && row.length > 0) &&
         row.map((elm, elmIdx) => {
+          // We need headerRule here
           const hdrValue = schema[elmIdx].keyName;
-          bufferRef.current.mapper[hdrValue] = elm;
+
+          if (type === 'header') {
+            bufferRef.current.headerMapper[hdrValue] = elm;
+          } else {
+            bufferRef.current.rowMapper[hdrValue] = elm;
+          }
 
           return  (
               <Fragment key={elmIdx}>
@@ -217,7 +225,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
                 <HeaderElement
                     elmValue={elm}
                     keyNameChoices={[...schema.map(item => item.keyName), 'none']}
-                    keyNameInitialValue={bufferRef.current.mapper[elm] || 'none'}
+                    keyNameInitialValue={bufferRef.current.headerMapper[elm] || 'none'}
                 />
                 :
                 <RowElement

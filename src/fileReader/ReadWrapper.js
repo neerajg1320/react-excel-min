@@ -26,10 +26,10 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
   const [interpretValues, setInterpretValues] = useState(true);
   const [showMappers, setShowMappers] = useState(false);
 
-  // Comment: The mapper based logic is not right. But we can use the key renaming logic
+  // Comment: The headerMapper based logic is not right. But we can use the key renaming logic
   const mappers = useMemo(() => {
     const mappers = []
-    // TBD: Put default mapper attributes
+    // TBD: Put default headerMapper attributes
     mappers.push({name: hdfc.bankName, matchThreshold: 7, headerKeynameMap: hdfc.headerKeynameMap});
     mappers.push({name: kotak.bankName, matchThreshold: 9, headerKeynameMap: kotak.headerKeynameMap});
     mappers.push({name: kotak2.bankName, matchThreshold: 9, headerKeynameMap: kotak2.headerKeynameMap});
@@ -94,11 +94,11 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
   // The input data is an object of the form {..., excelHeader: value, ...}
   // The normalized data is an object of the form {..., keyName: value, ...}
   const dataNormalizeUsingMapper = useCallback((data) => {
-    // First we match a mapper from the mapper array
+    // First we match a headerMapper from the headerMapper array
 
     const [matchedMapper, exactMapper] = getMatchedMapper(Object.keys(data[0]));
 
-    // Then we use the mapper to create data
+    // Then we use the headerMapper to create data
     if (matchedMapper) {
       const {name, headerKeynameMap} = matchedMapper;
       console.log(`dataNormalizeUsingMapper: Match Found: name=${name} keysMatched=${headerKeynameMap.length}`);

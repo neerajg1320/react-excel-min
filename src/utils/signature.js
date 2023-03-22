@@ -30,7 +30,7 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSignature, signature, row, rIdx, sigTag) => {
   const debugMismatch = true;
-  const debugRowIdx = [7];
+  const debugRowIdx = [];
   const debugColIdx = []
 
   if (debugRowIdx.includes(rIdx)) {
