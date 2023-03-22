@@ -59,12 +59,12 @@ const App = () => {
     //   dateRange:{},
     //   schema: bankStatementSchema,
     // },
-    {
-      signature: axisSignature,
-      name: 'Axis',
-      dateRange:{},
-      schema: bankStatementSchema,
-    }
+    // {
+    //   signature: axisSignature,
+    //   name: 'Axis',
+    //   dateRange:{},
+    //   schema: bankStatementSchema,
+    // }
   ]);
 
   //
