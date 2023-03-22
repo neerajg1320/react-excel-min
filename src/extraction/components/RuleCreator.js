@@ -196,9 +196,19 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
         row.map((elm, elmIdx) => {
 
           let hdrValue;
+          const typeIntialValue = getValueType(elm);
+
           if (type === 'data') {
             hdrValue = headerRule ? headerRule[elmIdx].keyName : `notfound[$elmIdx]`;
-            bufferRef.current.rowMapper[hdrValue] = elm;
+            bufferRef.current.rowMapper[hdrValue] = {
+              types: [typeIntialValue],
+              samples: [
+                {
+                  type: typeIntialValue,
+                  value: elm
+                }
+              ]
+            };
           }
 
           return  (
@@ -215,7 +225,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
                     elmIndex={elmIdx}
                     hdrValue={hdrValue}
                     typeChoices={typeChoices}
-                    typeInitialValue={getValueType(elm)}
+                    typeInitialValue={typeIntialValue}
                 />
               }
               </Fragment>
