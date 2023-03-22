@@ -56,10 +56,18 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
           {name:'complete'},
           {
             tag,
-            mapper: Object.fromEntries(row.map((elm) => {
+            rule: row.map((elm) => {
               const keyName = bufferRef.current.mapper[elm] !== undefined ? bufferRef.current.mapper[elm] : 'none';
-              return [elm,  keyName]
-            }))
+
+              return {
+                // acceptableTypes: tag === 'header' ? ['string'] : getValueType(v),
+                acceptableTypes: ['string'],
+                keyName,
+                required: true,
+                // finalType has to be added
+                // format has to be added
+              };
+            })
       });
     }
   }

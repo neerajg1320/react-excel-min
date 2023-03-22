@@ -431,23 +431,12 @@ const App = () => {
     setHighlighterDetected(value);
   }
 
-  const handleCreatorEvent = (event, {tag, mapper}) => {
-    console.log(`event:${JSON.stringify(event)} mapper:${JSON.stringify(mapper, null, 2)}`);
-    const createdRule = Object.entries(mapper).map(([k,v]) => {
-        // console.log(`item:${k}, ${v}`);
-        return {
-          acceptableTypes: tag === 'header' ? ['string'] : getValueType(v),
-          keyName: v,
-          required: true,
-          // finalType has to be added
-          // format has to be added
-        };
-    });
-    console.log(`rule=${JSON.stringify(createdRule, null, 2)}`);
+  const handleRuleCreatorEvent = (event, {tag, rule}) => {
+    console.log(`handleRuleCreatorEvent:${JSON.stringify(event)} rule:${JSON.stringify(rule, null, 2)}`);
 
     const sigObj = {
       signature: {
-        [tag]: createdRule
+        [tag]: rule
       },
       name: 'Axis',
       dateRange:{},
@@ -565,7 +554,7 @@ const App = () => {
                           tag={ruleTag}
                           rows={ruleSampleRows}
                           schema={bankStatementSchema}
-                          onEvent={handleCreatorEvent}
+                          onEvent={handleRuleCreatorEvent}
                       />
                     }
 
