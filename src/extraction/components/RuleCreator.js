@@ -56,26 +56,42 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
   const handleSaveMapperClick = (type, tag) => {
     console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
 
-    if (onEvent) {
-      onEvent(
-          {name:'complete'},
-          {
-            tag,
-            // When we want to use data from multiple rows we will use reduce
-            rule: row.map((elm) => {
-              const keyName = bufferRef.current.headerMapper[elm] !== undefined ? bufferRef.current.headerMapper[elm] : 'none';
-
-              return {
-                // acceptableTypes: tag === 'header' ? ['string'] : getValueType(v),
-                acceptableTypes: ['string'],
-                keyName,
-                required: true,
-                // finalType has to be added
-                // format has to be added
-              };
-            })
+    const eventObj = {
+      tag
+    };
+    if (tag === 'header') {
+      eventObj['rule'] = row.map((elm) => {
+        const keyName = bufferRef.current.headerMapper[elm] !== undefined ? bufferRef.current.headerMapper[elm] : 'none';
+        return {
+          acceptableTypes: ['string'],
+          keyName,
+          required: true,
+        };
       });
+
+      if (onEvent) {
+        onEvent({name:'complete'}, eventObj);
+      }
+    } else {
+      eventObj['rule'] = row.map((elm, elmIdx) => {
+        const keyName = headerRule[elmIdx].keyName;
+
+        return {
+          acceptableTypes: [getValueType(elm)],
+          keyName,
+          required: true,
+          // finalType has to be added
+          // format has to be added
+        };
+      });
+
+      // We need to add the onEvent call
+      if (onEvent) {
+        onEvent({name:'complete'}, eventObj);
+      }
     }
+
+
   }
 
   // Header Element
@@ -156,7 +172,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
 
       if (debug) {
-        console.log(`mapper:${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
+        // console.log(`mapper:${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
         console.log(`mappedKeys:${JSON.stringify(mappedKeys, null, 2)}`);
         console.log(`requiredKeys=${requiredKeys}`);
       }

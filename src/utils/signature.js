@@ -29,6 +29,9 @@ export const getRowSignature = (row, rowIdx, numProps) => {
 
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSignature, signature, row, rIdx, sigTag) => {
+  if (!acceptableSignature) {
+    throw `acceptableSignature:${JSON.stringify(acceptableSignature, null, 2)} is not valid`;
+  }
   const debugMismatch = true;
   const debugRowIdx = [];
   const debugColIdx = []

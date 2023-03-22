@@ -71,7 +71,10 @@ const App = () => {
   const [highlighterDetected, setHighlighterDetected] = useState(false);
   const [highlighterApplied, setHighlighterApplied] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
+
   const [headerRule, setHeaderRule] = useState(undefined);
+  const [signatureName, setSignatureName] = useState(undefined);
+  const [signature, setSignature] = useState({});
 
   // Currently we have two rule types: 'header', 'data'
   const [ruleType, setRuleType] = useState(undefined);
@@ -108,6 +111,7 @@ const App = () => {
 
   const detectHighlighter = useCallback((data, signatures) => {
     // console.log(`data:${JSON.stringify(data)}`);
+    console.log(`detectHighlighter:`, signatures);
 
     data.map((row, rIdx) => {
       if (signatures) {
@@ -115,6 +119,12 @@ const App = () => {
 
         for (let i=0; i < signatures.length; i++) {
           const signatureInfo = signatures[i];
+
+          // Don't apply a signature if it doesn't have a header
+          if (!signatureInfo['signature'] || !signatureInfo['signature']['header']) {
+            continue;
+          }
+
           const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx, 'header');
           if (bankMatch) {
             console.log(`Signature Matched: bank:${signatureInfo.name}`);
@@ -258,7 +268,7 @@ const App = () => {
               }
 
               if (!result) {
-                if (transactionsBufferRef.current.debitSignature) {
+                if (transactionsBufferRef.current.creditSignature) {
                   result = isSignatureMatch(transactionsBufferRef.current.creditSignature, rSig, row, rIdx, 'credit');
                   if (result) {
                     tag = 'credit';
@@ -431,25 +441,50 @@ const App = () => {
   }
 
   const handleRuleCreatorEvent = (event, {tag, rule}) => {
-    console.log(`handleRuleCreatorEvent:${JSON.stringify(event)} rule:${JSON.stringify(rule, null, 2)}`);
+    console.log(`handleRuleCreatorEvent:${JSON.stringify(event)} tag:${tag} rule:${JSON.stringify(rule, null, 2)}`);
+
 
     if (tag === 'header') {
       setHeaderRule(rule);
-    }
+      setSignatureName('Axis')
 
-    const sigObj = {
-      signature: {
-        [tag]: rule
-      },
-      name: 'Axis',
-      dateRange:{},
-      schema: bankStatementSchema,
-    };
+      const sigObj = {
+        signature: {
+          [tag]: rule
+        },
+        name: 'Axis',
+        dateRange:{},
+        schema: bankStatementSchema,
+      };
+
+      setSignature(sigObj);
+
+      setSignatureList((prev) => {
+        return [...prev, sigObj]
+      });
+    } else {
+      console.log(`handleRuleCreatorEvent: signature=${JSON.stringify(signature, null, 2)}`);
+      setSignature((prevSignature) => {
+        return {
+          ...prevSignature,
+          signature: {
+            ...prevSignature.signature,
+            [tag]: rule
+          }
+        }
+      });
+    }
+  }
+
+  useEffect(() => {
+    console.log(`useEffect[signature]: signature=`, signature);
 
     setSignatureList((prev) => {
-      return [...prev, sigObj]
+      // return [...prev, sigObj]
+      // Temporarily a single member list
+      return [signature];
     });
-  }
+  }, [signature]);
 
   const handleSelectionChange = (selRows) => {
     // console.log(`handleSelectionChange: selRows=`, selRows);
