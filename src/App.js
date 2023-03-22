@@ -47,24 +47,24 @@ const App = () => {
   // The App keeps a copy of signatures
   // TBD: We are yet to verify the json created using a rule with the related schema
   const [signatureList, setSignatureList] = useState([
-    {
-      signature: kotakSignature,
-      name: 'Kotak',
-      dateRange:{},
-      schema: bankStatementSchema,
-    },
-    {
-      signature: hdfcSignature,
-      name: 'HDFC',
-      dateRange:{},
-      schema: bankStatementSchema,
-    },
     // {
-    //   signature: axisSignature,
-    //   name: 'Axis',
+    //   signature: kotakSignature,
+    //   name: 'Kotak',
     //   dateRange:{},
     //   schema: bankStatementSchema,
-    // }
+    // },
+    // {
+    //   signature: hdfcSignature,
+    //   name: 'HDFC',
+    //   dateRange:{},
+    //   schema: bankStatementSchema,
+    // },
+    {
+      signature: axisSignature,
+      name: 'Axis',
+      dateRange:{},
+      schema: bankStatementSchema,
+    }
   ]);
 
   //
@@ -116,7 +116,7 @@ const App = () => {
 
         for (let i=0; i < signatures.length; i++) {
           const signatureInfo = signatures[i];
-          const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx);
+          const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx, 'header');
           if (bankMatch) {
             console.log(`Signature Matched: bank:${signatureInfo.name}`);
 
@@ -243,14 +243,14 @@ const App = () => {
 
           // If header is already found. This would work for one table per file
           if (transactionsBufferRef.current.headerFound) {
-            if (isSignatureMatch(transactionsBufferRef.current.headerSignature, rSig, row, rIdx)) {
+            if (isSignatureMatch(transactionsBufferRef.current.headerSignature, rSig, row, rIdx, 'header')) {
               matchRowSignature = transactionsBufferRef.current.headerSignature;
               tag = 'header';
             } else {
               let result;
 
               if (transactionsBufferRef.current.debitSignature) {
-                result = isSignatureMatch(transactionsBufferRef.current.debitSignature, rSig, row, rIdx);
+                result = isSignatureMatch(transactionsBufferRef.current.debitSignature, rSig, row, rIdx, 'debit');
                 if (result) {
                   tag = 'debit';
                   matchRowSignature = transactionsBufferRef.current.debitSignature;
@@ -260,7 +260,7 @@ const App = () => {
 
               if (!result) {
                 if (transactionsBufferRef.current.debitSignature) {
-                  result = isSignatureMatch(transactionsBufferRef.current.creditSignature, rSig, row, rIdx);
+                  result = isSignatureMatch(transactionsBufferRef.current.creditSignature, rSig, row, rIdx, 'credit');
                   if (result) {
                     tag = 'credit';
                     matchRowSignature = transactionsBufferRef.current.creditSignature;

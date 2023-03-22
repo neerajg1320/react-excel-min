@@ -2,7 +2,13 @@ import * as React from "react";
 import {useEffect, useMemo, useRef, useState} from "react";
 import Select from "react-select";
 import {listToOptions} from "../../utils/options";
+import {getAllDateFormats, getAllTypes, getValueType} from "../../utils/types";
 
+// The schema is needed for headers
+// For rows it should be filtered schema i.e. only the rows which are present in the
+// The RuleCreator is first called to create HeaderElement
+// Then it is called to create RowElements. So the RowElements can make use of a filtered Schema
+// We will pass a schemaMap which carries the info of which index maps to which row
 export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
   console.log(`HeaderCreator:rendered rows=`, rows);
 
@@ -12,6 +18,14 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
     return () => {
       console.log(`HeaderCreator:destroyed`);
     }
+  }, []);
+
+  const typeChoices = useMemo(() => {
+    return getAllTypes();
+  }, []);
+
+  const dateFormats = useMemo(() => {
+    return getAllDateFormats();
   }, []);
 
   const row = useMemo(() => {
@@ -75,8 +89,12 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
           if (onEvent) {
             // [tag ? tag : type]
             onEvent({name:'complete'}, {
-              tag: 'header',
-              mapper: {...bufferRef.current.mapper}
+              tag,
+              // mapper: {...bufferRef.current.mapper}
+              mapper: Object.fromEntries(row.map((elm) => {
+                const keyName = bufferRef.current.mapper[elm] !== undefined ? bufferRef.current.mapper[elm] : 'none';
+                return [elm,  keyName]
+              }))
             });
           }
         }
@@ -88,7 +106,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
         width: "100%",
         display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
       }}>
-        <span style={{width:"50%"}}>{elmValue}</span>
+        <span style={{textAlign: "left", width:"50%"}}>{elmValue}</span>
         <span style={{width:"50%"}}>
           <Select
               value={schemaKeyOptions.filter(opt => opt.value === value)}
@@ -101,12 +119,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
   }
 
   // Row Element
-  const RowElement = ({elmValue, keyNameChoices, keyNameInitialValue}) => {
-    const [value, setValue] = useState(keyNameInitialValue);
+  const RowElement = ({elmValue, hdrValue, typeChoices, typeInitialValue}) => {
+    const [typeValue, setTypeValue] = useState(typeInitialValue);
 
-    const schemaKeyOptions = useMemo(() => {
-      return listToOptions(keyNameChoices, "")
-    }, [keyNameChoices]);
+    const typeOptions = useMemo(() => {
+      return listToOptions(typeChoices, "")
+    }, []);
+
     const debug = false;
 
     const handleSelectChange = (option) => {
@@ -120,7 +139,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
         bufferRef.current.mapper[elmValue] = option.value;
       }
 
-      setValue(option.value);
+      setTypeValue(option.value);
 
       // This part can be taken out by using a callback
       const schemaKeys = Object.keys(bufferRef.current.mapper).map((k) => bufferRef.current.mapper[k]);
@@ -139,8 +158,12 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
           if (onEvent) {
             // [tag ? tag : type]
             onEvent({name:'complete'}, {
-              tag: 'header',
-              mapper: {...bufferRef.current.mapper}
+              tag,
+              // mapper: {...bufferRef.current.mapper}
+              mapper: Object.fromEntries(row.map((elm) => {
+                const keyName = bufferRef.current.mapper[elm] !== undefined ? bufferRef.current.mapper[elm] : 'notfound';
+                return [elm,  keyName]
+              }))
             });
           }
         }
@@ -152,11 +175,14 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
           width: "100%",
           display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
         }}>
-          <span style={{width:"50%"}}>{elmValue}</span>
-          <span style={{width:"50%"}}>
+          <span style={{textAlign: "left", width:"30%"}}>{hdrValue}</span>
+          <span style={{textAlign: "left", width:"30%"}}>
+            {['string', 'blank'].includes(typeValue) ? `[${elmValue.length}]'${elmValue}'` : elmValue}
+          </span>
+          <span style={{width:"40%"}}>
           <Select
-              value={schemaKeyOptions.filter(opt => opt.value === value)}
-              options={schemaKeyOptions}
+              value={typeOptions.filter(opt => opt.value === typeValue)}
+              options={typeOptions}
               onChange={handleSelectChange}
           />
         </span>
@@ -169,7 +195,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
       display: "flex", flexDirection:"column", gap: "10px",
       textAlign: "center"
     }}>
-      <pre>{JSON.stringify(row, null, 2)}</pre>
+      {/*<pre>{JSON.stringify(row, null, 2)}</pre>*/}
       {(row && row.length > 0) &&
         row.map((elm, elmIdx) => {
           return (
@@ -177,15 +203,16 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent}) => {
                 <HeaderElement
                     key={elmIdx}
                     elmValue={elm}
-                    keyNameChoices={schema.map(item => item.keyName)}
-                    keyNameInitialValue={bufferRef.current.mapper[elm]}
+                    keyNameChoices={[...schema.map(item => item.keyName), 'none']}
+                    keyNameInitialValue={bufferRef.current.mapper[elm] || 'none'}
                 />
                 :
                 <RowElement
                     key={elmIdx}
                     elmValue={elm}
-                    keyNameChoices={schema.map(item => item.keyName)}
-                    keyNameInitialValue={bufferRef.current.mapper[elm]}
+                    hdrValue={schema[elmIdx].keyName}
+                    typeChoices={typeChoices}
+                    typeInitialValue={getValueType(elm)}
                 />
               )
 

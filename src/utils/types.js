@@ -5,6 +5,7 @@ import {
   isValid as fnsIsValid,
   addHours, addMinutes, addSeconds
 } from "date-fns";
+import isPlainObject from "react-redux/es/utils/isPlainObject";
 
 export const isoDateFormat = "yyyy-MM-dd";
 export const indiaDateFormat = "dd/MM/yyyy";
@@ -28,14 +29,67 @@ export function valToString(val, format) {
   return val ? val.toString() : "";
 }
 
+export function getAllTypes() {
+  return [
+      'undefined',
+      'string',
+      'blank',
+      'number',
+      'date',
+      'object'
+  ];
+}
+
+export function getAllDateFormats() {
+  return [
+    {
+      name: 'ISO9661',
+      format: 'dd-MM-yyyy',
+    },
+    {
+      name: 'Date-India',
+      format: 'dd/MM/yyyy',
+    },
+    {
+      name: 'Date-US',
+      format: 'MM/dd/yyyy',
+    },
+  ];
+}
+
 export function getValueType(value) {
-  let valueType = typeof(value);
-  if (valueType === "object") {
-    if (isDate(value)) {
-      valueType = "date";
-    }
+  if (value === undefined) {
+    return 'undefined';
   }
-  return valueType;
+
+  if (isNaN(value)) {
+    const type = typeof(value);
+
+    if (type === 'object') {
+      if (isDate(value)) {
+        return 'date'
+      }
+
+      return 'object'
+    }
+
+    if (isString(value)) {
+      if (value.trim() === "") {
+        return 'blank';
+      }
+
+      return 'string';
+    }
+
+    return type;
+  }
+
+  // The blank string has to be classified as a string
+  if (typeof(value) === 'string' && value.trim() === "") {
+    return 'blank';
+  }
+
+  return 'number';
 }
 
 // dateFromString:

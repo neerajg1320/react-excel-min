@@ -73,22 +73,19 @@ const axisDebitTxSig = [
     required: true
   },
   {
-    acceptableTypes:['string'],
-    required: true,
-    finalType: "number"
-  },
-  {
-    choices: [' '],
-    acceptableTypes:['string'],
+    acceptableTypes:['number'],
     required: true
   },
   {
-    acceptableTypes:['string'],
-    required: true,
-    finalType: "number"
+    acceptableTypes:['blank'],
+    required: true
   },
   {
-    acceptableTypes:['string'],
+    acceptableTypes:['number'],
+    required: true
+  },
+  {
+    acceptableTypes:['number'],
     required: true
   }
 ];
@@ -113,22 +110,19 @@ const axisCreditTxSig = [
     required: true
   },
   {
-    choices: [' '],
-    acceptableTypes:['string'],
+    acceptableTypes:['blank'],
     required: true
   },
   {
-    acceptableTypes:['string'],
-    required: true,
-    finalType: "number"
+    acceptableTypes:['number'],
+    required: true
   },
   {
-    acceptableTypes:['string'],
-    required: true,
-    finalType: "number"
+    acceptableTypes:['number'],
+    required: true
   },
   {
-    acceptableTypes:['string'],
+    acceptableTypes:['number'],
     required: true
   }
 ];
