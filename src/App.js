@@ -439,8 +439,6 @@ const App = () => {
     clearTransactionsData();
   }
 
-
-
   const handleHighlightingRulesEvent = (event) => {
     if (event.name === 'complete') {
       setTransactionsData(transactionsBufferRef.current.data);
