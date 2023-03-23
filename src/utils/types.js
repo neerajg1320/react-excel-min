@@ -57,7 +57,11 @@ export function getAllDateFormats() {
   ];
 }
 
-export function getValueType(value) {
+export function getValueType(value, formatList, debug=false) {
+  if (debug && isString(value) && value.length === 10) {
+    console.log(`getValueType: value=${value}`);
+  }
+
   if (value === undefined) {
     return 'undefined';
   }
@@ -76,6 +80,26 @@ export function getValueType(value) {
     if (isString(value)) {
       if (value.trim() === "") {
         return 'blank';
+      }
+
+      // Check for formats like date etc
+      if (debug) {
+        console.log(`formatList=${JSON.stringify(formatList)}`);
+      }
+
+      if (formatList) {
+        for (const fmt of formatList) {
+          if (fmt['type'] === 'date') {
+            const finalValue = dateFromString(value, fmt['format']);
+            if (debug) {
+              console.log(`finalValue=${finalValue}`);
+            }
+
+            if (isDate(finalValue)) {
+              return {type: fmt['type'], value: finalValue};
+            }
+          }
+        }
       }
 
       return 'string';

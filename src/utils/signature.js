@@ -7,7 +7,7 @@ import {dateFromString, getValueType, isDate, isString, numberFromString} from "
 //   return typeof(val);
 // }
 
-export const getRowSignature = (row, rowIdx, numProps) => {
+export const getRowSignature = (row, rowIdx, numProps, formatList) => {
   const debugRowIdx = [4, 6, 8];
 
   // if (debugRowIdx.includes(rowIdx)) {
@@ -17,7 +17,11 @@ export const getRowSignature = (row, rowIdx, numProps) => {
   const signatureFullRow = [];
 
   for (let i=0; i < Math.max(row.length, numProps); i++) {
-    signatureFullRow.push(getValueType(row[i]));
+    let valueType = getValueType(row[i], formatList);
+    if(typeof(valueType) === 'object') {
+      valueType = valueType['type'];
+    }
+    signatureFullRow.push(valueType);
   }
 
   if (debugRowIdx.includes(rowIdx)) {

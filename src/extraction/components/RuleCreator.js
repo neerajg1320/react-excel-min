@@ -2,7 +2,7 @@ import * as React from "react";
 import {Fragment, useEffect, useMemo, useRef, useState} from "react";
 import Select from "react-select";
 import {listToOptions} from "../../utils/options";
-import {getAllDateFormats, getAllTypes, getValueType} from "../../utils/types";
+import {getAllDateFormats, getAllTypes, getValueType, isString} from "../../utils/types";
 import Button from "react-bootstrap/Button";
 
 // The schema is needed for headers
@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 // Then it is called to create RowElements. So the RowElements can make use of a filtered Schema
 // We will pass a schemaMap which carries the info of which index maps to which row
 // The headerRule is required. It will be passed to type=data rows
-export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
+export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, formatList}) => {
   console.log(`HeaderCreator:rendered rows=`, rows);
 
   useEffect(() => {
@@ -26,9 +26,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
     return getAllTypes();
   }, []);
 
-  const dateFormats = useMemo(() => {
-    return getAllDateFormats();
-  }, []);
 
   const row = useMemo(() => {
     // Here we need to make a composite row
@@ -75,9 +72,17 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
     } else {
       eventObj['rule'] = row.map((elm, elmIdx) => {
         const keyName = headerRule[elmIdx].keyName;
+        let valueType = getValueType(elm, formatList, isString(elm) && elm.length === 10);
+        if (typeof(valueType) === 'object') {
+          valueType = valueType['type'];
+        }
+
+        if (isString(elm) && elm.length === 10) {
+          console.log(`handleSaveMapperClick: valueType=${valueType}`);
+        }
 
         return {
-          acceptableTypes: [getValueType(elm)],
+          acceptableTypes: [valueType],
           keyName,
           required: true,
           // finalType has to be added
@@ -90,8 +95,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
         onEvent({name:'complete'}, eventObj);
       }
     }
-
-
   }
 
   // Header Element
@@ -150,7 +153,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
   }
 
   // Row Element
-  const RowElement = ({elmValue, elmIndex, hdrValue, typeChoices, typeInitialValue}) => {
+  const RowElement = ({elmValue, hdrValue, typeChoices, typeInitialValue}) => {
     const [typeValue, setTypeValue] = useState(typeInitialValue);
 
     const typeOptions = useMemo(() => {
@@ -212,7 +215,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
         row.map((elm, elmIdx) => {
 
           let hdrValue;
-          const typeIntialValue = getValueType(elm);
+          let typeIntialValue = getValueType(elm, formatList);
+          if (typeof(typeIntialValue) === 'object') {
+            typeIntialValue = typeIntialValue['type'];
+          }
 
           if (type === 'data') {
             hdrValue = headerRule ? headerRule[elmIdx].keyName : `notfound[$elmIdx]`;
@@ -238,7 +244,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule}) => {
                 :
                 <RowElement
                     elmValue={elm}
-                    elmIndex={elmIdx}
                     hdrValue={hdrValue}
                     typeChoices={typeChoices}
                     typeInitialValue={typeIntialValue}

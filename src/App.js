@@ -15,7 +15,7 @@ import {rowStyles} from "./extraction/highlighters/statementHighlight";
 import {detectionStyles} from "./extraction/highlighters/detectionHighlight";
 import {hdfcSignature} from "./extraction/parsers/hdfcSignature";
 import Button from "react-bootstrap/Button";
-import {getValueType, isString} from "./utils/types";
+import {getAllDateFormats, isString} from "./utils/types";
 import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 import Switch from "react-switch";
@@ -43,6 +43,22 @@ const App = () => {
     }
   }, []);
 
+  const dateFormats = useMemo(() => {
+    return getAllDateFormats();
+  }, []);
+
+  const formatList = useMemo(() => {
+    const fmtList = dateFormats.map(fmt => {
+      return {
+        ...fmt,
+        type: 'date'
+      }
+    })
+
+    console.log(`fmtList:${JSON.stringify(fmtList, null, 2)}`);
+
+    return fmtList;
+  }, [dateFormats]);
 
   // The App keeps a copy of signatures
   // TBD: We are yet to verify the json created using a rule with the related schema
@@ -115,7 +131,7 @@ const App = () => {
 
     data.map((row, rIdx) => {
       if (signatures) {
-        const rSig = getRowSignature(row, rIdx, -1);
+        const rSig = getRowSignature(row, rIdx, -1, formatList);
 
         for (let i=0; i < signatures.length; i++) {
           const signatureInfo = signatures[i];
@@ -163,7 +179,7 @@ const App = () => {
       {
         name: 'constructor',
         rule: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1);
+          const rSig = getRowSignature(row, rIdx, -1, formatList);
           const rSigSet = [...new Set(rSig)];
 
           if (debugRowIdx.includes(rIdx)) {
@@ -245,7 +261,7 @@ const App = () => {
       {
         name: 'header',
         rule: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1);
+          const rSig = getRowSignature(row, rIdx, -1, formatList);
           let tag;
           let matchRowSignature;
           let finalRow;
@@ -441,8 +457,7 @@ const App = () => {
   }
 
   const handleRuleCreatorEvent = (event, {tag, rule}) => {
-    console.log(`handleRuleCreatorEvent:${JSON.stringify(event)} tag:${tag} rule:${JSON.stringify(rule, null, 2)}`);
-
+    // console.log(`handleRuleCreatorEvent:${JSON.stringify(event)} tag:${tag} rule:${JSON.stringify(rule, null, 2)}`);
 
     if (tag === 'header') {
       setHeaderRule(rule);
@@ -463,7 +478,7 @@ const App = () => {
         return [...prev, sigObj]
       });
     } else {
-      console.log(`handleRuleCreatorEvent: signature=${JSON.stringify(signature, null, 2)}`);
+      // console.log(`handleRuleCreatorEvent: signature=${JSON.stringify(signature, null, 2)}`);
       setSignature((prevSignature) => {
         return {
           ...prevSignature,
@@ -606,6 +621,7 @@ const App = () => {
                           headerRule={headerRule}
                           schema={bankStatementSchema}
                           onEvent={handleRuleCreatorEvent}
+                          formatList={formatList}
                       />
                     }
 
