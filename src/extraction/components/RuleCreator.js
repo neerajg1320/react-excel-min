@@ -38,12 +38,12 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
   const bufferRef = useRef({
     headerMapper: {
-      "SRL NO": "serialNum",
-      "Tran Date": "valueDate",
-      "CHQNO": "reference",
-      "PARTICULARS": "description",
-      "DR": "debit",
-      "CR": "credit"
+      // "SRL NO": "serialNum",
+      // "Tran Date": "valueDate",
+      // "CHQNO": "reference",
+      // "PARTICULARS": "description",
+      // "DR": "debit",
+      // "CR": "credit"
     },
     rowMapper: {
     }
@@ -191,11 +191,11 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           width: "100%",
           display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
         }}>
-          <span style={{textAlign: "left", width:"30%"}}>{hdrValue}</span>
-          <span style={{textAlign: "left", width:"30%"}}>
+          <span style={{textAlign: "left", width:"25%"}}>{hdrValue}</span>
+          <span style={{textAlign: "left", width:"50%"}}>
             {['string', 'blank'].includes(typeValue) ? `[${elmValue.length}]'${elmValue}'` : elmValue}
           </span>
-          <span style={{width:"40%"}}>
+          <span style={{width:"25%"}}>
           <Select
               value={typeOptions.filter(opt => opt.value === typeValue)}
               options={typeOptions}
