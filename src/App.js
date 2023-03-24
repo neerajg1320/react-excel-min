@@ -171,6 +171,8 @@ const App = () => {
 
 
   // Rules for highlighter detection
+  // This helps in finding the proable rows which are a header
+  // We often skip this one
   const headerDetectionRules = useMemo(() => {
     const debugRowIdx = [3,4];
     const headerMemberThreshold = 5;
@@ -233,6 +235,7 @@ const App = () => {
 
   }
 
+  // These are simple highlighter which are used when the [header, debit, credit] rules are already created
   // Highlight Rows using hardcoded header parsers
   const rowHighlightingRules = useMemo(() => {
     const createRowObj = (headerSig, finalValues, rIdx) => {

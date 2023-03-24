@@ -8,7 +8,7 @@ import {dateFromString, getValueType, isDate, isString, numberFromString} from "
 // }
 
 export const getRowSignature = (row, rowIdx, numProps, formatList) => {
-  const debugRowIdx = [4, 6, 8];
+  const debugRowIdx = [];
 
   // if (debugRowIdx.includes(rowIdx)) {
   //   console.log(`getRowSignature: row:${row}`);
@@ -84,9 +84,6 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx, sigT
         const valueFormat = acceptableSignature[colIdx]['format'];
         finalValue = dateFromString(rowValue, valueFormat);
       }
-      // else if (valueType === 'number') {
-      //   finalValue = numberFromString(rowValue);
-      // }
 
       if (debugRowIdx.includes(rIdx) && debugColIdx.includes(colIdx)) {
         console.log(`isSignatureMatch: rIdx:${rIdx} i:${colIdx} finalValue:[${typeof(finalValue)}]${finalValue}`);
