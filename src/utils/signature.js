@@ -1,23 +1,53 @@
 import {dateFromString, getValueType, isDate, isString, numberFromString} from "./types";
 
-export const getRowSignature = (row, rowIdx, numProps, formatList) => {
-  const debugRowIdx = [3,8];
+export const getRowSignature = (row, rIdx, numProps, formatList) => {
+  const debugRowIdx = [];
 
   const signatureFullRow = [];
 
-  for (let i=0; i < Math.max(row.length, numProps); i++) {
-    const value = row[i];
-    let valueType = getValueType(value, formatList);
-    let finalValue = value;
-    if(typeof(valueType) === 'object') {
-      valueType = valueType['type'];
-      finalValue = valueType['finalValue'];
-    }
-    signatureFullRow.push({finalType: valueType, finalValue});
+  if (debugRowIdx.includes(rIdx)) {
+    console.log(`getRowSignature: row=${JSON.stringify(row)}`);
   }
 
-  if (debugRowIdx.includes(rowIdx)) {
-    console.log(`getRowSignature: rIdx${rowIdx} signatureFullRow:${signatureFullRow}`);
+  for (let colIdx=0; colIdx < Math.max(row.length, numProps); colIdx++) {
+    const value = row[colIdx];
+    let valueType;
+    let finalValue = value;
+
+    if (debugRowIdx.includes(rIdx)) {
+      console.log(`getRowSignature: value=${value} typeof(value)=${typeof(value)}`);
+    }
+
+    let valueInfo = getValueType(value, formatList);
+
+    if (debugRowIdx.includes(rIdx)) {
+      console.log(`after getValue call: value=${value} typeof(value)=${typeof(value)}`);
+    }
+
+    if(typeof(valueInfo) === 'object') {
+      if (debugRowIdx.includes(rIdx)) {
+        console.log(`object identified: valueType=${JSON.stringify(valueInfo)}`);
+      }
+      valueType = valueInfo['type'];
+      finalValue = valueInfo['finalValue'];
+      // finalValue = "checkme";
+    } else {
+      valueType = valueInfo;
+    }
+
+    if (debugRowIdx.includes(rIdx)) {
+      console.log(`getRowSignature: rIdx=${rIdx} colIdx=${colIdx} valueType=${JSON.stringify(valueInfo)} finalValue=${finalValue}`);
+    }
+    const sigElm = {finalType: valueType, finalValue:finalValue};
+    if (debugRowIdx.includes(rIdx)) {
+      console.log(`getRowSignature: sigElm=${JSON.stringify(sigElm)}`);
+    }
+
+    signatureFullRow.push(sigElm);
+  }
+
+  if (debugRowIdx.includes(rIdx)) {
+    console.log(`getRowSignature: rIdx${rIdx} signatureFullRow:${JSON.stringify(signatureFullRow)}`, signatureFullRow);
   }
 
   return signatureFullRow;
@@ -25,18 +55,19 @@ export const getRowSignature = (row, rowIdx, numProps, formatList) => {
 
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSigList, sigList, row, rIdx, sigTag) => {
+  const debugMismatch = true;
+  const debugRowIdx = [6];
+  const debugColIdx = []
+
   const signature = sigList.map(sig => sig['finalType'])
 
   if (!acceptableSigList) {
     throw `isSignatureMatch acceptableSigList:${JSON.stringify(acceptableSigList, null, 2)} is not valid`;
   }
-  const debugMismatch = true;
-  const debugRowIdx = [3,8];
-  const debugColIdx = []
 
   if (debugRowIdx.includes(rIdx)) {
     console.log(`rIdx:${rIdx} acceptableSigList=${JSON.stringify(acceptableSigList.map(item => item['acceptableTypes'][0]))}`);
-    console.log(`rIdx:${rIdx} signature=${signature}`);
+    console.log(`rIdx:${rIdx} sigList=${JSON.stringify(sigList)}`);
   }
 
   let match = true;
@@ -93,15 +124,19 @@ export const isSignatureMatch = (acceptableSigList, sigList, row, rIdx, sigTag) 
 
       finalRow.push(finalValue);
     } else {
-      finalRow.push(rowValue);
+      finalRow.push(sigList[colIdx]['finalValue']);
     }
   }
 
   if (match) {
-    return {
+    const result = {
       match,
       finalRow
-    };
+    }
+    if (debugRowIdx.includes(rIdx)) {
+      console.log(`isSignatureMatch: result=${JSON.stringify(result, null, 2)}`);
+    }
+    return result;
   }
 
   return null;
