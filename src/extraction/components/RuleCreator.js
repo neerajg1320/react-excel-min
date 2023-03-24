@@ -230,10 +230,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
 
       {
-        <pre>{JSON.stringify(row)}</pre>
-      }
-      {
-
           (type !== 'header' && headerRule && headerRule.length > 0) &&
           headerRule.map((elm, elmIdx) => {
 
