@@ -131,7 +131,7 @@ const App = () => {
 
     data.map((row, rIdx) => {
       if (signatures) {
-        const rSig = getRowSignature(row, rIdx, -1, formatList).map(sig => sig['finalType']);
+        const rSig = getRowSignature(row, rIdx, -1, formatList);
 
         for (let i=0; i < signatures.length; i++) {
           const signatureInfo = signatures[i];
@@ -181,7 +181,7 @@ const App = () => {
       {
         name: 'constructor',
         rule: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1, formatList).map(sig => sig['finalType']);
+          const rSig = getRowSignature(row, rIdx, -1, formatList);
           const rSigSet = [...new Set(rSig)];
 
           if (debugRowIdx.includes(rIdx)) {
@@ -264,7 +264,7 @@ const App = () => {
       {
         name: 'header',
         rule: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1, formatList).map(sig => sig['finalType']);
+          const rSig = getRowSignature(row, rIdx, -1, formatList);
           let tag;
           let matchRowSignature;
           let finalRow;

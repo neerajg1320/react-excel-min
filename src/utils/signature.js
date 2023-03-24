@@ -24,36 +24,38 @@ export const getRowSignature = (row, rowIdx, numProps, formatList) => {
 };
 
 // Even though rIdx is not needed we are passing it for debugging purpose
-export const isSignatureMatch = (acceptableSignature, signature, row, rIdx, sigTag) => {
-  if (!acceptableSignature) {
-    throw `acceptableSignature:${JSON.stringify(acceptableSignature, null, 2)} is not valid`;
+export const isSignatureMatch = (acceptableSigList, sigList, row, rIdx, sigTag) => {
+  const signature = sigList.map(sig => sig['finalType'])
+
+  if (!acceptableSigList) {
+    throw `isSignatureMatch acceptableSigList:${JSON.stringify(acceptableSigList, null, 2)} is not valid`;
   }
   const debugMismatch = true;
   const debugRowIdx = [3,8];
   const debugColIdx = []
 
   if (debugRowIdx.includes(rIdx)) {
-    console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature.map(item => item['acceptableTypes'][0]))}`);
+    console.log(`rIdx:${rIdx} acceptableSigList=${JSON.stringify(acceptableSigList.map(item => item['acceptableTypes'][0]))}`);
     console.log(`rIdx:${rIdx} signature=${signature}`);
   }
 
   let match = true;
   const finalRow = [];
 
-  for (let colIdx=0; colIdx < acceptableSignature.length; colIdx++) {
+  for (let colIdx=0; colIdx < acceptableSigList.length; colIdx++) {
     const rowValue = row[colIdx];
 
-    if (!acceptableSignature[colIdx]['acceptableTypes'].includes(signature[colIdx])) {
-      if (acceptableSignature[colIdx]['required']) {
+    if (!acceptableSigList[colIdx]['acceptableTypes'].includes(signature[colIdx])) {
+      if (acceptableSigList[colIdx]['required']) {
         if (debugMismatch && debugRowIdx.includes(rIdx)) {
-          console.log(`Not Found: colIdx:${colIdx} cell=${row[colIdx]} ${signature[colIdx]} not found in ${acceptableSignature[colIdx]['acceptableTypes']}`);
+          console.log(`Not Found: colIdx:${colIdx} cell=${row[colIdx]} ${signature[colIdx]} not found in ${acceptableSigList[colIdx]['acceptableTypes']}`);
         }
         match = false;
         break;
       }
     }
 
-    const choices = acceptableSignature[colIdx]['choices'];
+    const choices = acceptableSigList[colIdx]['choices'];
     if (choices) {
       if (debugRowIdx.includes(rIdx)) {
         console.log(`choices=${choices}`);
@@ -69,11 +71,11 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx, sigT
     }
 
     // Check if the rowValue is convertible to expected type if though it is read as a string
-    const valueType = acceptableSignature[colIdx]['finalType'];
+    const valueType = acceptableSigList[colIdx]['finalType'];
     if (valueType) {
       let finalValue = null;
       if (valueType === 'date') {
-        const valueFormat = acceptableSignature[colIdx]['format'];
+        const valueFormat = acceptableSigList[colIdx]['format'];
         finalValue = dateFromString(rowValue, valueFormat);
       }
 
