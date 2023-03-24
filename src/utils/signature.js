@@ -24,13 +24,13 @@ export const getRowSignature = (row, rIdx, numProps, formatList) => {
       console.log(`after getValue call: value=${value} typeof(value)=${typeof(value)}`);
     }
 
+    // This should have been avoided to keep the logic clean.
     if(typeof(valueInfo) === 'object') {
       if (debugRowIdx.includes(rIdx)) {
         console.log(`object identified: valueType=${JSON.stringify(valueInfo)}`);
       }
       valueType = valueInfo['type'];
       finalValue = valueInfo['finalValue'];
-      // finalValue = "checkme";
     } else {
       valueType = valueInfo;
     }
