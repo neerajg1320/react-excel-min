@@ -45,12 +45,12 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
   const bufferRef = useRef({
     headerMapper: {
-      // "SRL NO": "serialNum",
-      // "Tran Date": "valueDate",
-      // "CHQNO": "reference",
-      // "PARTICULARS": "description",
-      // "DR": "debit",
-      // "CR": "credit"
+      "SRL NO": "serialNum",
+      "Tran Date": "valueDate",
+      "CHQNO": "reference",
+      "PARTICULARS": "description",
+      "DR": "debit",
+      "CR": "credit"
     },
     rowMapper: {
     }
@@ -83,7 +83,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         if (typeof(valueType) === 'object') {
           valueType = valueType['type'];
         }
-        
+
         return {
           acceptableTypes: [valueType],
           keyName,
@@ -214,53 +214,68 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       display: "flex", flexDirection:"column", gap: "10px",
       textAlign: "center"
     }}>
-      {(row && row.length > 0) &&
+
+      {
+        (type === 'header' && row && row.length > 0) &&
         row.map((elm, elmIdx) => {
-
-          let hdrValue;
-          let typeIntialValue = getValueType(elm, formatList);
-          if (typeof(typeIntialValue) === 'object') {
-            typeIntialValue = typeIntialValue['type'];
-          }
-
-          if (type === 'data') {
-            hdrValue = headerRule ? headerRule[elmIdx].keyName : `notfound[$elmIdx]`;
-            bufferRef.current.rowMapper[hdrValue] = {
-              types: [typeIntialValue],
-              samples: [
-                {
-                  type: typeIntialValue,
-                  value: elm
-                }
-              ]
-            };
-          }
-
           return  (
-              <Fragment key={elmIdx}>
-              {type === 'header' ?
-                <HeaderElement
-                    elmValue={elm}
-                    keyNameChoices={[...schema.map(item => item.keyName), 'none']}
-                    keyNameInitialValue={bufferRef.current.headerMapper[elm] || 'none'}
-                />
-                :
-                <RowElement
-                    elmValue={elm}
-                    hdrValue={hdrValue}
-                    typeChoices={typeChoices}
-                    typeInitialValue={typeIntialValue}
-                />
-              }
-              </Fragment>
+            <HeaderElement
+                key={elmIdx}
+                elmValue={elm}
+                keyNameChoices={[...schema.map(item => item.keyName), 'none']}
+                keyNameInitialValue={bufferRef.current.headerMapper[elm] || 'none'}
+            />
           );
         })
       }
+
+      {
+        <pre>{JSON.stringify(row)}</pre>
+      }
+      {
+
+          (type !== 'header' && headerRule && headerRule.length > 0) &&
+          headerRule.map((elm, elmIdx) => {
+
+            const value = row[elmIdx];
+            let hdrValue;
+            let typeIntialValue = getValueType(value, formatList);
+            if (typeof(typeIntialValue) === 'object') {
+              typeIntialValue = typeIntialValue['type'];
+            }
+
+            if (type === 'data') {
+              hdrValue = headerRule[elmIdx].keyName;
+              bufferRef.current.rowMapper[hdrValue] = {
+                types: [typeIntialValue],
+                samples: [
+                  {
+                    type: typeIntialValue,
+                    value: elm
+                  }
+                ]
+              };
+            }
+
+            return  (
+                // <pre>{`${JSON.stringify(elm['keyName'])}, ${value}, ${typeIntialValue}`}</pre>
+              <RowElement
+                  key={elmIdx}
+                  elmValue={value}
+                  hdrValue={hdrValue}
+                  typeChoices={typeChoices}
+                  typeInitialValue={typeIntialValue}
+              />
+            );
+          })
+      }
+
       {
         mapperSufficient ?
             <p style={{backgroundColor:'rgba(0, 255, 0, 0.2)'}}>Mapper Complete</p> :
             <p style={{backgroundColor:'rgba(255, 0, 0, 0.2)'}}>Mapper Incomplete</p>
       }
+
       <Button onClick={() => handleSaveMapperClick(type, tag)} disabled={!mapperSufficient}>
         Save Mapper
       </Button>
