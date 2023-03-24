@@ -98,7 +98,7 @@ export function getValueType(value, formatList, debug=false) {
             if (isDate(finalValue)) {
               return {
                 type: fmt['type'],
-                value: finalValue
+                finalValue
               };
             }
           }

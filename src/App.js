@@ -131,7 +131,7 @@ const App = () => {
 
     data.map((row, rIdx) => {
       if (signatures) {
-        const rSig = getRowSignature(row, rIdx, -1, formatList);
+        const rSig = getRowSignature(row, rIdx, -1, formatList).map(sig => sig['finalType']);
 
         for (let i=0; i < signatures.length; i++) {
           const signatureInfo = signatures[i];
@@ -164,7 +164,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log(`useEffect[row, signatureList] signatureList[${signatureList.length}]`);
+    console.log(`useEffect[row, signatureList] signatureList[${signatureList.length}]`, signatureList);
 
     detectHighlighter(rows, signatureList);
   }, [rows, signatureList]);
@@ -181,7 +181,7 @@ const App = () => {
       {
         name: 'constructor',
         rule: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1, formatList);
+          const rSig = getRowSignature(row, rIdx, -1, formatList).map(sig => sig['finalType']);
           const rSigSet = [...new Set(rSig)];
 
           if (debugRowIdx.includes(rIdx)) {
@@ -264,7 +264,7 @@ const App = () => {
       {
         name: 'header',
         rule: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1, formatList);
+          const rSig = getRowSignature(row, rIdx, -1, formatList).map(sig => sig['finalType']);
           let tag;
           let matchRowSignature;
           let finalRow;

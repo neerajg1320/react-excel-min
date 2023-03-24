@@ -1,20 +1,19 @@
 import {dateFromString, getValueType, isDate, isString, numberFromString} from "./types";
 
 export const getRowSignature = (row, rowIdx, numProps, formatList) => {
-  const debugRowIdx = [8];
-
-  // if (debugRowIdx.includes(rowIdx)) {
-  //   console.log(`getRowSignature: row:${row}`);
-  // }
+  const debugRowIdx = [3,8];
 
   const signatureFullRow = [];
 
   for (let i=0; i < Math.max(row.length, numProps); i++) {
-    let valueType = getValueType(row[i], formatList);
+    const value = row[i];
+    let valueType = getValueType(value, formatList);
+    let finalValue = value;
     if(typeof(valueType) === 'object') {
       valueType = valueType['type'];
+      finalValue = valueType['finalValue'];
     }
-    signatureFullRow.push(valueType);
+    signatureFullRow.push({finalType: valueType, finalValue});
   }
 
   if (debugRowIdx.includes(rowIdx)) {
@@ -30,7 +29,7 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx, sigT
     throw `acceptableSignature:${JSON.stringify(acceptableSignature, null, 2)} is not valid`;
   }
   const debugMismatch = true;
-  const debugRowIdx = [8];
+  const debugRowIdx = [3,8];
   const debugColIdx = []
 
   if (debugRowIdx.includes(rIdx)) {
