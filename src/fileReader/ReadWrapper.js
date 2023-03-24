@@ -13,7 +13,7 @@ import * as hdfc from "../banks/hdfc";
 import * as kotak from "../banks/kotak";
 import * as kotak2 from "../banks/kotak2";
 
-export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
+export const ReadWrapper = ({onDataChange: updateData, transactions=true, formatList}) => {
   if (debug.lifecycle) {
     console.log(`Rendering <Read>`);
   }
@@ -233,7 +233,8 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
         console.log(`${rowIdx}: matchedMapper=`, matchedPresetMapper);
       }
 
-      const signature = getRowSignature(row, rowIdx, matchedPresetMapper ? matchedPresetMapper.headerKeynameMap.length : -1);
+      const numProps = matchedPresetMapper ? matchedPresetMapper.headerKeynameMap.length : -1;
+      const signature = getRowSignature(row, rowIdx, numProps, formatList).map(sig => sig['finalType']);
       // console.log(`[${rowIdx}] signature=`, signature);
 
       if (signature.length >= filterThreshold) {
@@ -321,7 +322,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true}) => {
 
     return {headerRow, matchedRows, matchedPresetMapper, exactMapper};
 
-  }, []);
+  }, [formatList]);
 
   const createDataFromRows = (header, rows, matchedPresetMapper, exactMapper,
                               {skipUndefined, interpretValues, interpretHeaderTypes}

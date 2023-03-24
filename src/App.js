@@ -542,7 +542,7 @@ const App = () => {
           <Route element={<HomeLayout />}>
 
             {/* Data read from excel file */}
-            <Route index element={<ReadWrapper onDataChange={handleDataChange} />} />
+            <Route index element={<ReadWrapper onDataChange={handleDataChange} formatList={formatList}/>} />
 
             {/* Transactions are categorized by user */}
             <Route
