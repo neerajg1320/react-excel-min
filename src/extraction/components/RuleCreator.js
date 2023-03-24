@@ -79,15 +79,11 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     } else {
       eventObj['rule'] = row.map((elm, elmIdx) => {
         const keyName = headerRule[elmIdx].keyName;
-        let valueType = getValueType(elm, formatList, isString(elm) && elm.length === 10);
+        let valueType = getValueType(elm, formatList);
         if (typeof(valueType) === 'object') {
           valueType = valueType['type'];
         }
-
-        if (isString(elm) && elm.length === 10) {
-          console.log(`handleSaveMapperClick: valueType=${valueType}`);
-        }
-
+        
         return {
           acceptableTypes: [valueType],
           keyName,
