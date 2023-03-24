@@ -156,7 +156,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   }
 
   // Row Element
-  const RowElement = ({elmValue, hdrValue, typeChoices, typeInitialValue}) => {
+  const RowElement = ({elmValue, keyName, typeChoices, typeInitialValue}) => {
     const [typeValue, setTypeValue] = useState(typeInitialValue);
 
     const typeOptions = useMemo(() => {
@@ -172,7 +172,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
       setTypeValue(option.value);
 
-      console.log(`bufferRef.current.rowMapper[${hdrValue}]=${bufferRef.current.rowMapper[hdrValue]}`);
+      console.log(`bufferRef.current.rowMapper[${keyName}]=${bufferRef.current.rowMapper[keyName]}`);
 
       // This part can be taken out by using a callback
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
@@ -194,7 +194,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           width: "100%",
           display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
         }}>
-          <span style={{textAlign: "left", width:"25%"}}>{hdrValue}</span>
+          <span style={{textAlign: "left", width:"25%"}}>{keyName}</span>
           <span style={{textAlign: "left", width:"50%"}}>
             {['string', 'blank'].includes(typeValue) ? `[${elmValue.length}]'${elmValue}'` : elmValue}
           </span>
@@ -238,31 +238,28 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           headerRule.map((elm, elmIdx) => {
 
             const value = row[elmIdx];
-            let hdrValue;
+
             let typeIntialValue = getValueType(value, formatList);
             if (typeof(typeIntialValue) === 'object') {
               typeIntialValue = typeIntialValue['type'];
             }
 
-            if (type === 'data') {
-              hdrValue = headerRule[elmIdx].keyName;
-              bufferRef.current.rowMapper[hdrValue] = {
-                types: [typeIntialValue],
-                samples: [
-                  {
-                    type: typeIntialValue,
-                    value: elm
-                  }
-                ]
-              };
-            }
+            const keyName = headerRule[elmIdx].keyName;
+            bufferRef.current.rowMapper[keyName] = {
+              types: [typeIntialValue],
+              samples: [
+                {
+                  type: typeIntialValue,
+                  value: value
+                }
+              ]
+            };
 
             return  (
-                // <pre>{`${JSON.stringify(elm['keyName'])}, ${value}, ${typeIntialValue}`}</pre>
               <RowElement
                   key={elmIdx}
                   elmValue={value}
-                  hdrValue={hdrValue}
+                  keyName={keyName}
                   typeChoices={typeChoices}
                   typeInitialValue={typeIntialValue}
               />
