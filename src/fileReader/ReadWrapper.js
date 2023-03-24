@@ -153,7 +153,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true, format
 
   const getMatchedMapper = (headers) => {
     const mappers = getMappers();
-    console.log(`mappers=`, mappers);
+    // console.log(`mappers=`, mappers);
 
     let matchedPresetMapper;
     let exactMapper;
@@ -296,7 +296,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true, format
               }
             });
 
-            console.log(`matchRowSignature=`, matchRowSignature);
+            // console.log(`matchRowSignature=`, matchRowSignature);
           }
         } else {
           if (matchRowSignature) {
@@ -432,7 +432,7 @@ export const ReadWrapper = ({onDataChange: updateData, transactions=true, format
       )
 
       if (!filteredData) {
-        alert('No transactions detected');
+        console.log('No transactions detected');
       } else {
         // console.log(`filteredData:`, filteredData);
         txsData = addAccountingColumns(filteredData);

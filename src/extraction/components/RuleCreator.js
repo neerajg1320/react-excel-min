@@ -4,6 +4,7 @@ import Select from "react-select";
 import {listToOptions} from "../../utils/options";
 import {getAllDateFormats, getAllTypes, getValueType, isString} from "../../utils/types";
 import Button from "react-bootstrap/Button";
+import {debug} from "../../components/config/debug";
 
 // The schema is needed for headers
 // For rows it should be filtered schema i.e. only the rows which are present in the
@@ -12,13 +13,19 @@ import Button from "react-bootstrap/Button";
 // We will pass a schemaMap which carries the info of which index maps to which row
 // The headerRule is required. It will be passed to type=data rows
 export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, formatList}) => {
-  console.log(`HeaderCreator:rendered rows=`, rows);
+  if (debug.lifecycle) {
+    console.log(`RuleCreator:rendered`);
+  }
 
   useEffect(() => {
-    console.log(`HeaderCreator:mounted`);
+    if (debug.lifecycle) {
+      console.log(`RuleCreator:mounted`);
+    }
 
     return () => {
-      console.log(`HeaderCreator:destroyed`);
+      if (debug.lifecycle) {
+        console.log(`RuleCreator:destroyed`);
+      }
     }
   }, []);
 
@@ -51,7 +58,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
   const handleSaveMapperClick = (type, tag) => {
-    console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
+    // console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
 
     const eventObj = {
       tag

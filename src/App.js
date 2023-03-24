@@ -55,7 +55,7 @@ const App = () => {
       }
     })
 
-    console.log(`fmtList:${JSON.stringify(fmtList, null, 2)}`);
+    // console.log(`fmtList:${JSON.stringify(fmtList, null, 2)}`);
 
     return fmtList;
   }, [dateFormats]);
@@ -127,7 +127,7 @@ const App = () => {
 
   const detectHighlighter = useCallback((data, signatures) => {
     // console.log(`data:${JSON.stringify(data)}`);
-    console.log(`detectHighlighter:`, signatures);
+    // console.log(`detectHighlighter:`, signatures);
 
     data.map((row, rIdx) => {
       if (signatures) {
@@ -143,7 +143,7 @@ const App = () => {
 
           const bankMatch = isSignatureMatch(signatureInfo['signature']['header'], rSig, row, rIdx, 'header');
           if (bankMatch) {
-            console.log(`Signature Matched: bank:${signatureInfo.name}`);
+            // console.log(`Signature Matched: bank:${signatureInfo.name}`);
 
             transactionsBufferRef.current = {
               ...transactionsBufferRef.current,
@@ -155,7 +155,7 @@ const App = () => {
               data: []
             }
 
-            console.log(`rowHighlightingRules: rIdx:${rIdx} highlighter detected from hardcoded signatures`);
+            // console.log(`rowHighlightingRules: rIdx:${rIdx} highlighter detected from hardcoded signatures`);
             setHighlighterDetected(true);
           }
         }
@@ -164,7 +164,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log(`useEffect[row, signatureList] signatureList[${signatureList.length}]`, signatureList);
+    // console.log(`useEffect[row, signatureList] signatureList[${signatureList.length}]`, signatureList);
 
     detectHighlighter(rows, signatureList);
   }, [rows, signatureList]);
@@ -493,7 +493,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log(`useEffect[signature]: signature=`, signature);
+    // console.log(`useEffect[signature]: signature=`, signature);
 
     setSignatureList((prev) => {
       // return [...prev, sigObj]
@@ -508,7 +508,7 @@ const App = () => {
   }
 
   const handleCreateRule = useCallback((tag, selRows) => {
-    console.log(`handleCreateRule: tag=${tag} selRows=`, selRows.map(row => row.original));
+    // console.log(`handleCreateRule: tag=${tag} selRows=`, selRows.map(row => row.original));
     switch (tag) {
       case 'header':
         setRuleType(tag);
