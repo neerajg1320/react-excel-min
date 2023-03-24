@@ -1,14 +1,7 @@
 import {dateFromString, getValueType, isDate, isString, numberFromString} from "./types";
 
-// export const getType = (val) => {
-//   if (isDate(val)) {
-//     return 'date';
-//   }
-//   return typeof(val);
-// }
-
 export const getRowSignature = (row, rowIdx, numProps, formatList) => {
-  const debugRowIdx = [];
+  const debugRowIdx = [8];
 
   // if (debugRowIdx.includes(rowIdx)) {
   //   console.log(`getRowSignature: row:${row}`);
@@ -37,11 +30,11 @@ export const isSignatureMatch = (acceptableSignature, signature, row, rIdx, sigT
     throw `acceptableSignature:${JSON.stringify(acceptableSignature, null, 2)} is not valid`;
   }
   const debugMismatch = true;
-  const debugRowIdx = [];
+  const debugRowIdx = [8];
   const debugColIdx = []
 
   if (debugRowIdx.includes(rIdx)) {
-    console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature, null, 2)}`);
+    console.log(`rIdx:${rIdx} acceptableSignature=${JSON.stringify(acceptableSignature.map(item => item['acceptableTypes'][0]))}`);
     console.log(`rIdx:${rIdx} signature=${signature}`);
   }
 
