@@ -67,6 +67,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       eventObj['rule'] = row.map((elm) => {
         const keyName = bufferRef.current.headerMapper[elm] !== undefined ? bufferRef.current.headerMapper[elm] : 'none';
         return {
+          choices: [elm],
           acceptableTypes: ['string'],
           keyName,
           required: true,
@@ -209,6 +210,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     );
   }
 
+  // For the RuleCreator component
   return (
     <div style={{
       display: "flex", flexDirection:"column", gap: "10px",
