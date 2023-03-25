@@ -164,7 +164,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // console.log(`useEffect[row, signatureList] signatureList[${signatureList.length}]`, signatureList);
+    // console.log(`signatureList.signaure: ${JSON.stringify(signatureList.map(sig => sig['signature']), null, 2)}`);
 
     detectHighlighter(rows, signatureList);
   }, [rows, signatureList]);
@@ -501,11 +501,7 @@ const App = () => {
       return [signature];
     });
   }, [signature]);
-
-  useEffect(() => {
-    console.log(`signatureList.signaure: ${JSON.stringify(signatureList.map(sig => sig['signature']), null, 2)}`);
-  }, [signatureList]);
-
+  
   const handleSelectionChange = (selRows) => {
     // console.log(`handleSelectionChange: selRows=`, selRows);
     setSelectedRows(selRows);
