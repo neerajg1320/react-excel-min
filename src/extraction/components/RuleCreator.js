@@ -50,7 +50,14 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "CHQNO": "reference",
       "PARTICULARS": "description",
       "DR": "debit",
-      "CR": "credit"
+      "CR": "credit",
+      "Date": "transactionDate",
+      "NARRATION": "description",
+      "Chq./Ref.No.": "reference",
+      "Value Dt": "valueDate",
+      "Withdrawal Amt.": "debit",
+      "Deposit Amt.": "credit",
+      "Closing Balance": "balance",
     },
     rowMapper: {
     }
