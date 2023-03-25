@@ -78,8 +78,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         onEvent({name:'complete'}, eventObj);
       }
     } else {
-      eventObj['rule'] = row.map((elm, elmIdx) => {
-        const keyName = headerRule[elmIdx].keyName;
+      // console.log(`row[${row.length}]=${JSON.stringify(row)}`, row);
+      // console.log(`headerRule[${headerRule.length}]=${JSON.stringify(headerRule, null, 2)}`);
+
+      eventObj['rule'] = headerRule.map((hdrRuleElm, elmIdx) => {
+        const keyName = hdrRuleElm.keyName;
+        const elm = row[elmIdx];
+
         let valueType = getValueType(elm, formatList);
         if (typeof(valueType) === 'object') {
           valueType = valueType['type'];
