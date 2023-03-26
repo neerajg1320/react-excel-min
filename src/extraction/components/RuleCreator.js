@@ -93,6 +93,9 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         const keyName = hdrRuleElm.keyName;
         const elm = row[elmIdx];
 
+        // This is not correct. The acceptableTypes have to be extracted from the RowElement
+        console.log(`handleSaveMapperClick: rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
+
         let valueType = getValueType(elm, formatList);
         if (typeof(valueType) === 'object') {
           valueType = valueType['type'];
@@ -170,6 +173,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   }
 
   // Row Element
+  // Need to pass the row value so that it can be put in samples
   const RowElement = ({elmValue, keyName, typeChoices, typeInitialValue}) => {
     const [typeValue, setTypeValue] = useState(typeInitialValue);
     const [multiSelection, setMultiSelection] = useState([]);
@@ -207,6 +211,11 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     const handleMultiSelectChange = (selection) => {
       console.log(`handleMultiSelectChange: selection=${JSON.stringify(selection)}`);
       setMultiSelection(selection);
+      const mappedKeys = Object.keys(bufferRef.current.rowMapper);
+      if (mappedKeys.length >= requiredKeys.length) {
+        const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
+        setMapperSufficient(allMandatoryKeysMapped);
+      }
     }
 
     return (
@@ -271,7 +280,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
             const keyName = headerRule[elmIdx].keyName;
             bufferRef.current.rowMapper[keyName] = {
-              types: [typeIntialValue],
+              acceptableTypes: [typeIntialValue],
               samples: [
                 {
                   type: typeIntialValue,
