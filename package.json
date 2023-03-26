@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@glassball/table": "^0.1.5",
+    "react-multi-select-component": "^4.3.4",
     "react-switch": "^7.0.0"
   }
 }

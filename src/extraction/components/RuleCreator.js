@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Fragment, useEffect, useMemo, useRef, useState} from "react";
 import Select from "react-select";
+import {MultiSelect} from "react-multi-select-component";
 import {listToOptions} from "../../utils/options";
 import {getAllDateFormats, getAllTypes, getValueType, isString} from "../../utils/types";
 import Button from "react-bootstrap/Button";
@@ -171,6 +172,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   // Row Element
   const RowElement = ({elmValue, keyName, typeChoices, typeInitialValue}) => {
     const [typeValue, setTypeValue] = useState(typeInitialValue);
+    const [multiSelection, setMultiSelection] = useState([]);
 
     const typeOptions = useMemo(() => {
       return listToOptions(typeChoices, "")
@@ -202,22 +204,35 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
     };
 
+    const handleMultiSelectChange = (selection) => {
+      console.log(`handleMultiSelectChange: selection=${JSON.stringify(selection)}`);
+      setMultiSelection(selection);
+    }
+
     return (
         <div style={{
           width: "100%",
           display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
         }}>
           <span style={{textAlign: "left", width:"25%"}}>{keyName}</span>
-          <span style={{textAlign: "left", width:"50%"}}>
+          <span style={{textAlign: "left", width:"25%"}}>
             {['string', 'blank'].includes(typeValue) ? `[${elmValue.length}]'${elmValue}'` : elmValue}
           </span>
           <span style={{width:"25%"}}>
-          <Select
-              value={typeOptions.filter(opt => opt.value === typeValue)}
-              options={typeOptions}
-              onChange={handleSelectChange}
-          />
-        </span>
+            <Select
+                value={typeOptions.filter(opt => opt.value === typeValue)}
+                options={typeOptions}
+                onChange={handleSelectChange}
+            />
+          </span>
+          <span style={{width:"25%"}}>
+            <MultiSelect
+                options={typeOptions}
+                value={multiSelection}
+                onChange={handleMultiSelectChange}
+                labelledBy="Select"
+            />
+          </span>
         </div>
     );
   }
