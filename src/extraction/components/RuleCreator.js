@@ -110,6 +110,15 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         };
       });
 
+      // Here we are updating the logic
+      eventObj['rule'] = Object.entries(bufferRef.current.rowMapper).map(([keyName, rowRuleElm]) => {
+        return {
+          acceptableTypes: rowRuleElm.acceptableTypes,
+          keyName,
+          required:true
+        };
+      });
+
       // We need to add the onEvent call
       if (onEvent) {
         onEvent({name:'complete'}, eventObj);
