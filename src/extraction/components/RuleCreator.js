@@ -60,9 +60,12 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "Deposit Amt.": "credit",
       "Closing Balance": "balance",
     },
-    rowMapper: {
-    }
+    rowMapper: {}
   });
+  useEffect(() => {
+    // bufferRef.current.rowMapper = {}
+  }, [type, tag])
+
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
   const handleSaveMapperClick = (type, tag) => {
