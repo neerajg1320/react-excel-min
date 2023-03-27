@@ -183,13 +183,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   // Row Element
   // Need to pass the row value so that it can be put in samples
   const RowElement = ({elmValue, keyName, typeChoices, typeInitialValue}) => {
-    const [typeValue, setTypeValue] = useState(typeInitialValue);
-    const [multiSelection, setMultiSelection] = useState([]);
-
     const typeOptions = useMemo(() => {
       return listToOptions(typeChoices, "")
-    }, []);
+    }, [typeChoices]);
 
+    const [typeValue, setTypeValue] = useState(typeInitialValue);
+    const [multiSelection, setMultiSelection] = useState([]);
+    
     const debug = true;
 
     const handleSelectionChange = (selection) => {
@@ -282,37 +282,36 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
 
       {
-          (type !== 'header' && headerRule && headerRule.length > 0) &&
-          headerRule.map((elm, elmIdx) => {
+        (type !== 'header' && headerRule && headerRule.length > 0) &&
+        headerRule.map((elm, elmIdx) => {
+          const value = row[elmIdx];
 
-            const value = row[elmIdx];
+          let typeIntialValue = getValueType(value, formatList);
+          if (typeof(typeIntialValue) === 'object') {
+            typeIntialValue = typeIntialValue['type'];
+          }
 
-            let typeIntialValue = getValueType(value, formatList);
-            if (typeof(typeIntialValue) === 'object') {
-              typeIntialValue = typeIntialValue['type'];
-            }
+          const keyName = headerRule[elmIdx].keyName;
+          bufferRef.current.rowMapper[keyName] = {
+            acceptableTypes: [typeIntialValue],
+            samples: [
+              {
+                type: typeIntialValue,
+                value: value
+              }
+            ]
+          };
 
-            const keyName = headerRule[elmIdx].keyName;
-            bufferRef.current.rowMapper[keyName] = {
-              acceptableTypes: [typeIntialValue],
-              samples: [
-                {
-                  type: typeIntialValue,
-                  value: value
-                }
-              ]
-            };
-
-            return  (
-              <RowElement
-                  key={elmIdx}
-                  elmValue={value}
-                  keyName={keyName}
-                  typeChoices={typeChoices}
-                  typeInitialValue={typeIntialValue}
-              />
-            );
-          })
+          return  (
+            <RowElement
+                key={elmIdx}
+                elmValue={value}
+                keyName={keyName}
+                typeChoices={typeChoices}
+                typeInitialValue={typeIntialValue}
+            />
+          );
+        })
       }
 
       {
