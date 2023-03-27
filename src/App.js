@@ -126,7 +126,7 @@ const App = () => {
   ]);
 
   const detectHighlighter = useCallback((data, signatures) => {
-    // console.log(`data:${JSON.stringify(data)}`);
+    console.log(`data:${JSON.stringify(data, null, 2)}`);
     // console.log(`detectHighlighter:`, signatures);
 
     data.map((row, rIdx) => {

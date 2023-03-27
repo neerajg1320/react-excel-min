@@ -205,40 +205,40 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       return listToOptions(typeChoices, "")
     }, [typeChoices]);
 
-    const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValues[0]));
+    // const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValues[0]));
     const [multiSelection, setMultiSelection] = useState(typeOptions.filter(opt => typeInitialValues.includes(opt.value)));
 
     const debug = true;
 
-    const handleSelectionChange = (sel) => {
-      if (debug) {
-        console.log(`option.value=${sel.value}`);
-      }
-
-      setSelection(sel);
-
-      // Update the rowMapper
-      const acceptableTypes = [sel.value];
-      bufferRef.current.rowMapper[keyName] = {
-        ...bufferRef.current.rowMapper[keyName],
-        acceptableTypes
-      };
-
-      console.log(`handleSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
-
-      // This part can be taken out by using a callback
-      const mappedKeys = Object.keys(bufferRef.current.rowMapper);
-
-      if (debug) {
-        console.log(`mappedKeys:${JSON.stringify(mappedKeys, null, 2)}`);
-        console.log(`requiredKeys=${requiredKeys}`);
-      }
-
-      if (mappedKeys.length >= requiredKeys.length) {
-        const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
-        setMapperSufficient(allMandatoryKeysMapped);
-      }
-    };
+    // const handleSelectionChange = (sel) => {
+    //   if (debug) {
+    //     console.log(`option.value=${sel.value}`);
+    //   }
+    //
+    //   setSelection(sel);
+    //
+    //   // Update the rowMapper
+    //   const acceptableTypes = [sel.value];
+    //   bufferRef.current.rowMapper[keyName] = {
+    //     ...bufferRef.current.rowMapper[keyName],
+    //     acceptableTypes
+    //   };
+    //
+    //   console.log(`handleSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
+    //
+    //   // This part can be taken out by using a callback
+    //   const mappedKeys = Object.keys(bufferRef.current.rowMapper);
+    //
+    //   if (debug) {
+    //     console.log(`mappedKeys:${JSON.stringify(mappedKeys, null, 2)}`);
+    //     console.log(`requiredKeys=${requiredKeys}`);
+    //   }
+    //
+    //   if (mappedKeys.length >= requiredKeys.length) {
+    //     const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
+    //     setMapperSufficient(allMandatoryKeysMapped);
+    //   }
+    // };
 
     const handleMultiSelectionChange = (sels) => {
       console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
@@ -267,17 +267,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
         }}>
           <span style={{textAlign: "left", width:"25%"}}>{keyName}</span>
-          <span style={{textAlign: "left", width:"25%"}}>
-            {['string', 'blank'].includes(selection.value) ? `[${elmValue?.length}]'${elmValue}'` : elmValue}
-          </span>
-          <span style={{width:"25%"}}>
-            <Select
-                value={selection}
-                options={typeOptions}
-                onChange={handleSelectionChange}
-            />
-          </span>
-          <span style={{width:"25%"}}>
+          <span style={{textAlign: "left", width:"35%"}}>{elmValue}</span>
+          <span style={{width:"40%"}}>
             <MultiSelect
                 options={typeOptions}
                 value={multiSelection}
