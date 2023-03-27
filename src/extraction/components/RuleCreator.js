@@ -188,10 +188,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     }, [typeChoices]);
 
     const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValue));
-    const typeValue = useMemo(() => {
-      return selection.value;
-    }, [selection]);
-    
+
     const [multiSelection, setMultiSelection] = useState([]);
 
     const debug = true;
@@ -243,7 +240,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         }}>
           <span style={{textAlign: "left", width:"25%"}}>{keyName}</span>
           <span style={{textAlign: "left", width:"25%"}}>
-            {['string', 'blank'].includes(typeValue) ? `[${elmValue?.length}]'${elmValue}'` : elmValue}
+            {['string', 'blank'].includes(selection.value) ? `[${elmValue?.length}]'${elmValue}'` : elmValue}
           </span>
           <span style={{width:"25%"}}>
             <Select
