@@ -62,8 +62,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     },
     rowMapper: {}
   });
+
   useEffect(() => {
-    // bufferRef.current.rowMapper = {}
+    console.log(`Clearing the rowMapper`);
+    bufferRef.current.rowMapper = {}
   }, [type, tag])
 
   const [mapperSufficient, setMapperSufficient] = useState(false);
