@@ -164,7 +164,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log(`signatureList.signaure: ${JSON.stringify(signatureList.map(sig => sig['signature']), null, 2)}`);
+    console.log(`signatureList.signaure: ${JSON.stringify(signatureList.map(sig => sig), null, 2)}`);
 
     detectHighlighter(rows, signatureList);
   }, [rows, signatureList]);

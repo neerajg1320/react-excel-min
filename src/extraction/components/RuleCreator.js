@@ -53,7 +53,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "DR": "debit",
       "CR": "credit",
       "Date": "transactionDate",
-      "NARRATION": "description",
+      "Narration": "description",
       "Chq./Ref.No.": "reference",
       "Value Dt": "valueDate",
       "Withdrawal Amt.": "debit",
@@ -193,12 +193,19 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
     const debug = true;
 
-    const handleSelectChange = (option) => {
+    const handleSelectChange = (selection) => {
       if (debug) {
-        console.log(`option.value=${option.value}`);
+        console.log(`option.value=${selection.value}`);
       }
 
-      setTypeValue(option.value);
+      setTypeValue(selection.value);
+
+      // Update the rowMapper
+      // bufferRef.current.rowMapper[keyName] = selection.value;
+      bufferRef.current.rowMapper[keyName] = {
+        ...bufferRef.current.rowMapper[keyName],
+        acceptableTypes: [selection.value]
+      };
 
       console.log(`bufferRef.current.rowMapper[${keyName}]=${bufferRef.current.rowMapper[keyName]}`);
 
@@ -217,9 +224,9 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
     };
 
-    const handleMultiSelectChange = (selection) => {
-      console.log(`handleMultiSelectChange: selection=${JSON.stringify(selection)}`);
-      setMultiSelection(selection);
+    const handleMultiSelectChange = (selections) => {
+      console.log(`handleMultiSelectChange: selections=${JSON.stringify(selections)}`);
+      setMultiSelection(selections);
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
       if (mappedKeys.length >= requiredKeys.length) {
         const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
@@ -234,7 +241,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         }}>
           <span style={{textAlign: "left", width:"25%"}}>{keyName}</span>
           <span style={{textAlign: "left", width:"25%"}}>
-            {['string', 'blank'].includes(typeValue) ? `[${elmValue.length}]'${elmValue}'` : elmValue}
+            {['string', 'blank'].includes(typeValue) ? `[${elmValue?.length}]'${elmValue}'` : elmValue}
           </span>
           <span style={{width:"25%"}}>
             <Select
