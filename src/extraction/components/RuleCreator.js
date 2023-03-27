@@ -193,7 +193,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
     const debug = true;
 
-    const handleSelectChange = (selection) => {
+    const handleSelectionChange = (selection) => {
       if (debug) {
         console.log(`option.value=${selection.value}`);
       }
@@ -201,10 +201,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       setTypeValue(selection.value);
 
       // Update the rowMapper
-      // bufferRef.current.rowMapper[keyName] = selection.value;
+      const acceptableTypes = [selection.value];
       bufferRef.current.rowMapper[keyName] = {
         ...bufferRef.current.rowMapper[keyName],
-        acceptableTypes: [selection.value]
+        acceptableTypes
       };
 
       console.log(`bufferRef.current.rowMapper[${keyName}]=${bufferRef.current.rowMapper[keyName]}`);
@@ -213,7 +213,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
 
       if (debug) {
-        // console.log(`mapper:${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
         console.log(`mappedKeys:${JSON.stringify(mappedKeys, null, 2)}`);
         console.log(`requiredKeys=${requiredKeys}`);
       }
@@ -224,7 +223,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
     };
 
-    const handleMultiSelectChange = (selections) => {
+    const handleMultiSelectionChange = (selections) => {
       console.log(`handleMultiSelectChange: selections=${JSON.stringify(selections)}`);
       setMultiSelection(selections);
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
@@ -247,14 +246,14 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
             <Select
                 value={typeOptions.filter(opt => opt.value === typeValue)}
                 options={typeOptions}
-                onChange={handleSelectChange}
+                onChange={handleSelectionChange}
             />
           </span>
           <span style={{width:"25%"}}>
             <MultiSelect
                 options={typeOptions}
                 value={multiSelection}
-                onChange={handleMultiSelectChange}
+                onChange={handleMultiSelectionChange}
                 labelledBy="Select"
             />
           </span>
