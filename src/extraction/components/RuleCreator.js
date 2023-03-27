@@ -182,14 +182,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
   // Row Element
   // Need to pass the row value so that it can be put in samples
-  const RowElement = ({elmValue, keyName, typeChoices, typeInitialValue}) => {
+  const RowElement = ({elmValue, keyName, typeChoices, typeInitialValues}) => {
     const typeOptions = useMemo(() => {
       return listToOptions(typeChoices, "")
     }, [typeChoices]);
 
-    const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValue));
-
-    const [multiSelection, setMultiSelection] = useState([]);
+    const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValues[0]));
+    const [multiSelection, setMultiSelection] = useState(typeOptions.filter(opt => typeInitialValues.includes(opt.value)));
 
     const debug = true;
 
@@ -207,7 +206,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         acceptableTypes
       };
 
-      console.log(`bufferRef.current.rowMapper[${keyName}]=${bufferRef.current.rowMapper[keyName]}`);
+      console.log(`handleSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
 
       // This part can be taken out by using a callback
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
@@ -223,9 +222,20 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
     };
 
-    const handleMultiSelectionChange = (selections) => {
-      console.log(`handleMultiSelectChange: selections=${JSON.stringify(selections)}`);
-      setMultiSelection(selections);
+    const handleMultiSelectionChange = (sels) => {
+      console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
+
+      setMultiSelection(sels);
+
+      // Update the rowMapper
+      const acceptableTypes = sels.map(sel => sel.value);
+      bufferRef.current.rowMapper[keyName] = {
+        ...bufferRef.current.rowMapper[keyName],
+        acceptableTypes
+      };
+
+      console.log(`handleMultiSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
+
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
       if (mappedKeys.length >= requiredKeys.length) {
         const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
@@ -287,21 +297,23 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         headerRule.map((elm, elmIdx) => {
           const value = row[elmIdx];
 
-          let typeIntialValue = getValueType(value, formatList);
-          if (typeof(typeIntialValue) === 'object') {
-            typeIntialValue = typeIntialValue['type'];
-          }
-
           const keyName = headerRule[elmIdx].keyName;
-          bufferRef.current.rowMapper[keyName] = {
-            acceptableTypes: [typeIntialValue],
-            samples: [
-              {
-                type: typeIntialValue,
-                value: value
-              }
-            ]
-          };
+          if (!bufferRef.current.rowMapper[keyName]) {
+            let typeIntialValue = getValueType(value, formatList);
+            if (typeof(typeIntialValue) === 'object') {
+              typeIntialValue = typeIntialValue['type'];
+            }
+
+            bufferRef.current.rowMapper[keyName] = {
+              acceptableTypes: [typeIntialValue],
+              samples: [
+                {
+                  type: typeIntialValue,
+                  value: value
+                }
+              ]
+            };
+          }
 
           return  (
             <RowElement
@@ -309,7 +321,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
                 elmValue={value}
                 keyName={keyName}
                 typeChoices={typeChoices}
-                typeInitialValue={typeIntialValue}
+                typeInitialValues={bufferRef.current.rowMapper[keyName]['acceptableTypes']}
             />
           );
         })
