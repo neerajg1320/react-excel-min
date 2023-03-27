@@ -59,15 +59,27 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "Withdrawal Amt.": "debit",
       "Deposit Amt.": "credit",
       "Closing Balance": "balance",
+      "Sl. No.": "serialNum",
+      "Transaction Date": "transactionDate",
+      "Value Date": "valueDate",
+      "Description": "description",
+      "Chq / Ref No.": "reference",
+      "Debit": "debit",
+      "Credit": "credit",
+      "Balance": "balance",
+      "Dr / Cr": "drCr",
     },
     rowMapper: {}
   });
-  
+
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
   useEffect(() => {
     console.log(`Clearing the rowMapper`);
     bufferRef.current.rowMapper = {}
+    // This achieves the required rerender as well.
+    // TBD: we need to fix this logic.
+    // Note: Do not remove the setMapperSufficient till we fix the rerender logic for rowMapper
     setMapperSufficient(false);
   }, [type, tag])
 
