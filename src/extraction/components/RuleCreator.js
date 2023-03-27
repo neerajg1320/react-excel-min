@@ -187,20 +187,24 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       return listToOptions(typeChoices, "")
     }, [typeChoices]);
 
-    const [typeValue, setTypeValue] = useState(typeInitialValue);
-    const [multiSelection, setMultiSelection] = useState([]);
+    const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValue));
+    const typeValue = useMemo(() => {
+      return selection.value;
+    }, [selection]);
     
+    const [multiSelection, setMultiSelection] = useState([]);
+
     const debug = true;
 
-    const handleSelectionChange = (selection) => {
+    const handleSelectionChange = (sel) => {
       if (debug) {
-        console.log(`option.value=${selection.value}`);
+        console.log(`option.value=${sel.value}`);
       }
 
-      setTypeValue(selection.value);
+      setSelection(sel);
 
       // Update the rowMapper
-      const acceptableTypes = [selection.value];
+      const acceptableTypes = [sel.value];
       bufferRef.current.rowMapper[keyName] = {
         ...bufferRef.current.rowMapper[keyName],
         acceptableTypes
@@ -243,7 +247,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           </span>
           <span style={{width:"25%"}}>
             <Select
-                value={typeOptions.filter(opt => opt.value === typeValue)}
+                value={selection}
                 options={typeOptions}
                 onChange={handleSelectionChange}
             />
