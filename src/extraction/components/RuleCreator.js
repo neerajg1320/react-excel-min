@@ -128,25 +128,24 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
   // Header Element
   const HeaderElement = ({elmValue, keyNameChoices, keyNameInitialValue}) => {
-    const [value, setValue] = useState(keyNameInitialValue);
-
     const schemaKeyOptions = useMemo(() => {
       return listToOptions(keyNameChoices, "")
     }, [keyNameChoices]);
+    const [selection, setSelection] = useState(schemaKeyOptions.filter(opt => opt.value === keyNameInitialValue));
     const debug = false;
 
-    const handleSelectChange = (option) => {
+    const handleSelectChange = (sel) => {
       if (debug) {
-        console.log(`option.value=${option.value}`);
+        console.log(`option.value=${sel.value}`);
       }
 
-      if (option.value === "") {
+      if (sel.value === "") {
         delete bufferRef.current.headerMapper[elmValue];
       } else {
-        bufferRef.current.headerMapper[elmValue] = option.value;
+        bufferRef.current.headerMapper[elmValue] = sel.value;
       }
 
-      setValue(option.value);
+      setSelection(sel);
 
       // This part can be taken out by using a callback
       const schemaKeys = Object.keys(bufferRef.current.headerMapper).map((k) => bufferRef.current.headerMapper[k]);
@@ -172,7 +171,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         <span style={{textAlign: "left", width:"50%"}}>{elmValue}</span>
         <span style={{width:"50%"}}>
           <Select
-              value={schemaKeyOptions.filter(opt => opt.value === value)}
+              value={selection}
               options={schemaKeyOptions}
               onChange={handleSelectChange}
           />
