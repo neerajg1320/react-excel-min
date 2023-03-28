@@ -62,7 +62,7 @@ export const isSignatureMatch = (acceptableSigList, sigList, row, rIdx, sigTag) 
   // Treat the trailing missing in the row as undefined
   if (sigList.length < acceptableSigList.length) {
     for (let i=0; i < (acceptableSigList.length - sigList.length); i++) {
-      sigList.push({finalType: "undefined", finalValue: "undefined"});
+      sigList.push({finalType: "undefined", finalValue: undefined});
     }
   }
   const signature = sigList.map(sig => sig['finalType'])

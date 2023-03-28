@@ -52,6 +52,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "PARTICULARS": "description",
       "DR": "debit",
       "CR": "credit",
+      "BAL": "balance",
       "Date": "transactionDate",
       "Narration": "description",
       "Chq./Ref.No.": "reference",

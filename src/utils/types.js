@@ -5,7 +5,6 @@ import {
   isValid as fnsIsValid,
   addHours, addMinutes, addSeconds
 } from "date-fns";
-import isPlainObject from "react-redux/es/utils/isPlainObject";
 
 export const isoDateFormat = "yyyy-MM-dd";
 export const indiaDateFormat = "dd/MM/yyyy";
