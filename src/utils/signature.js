@@ -56,9 +56,15 @@ export const getRowSignature = (row, rIdx, numProps, formatList) => {
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSigList, sigList, row, rIdx, sigTag) => {
   const debugMismatch = true;
-  const debugRowIdx = [];
+  const debugRowIdx = [23];
   const debugColIdx = []
 
+  // Treat the trailing missing in the row as undefined
+  if (sigList.length < acceptableSigList.length) {
+    for (let i=0; i < (acceptableSigList.length - sigList.length); i++) {
+      sigList.push({finalType: "undefined", finalValue: "undefined"});
+    }
+  }
   const signature = sigList.map(sig => sig['finalType'])
 
   if (!acceptableSigList) {
@@ -79,7 +85,9 @@ export const isSignatureMatch = (acceptableSigList, sigList, row, rIdx, sigTag) 
     if (!acceptableSigList[colIdx]['acceptableTypes'].includes(signature[colIdx])) {
       if (acceptableSigList[colIdx]['required']) {
         if (debugMismatch && debugRowIdx.includes(rIdx)) {
-          console.log(`Not Found: colIdx:${colIdx} cell=${row[colIdx]} ${signature[colIdx]} not found in ${acceptableSigList[colIdx]['acceptableTypes']}`);
+          console.log(`sigList: ${JSON.stringify(sigList)}`);
+          console.log(`signature: ${JSON.stringify(signature)}`);
+          console.log(`Not Found: colIdx:${colIdx} cell=${row[colIdx]} ${signature[colIdx]} not found in ${JSON.stringify(acceptableSigList[colIdx]['acceptableTypes'])}`);
         }
         match = false;
         break;

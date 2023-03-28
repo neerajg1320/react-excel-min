@@ -54,6 +54,10 @@ export function getAllDateFormats() {
       name: 'Date-US',
       format: 'MM/dd/yyyy',
     },
+    {
+      name: 'SBI',
+      format: 'dd-MMM-yy'
+    }
   ];
 }
 

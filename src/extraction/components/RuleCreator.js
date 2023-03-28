@@ -70,6 +70,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "Dr / Cr": "drCr",
       "Withdrawals": "debit",
       "Deposits": "credit",
+      "Ref No./Cheque No.": "reference",
+      "Txn Date": "transactionDate"
     },
     rowMapper: {}
   });
@@ -83,6 +85,32 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     // TBD: we need to fix this logic.
     // Note: Do not remove the setMapperSufficient till we fix the rerender logic for rowMapper
     setMapperSufficient(false);
+
+    if (type != 'header' && (headerRule && headerRule.length > 0)) {
+      headerRule.forEach((elm, elmIdx) => {
+        const value = row[elmIdx];
+
+        const keyName = headerRule[elmIdx].keyName;
+        if (!bufferRef.current.rowMapper[keyName]) {
+          console.log(`Migration: called from useEffect`);
+
+          let typeIntialValue = getValueType(value, formatList);
+          if (typeof(typeIntialValue) === 'object') {
+            typeIntialValue = typeIntialValue['type'];
+          }
+
+          bufferRef.current.rowMapper[keyName] = {
+            acceptableTypes: [typeIntialValue],
+            samples: [
+              {
+                type: typeIntialValue,
+                value: value
+              }
+            ]
+          };
+        }
+      });
+    }
   }, [type, tag])
 
   const handleSaveMapperClick = (type, tag) => {
@@ -279,33 +307,21 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           const value = row[elmIdx];
 
           const keyName = headerRule[elmIdx].keyName;
-          if (!bufferRef.current.rowMapper[keyName]) {
-            console.log(`Warning: check code before removing. We should not be here`);
-
-            let typeIntialValue = getValueType(value, formatList);
-            if (typeof(typeIntialValue) === 'object') {
-              typeIntialValue = typeIntialValue['type'];
-            }
-
-            bufferRef.current.rowMapper[keyName] = {
-              acceptableTypes: [typeIntialValue],
-              samples: [
-                {
-                  type: typeIntialValue,
-                  value: value
-                }
-              ]
-            };
-          }
 
           return  (
-            <RowElement
-                key={elmIdx}
-                elmValue={value}
-                keyName={keyName}
-                typeChoices={typeChoices}
-                typeInitialValues={bufferRef.current.rowMapper[keyName]['acceptableTypes']}
-            />
+            <Fragment key={elmIdx}>
+              <p>{`${keyName}`}</p>
+              {bufferRef.current.rowMapper[keyName] ?
+                <RowElement
+                    elmValue={value}
+                    keyName={keyName}
+                    typeChoices={typeChoices}
+                    typeInitialValues={bufferRef.current.rowMapper[keyName]['acceptableTypes']}
+                />
+                  :
+                  <h4>{`${bufferRef.current.rowMapper[keyName]} is not valid`}</h4>
+              }
+            </Fragment>
           );
         })
       }
