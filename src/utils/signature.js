@@ -56,7 +56,7 @@ export const getRowSignature = (row, rIdx, numProps, formatList) => {
 // Even though rIdx is not needed we are passing it for debugging purpose
 export const isSignatureMatch = (acceptableSigList, sigList, row, rIdx, sigTag) => {
   const debugMismatch = true;
-  const debugRowIdx = [23];
+  const debugRowIdx = [];
   const debugColIdx = []
 
   // Treat the trailing missing in the row as undefined

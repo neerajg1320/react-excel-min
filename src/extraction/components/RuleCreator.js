@@ -311,7 +311,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
           return  (
             <Fragment key={elmIdx}>
-              <p>{`${keyName}`}</p>
+              {/*<p>{`${keyName}`}</p>*/}
               {bufferRef.current.rowMapper[keyName] ?
                 <RowElement
                     elmValue={value}
