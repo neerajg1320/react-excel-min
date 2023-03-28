@@ -44,8 +44,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     return schema.filter(elm => elm.required).map(elm => elm.keyName);
   }, [schema]);
 
+  // TBD: Using buffer for mapper is not pragmatic anymore.
+  // We need to change it.
   const bufferRef = useRef({
-    headerMapper: {
+    headerDefaultMapper: {
       "SRL NO": "serialNum",
       "Tran Date": "valueDate",
       "CHQNO": "reference",
@@ -74,6 +76,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "Ref No./Cheque No.": "reference",
       "Txn Date": "transactionDate"
     },
+    headerMapper: {},
     rowMapper: {}
   });
 
@@ -87,7 +90,15 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     // Note: Do not remove the setMapperSufficient till we fix the rerender logic for rowMapper
     setMapperSufficient(false);
 
-    if (type != 'header' && (headerRule && headerRule.length > 0)) {
+    if (type === 'header' && (row && row.length > 0)) {
+      row.forEach((elm, elmIdx) => {
+        bufferRef.current.headerMapper[elm] = bufferRef.current.headerDefaultMapper[elm] || 'none';
+      });
+
+      console.log(`bufferRef.current.headerMapper: ${JSON.stringify(bufferRef.current.headerMapper, null, 2)}`);
+    }
+
+    if (type !== 'header' && (headerRule && headerRule.length > 0)) {
       headerRule.forEach((elm, elmIdx) => {
         const value = row[elmIdx];
 
@@ -112,7 +123,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         }
       });
     }
-  }, [type, tag])
+  }, [type, tag, headerRule, row])
 
   const handleSaveMapperClick = (type, tag) => {
     // console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
@@ -181,7 +192,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       return listToOptions(keyNameChoices, "")
     }, [keyNameChoices]);
     const [selection, setSelection] = useState(schemaKeyOptions.filter(opt => opt.value === keyNameInitialValue));
-    const debug = false;
+    const debug = true;
 
     const handleSelectChange = (sel) => {
       if (debug) {
@@ -201,8 +212,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
       if (debug) {
         console.log(`mapper:${JSON.stringify(bufferRef.current.headerMapper, null, 2)}`);
-        console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
-        console.log(`requiredKeys=${requiredKeys}`);
+        // console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
+        // console.log(`requiredKeys=${requiredKeys}`);
       }
 
       // This has to be outside the header element
@@ -239,7 +250,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     // const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValues[0]));
     const [multiSelection, setMultiSelection] = useState(typeOptions.filter(opt => typeInitialValues.includes(opt.value)));
 
-    const debug = true;
+    const debug = false;
 
     const handleMultiSelectionChange = (sels) => {
       console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
@@ -296,7 +307,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
                 key={elmIdx}
                 elmValue={elm}
                 keyNameChoices={[...schema.map(item => item.keyName), 'none']}
-                keyNameInitialValue={bufferRef.current.headerMapper[elm] || 'none'}
+                keyNameInitialValue={bufferRef.current.headerDefaultMapper[elm] || 'none'}
             />
           );
         })
