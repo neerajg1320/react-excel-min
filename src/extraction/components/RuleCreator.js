@@ -68,6 +68,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "Credit": "credit",
       "Balance": "balance",
       "Dr / Cr": "drCr",
+      "Withdrawals": "debit",
+      "Deposits": "credit",
     },
     rowMapper: {}
   });
@@ -210,36 +212,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
     const debug = true;
 
-    // const handleSelectionChange = (sel) => {
-    //   if (debug) {
-    //     console.log(`option.value=${sel.value}`);
-    //   }
-    //
-    //   setSelection(sel);
-    //
-    //   // Update the rowMapper
-    //   const acceptableTypes = [sel.value];
-    //   bufferRef.current.rowMapper[keyName] = {
-    //     ...bufferRef.current.rowMapper[keyName],
-    //     acceptableTypes
-    //   };
-    //
-    //   console.log(`handleSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
-    //
-    //   // This part can be taken out by using a callback
-    //   const mappedKeys = Object.keys(bufferRef.current.rowMapper);
-    //
-    //   if (debug) {
-    //     console.log(`mappedKeys:${JSON.stringify(mappedKeys, null, 2)}`);
-    //     console.log(`requiredKeys=${requiredKeys}`);
-    //   }
-    //
-    //   if (mappedKeys.length >= requiredKeys.length) {
-    //     const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
-    //     setMapperSufficient(allMandatoryKeysMapped);
-    //   }
-    // };
-
     const handleMultiSelectionChange = (sels) => {
       console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
 
@@ -308,6 +280,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
           const keyName = headerRule[elmIdx].keyName;
           if (!bufferRef.current.rowMapper[keyName]) {
+            console.log(`Warning: check code before removing. We should not be here`);
+
             let typeIntialValue = getValueType(value, formatList);
             if (typeof(typeIntialValue) === 'object') {
               typeIntialValue = typeIntialValue['type'];
