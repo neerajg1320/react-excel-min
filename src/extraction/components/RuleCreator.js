@@ -156,7 +156,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         const elm = row[elmIdx];
 
         // This is not correct. The acceptableTypes have to be extracted from the RowElement
-        console.log(`handleSaveMapperClick: rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
+        // console.log(`handleSaveMapperClick: rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
 
         let valueType = getValueType(elm, formatList);
         if (typeof(valueType) === 'object') {
@@ -266,7 +266,9 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         acceptableTypes
       };
 
-      console.log(`handleMultiSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
+      setRowMapper(bufferRef.current.rowMapper);
+
+      // console.log(`handleMultiSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
 
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
       if (mappedKeys.length >= requiredKeys.length) {
