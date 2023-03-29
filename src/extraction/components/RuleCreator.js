@@ -44,8 +44,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     return schema.filter(elm => elm.required).map(elm => elm.keyName);
   }, [schema]);
 
-  const bufferRef = useRef({
-    headerMapper: {
+  const defaultMapper = useMemo(() => {
+    return {
       "SRL NO": "serialNum",
       "Tran Date": "valueDate",
       "CHQNO": "reference",
@@ -73,7 +73,11 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       "Deposits": "credit",
       "Ref No./Cheque No.": "reference",
       "Txn Date": "transactionDate"
-    },
+    }
+  });
+  const [headerMapper, setHeaderMapper] = useState(defaultMapper);
+
+  const bufferRef = useRef({
     rowMapper: {}
   });
 
@@ -122,7 +126,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     };
     if (tag === 'header') {
       eventObj['rule'] = row.map((elm) => {
-        const keyName = bufferRef.current.headerMapper[elm] !== undefined ? bufferRef.current.headerMapper[elm] : 'none';
+        const keyName = headerMapper[elm] !== undefined ? headerMapper[elm] : 'none';
         return {
           choices: [elm],
           acceptableTypes: ['string'],
@@ -189,18 +193,18 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
 
       if (sel.value === "") {
-        delete bufferRef.current.headerMapper[elmValue];
+        delete headerMapper[elmValue];
       } else {
-        bufferRef.current.headerMapper[elmValue] = sel.value;
+        headerMapper[elmValue] = sel.value;
       }
 
       setSelection(sel);
 
       // This part can be taken out by using a callback
-      const schemaKeys = Object.keys(bufferRef.current.headerMapper).map((k) => bufferRef.current.headerMapper[k]);
+      const schemaKeys = Object.keys(headerMapper).map((k) => headerMapper[k]);
 
       if (debug) {
-        console.log(`mapper:${JSON.stringify(bufferRef.current.headerMapper, null, 2)}`);
+        console.log(`mapper:${JSON.stringify(headerMapper, null, 2)}`);
         console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
         console.log(`requiredKeys=${requiredKeys}`);
       }
@@ -296,7 +300,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
                 key={elmIdx}
                 elmValue={elm}
                 keyNameChoices={[...schema.map(item => item.keyName), 'none']}
-                keyNameInitialValue={bufferRef.current.headerMapper[elm] || 'none'}
+                keyNameInitialValue={headerMapper[elm] || 'none'}
             />
           );
         })
