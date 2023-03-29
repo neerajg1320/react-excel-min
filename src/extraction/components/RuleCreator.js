@@ -1,11 +1,10 @@
 import * as React from "react";
 import {Fragment, useEffect, useMemo, useRef, useState} from "react";
-import Select from "react-select";
-import {MultiSelect} from "react-multi-select-component";
-import {listToOptions} from "../../utils/options";
-import {getAllDateFormats, getAllTypes, getValueType, isString} from "../../utils/types";
+import {getAllDateFormats, getAllTypes, getValueType} from "../../utils/types";
 import Button from "react-bootstrap/Button";
 import {debug} from "../../components/config/debug";
+import {HeaderElement} from "./HeaderElement";
+import {RowElement} from "./RowElement";
 
 // The schema is needed for headers
 // For rows it should be filtered schema i.e. only the rows which are present in the
@@ -204,79 +203,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     }
   }
 
-  // Header Element
-  const HeaderElement = ({elmValue, keyNameChoices, keyNameInitialValue, onChange}) => {
-    const schemaKeyOptions = useMemo(() => {
-      return listToOptions(keyNameChoices, "")
-    }, [keyNameChoices]);
-
-    const selection = useMemo(() => {
-      return schemaKeyOptions.filter(opt => opt.value === keyNameInitialValue);
-    });
-
-    const handleSelectChange = (sel) => {
-      if (onChange) {
-        onChange(elmValue, sel.value);
-      }
-    };
-
-    return (
-      <div style={{
-        width: "100%",
-        display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
-      }}>
-        <span style={{textAlign: "left", width:"50%"}}>{elmValue}</span>
-        <span style={{width:"50%"}}>
-          <Select
-              value={selection}
-              options={schemaKeyOptions}
-              onChange={handleSelectChange}
-          />
-        </span>
-      </div>
-    );
-  }
-
-  // Row Element
-  // Need to pass the row value so that it can be put in samples
-  const RowElement = ({elmValue, keyName, typeChoices, typeInitialValues, onChange}) => {
-    const typeOptions = useMemo(() => {
-      return listToOptions(typeChoices, "")
-    }, [typeChoices]);
-
-    const multiSelection = useMemo(() => {
-      return typeOptions.filter(opt => typeInitialValues.includes(opt.value));
-    });
-
-    const handleMultiSelectionChange = (sels) => {
-      // console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
-      const acceptableTypes = sels.map(sel => sel.value);
-
-      if (onChange) {
-        onChange(keyName, acceptableTypes);
-      }
-    }
-
-    return (
-        <div style={{
-          width: "100%",
-          display: "flex", flexDirection:"row", justifyContent: "space-between", alignItems: "center"
-        }}>
-          <span style={{textAlign: "left", width:"25%"}}>{keyName}</span>
-          <span style={{textAlign: "left", width:"35%"}}>{elmValue}</span>
-          <span style={{width:"40%"}}>
-            <MultiSelect
-                options={typeOptions}
-                value={multiSelection}
-                onChange={handleMultiSelectionChange}
-                labelledBy="Select"
-            />
-          </span>
-        </div>
-    );
-  }
-
-  // For the RuleCreator component
   return (
     <div style={{
       display: "flex", flexDirection:"column", gap: "10px",
@@ -303,11 +229,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         headerRule.map((elm, elmIdx) => {
           const value = row[elmIdx];
 
-          const keyName = headerRule[elmIdx].keyName;
+          const keyName = elm.keyName;
 
           return  (
             <Fragment key={elmIdx}>
-              {/*<p>{`${keyName}`}</p>*/}
               {rowMapper[keyName] ?
                 <RowElement
                     elmValue={value}
