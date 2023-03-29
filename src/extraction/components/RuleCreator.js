@@ -247,16 +247,16 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
       const updatedRowMapper = {
         ...rowMapper,
-        keyName: {
+        [keyName]: {
           ...rowMapper[keyName],
           acceptableTypes
         }
       };
       console.log(`updatedRowMapper: ${JSON.stringify(updatedRowMapper, null, 2)}`);
 
-      setRowMapper(bufferRef.current.rowMapper);
+      setRowMapper(updatedRowMapper);
 
-      const mappedKeys = Object.keys(bufferRef.current.rowMapper);
+      const mappedKeys = Object.keys(updatedRowMapper);
       if (mappedKeys.length >= requiredKeys.length) {
         const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
         setMapperSufficient(allMandatoryKeysMapped);
