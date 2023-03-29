@@ -220,8 +220,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       if (onChange) {
         onChange(elmValue, sel.value);
       }
-      
-      setSelection(sel);
+
+      // setSelection(sel);
     };
 
     return (
@@ -256,7 +256,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     const handleMultiSelectionChange = (sels) => {
       console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
 
-      setMultiSelection(sels);
+      // setMultiSelection(sels);
 
       // Update the rowMapper
       const acceptableTypes = sels.map(sel => sel.value);
