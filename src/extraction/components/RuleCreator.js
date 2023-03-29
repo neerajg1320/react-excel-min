@@ -150,28 +150,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     } else {
       // console.log(`row[${row.length}]=${JSON.stringify(row)}`, row);
       // console.log(`headerRule[${headerRule.length}]=${JSON.stringify(headerRule, null, 2)}`);
-
-      eventObj['rule'] = headerRule.map((hdrRuleElm, elmIdx) => {
-        const keyName = hdrRuleElm.keyName;
-        const elm = row[elmIdx];
-
-        // This is not correct. The acceptableTypes have to be extracted from the RowElement
-        // console.log(`handleSaveMapperClick: rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
-
-        let valueType = getValueType(elm, formatList);
-        if (typeof(valueType) === 'object') {
-          valueType = valueType['type'];
-        }
-
-        return {
-          acceptableTypes: [valueType],
-          keyName,
-          required: true,
-          // finalType has to be added
-          // format has to be added
-        };
-      });
-
+      
       // Here we are updating the logic
       eventObj['rule'] = Object.entries(bufferRef.current.rowMapper).map(([keyName, rowRuleElm]) => {
         return {
@@ -267,8 +246,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       };
 
       setRowMapper(bufferRef.current.rowMapper);
-
-      // console.log(`handleMultiSelectionChange: bufferRef.current.rowMapper=${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
 
       const mappedKeys = Object.keys(bufferRef.current.rowMapper);
       if (mappedKeys.length >= requiredKeys.length) {
