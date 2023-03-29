@@ -95,13 +95,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       console.log(`headerRule: ${JSON.stringify(headerRule, null, 2)}`);
       console.log(`row: ${JSON.stringify(row, null, 2)}`);
 
-      bufferRef.current.rowMapper = {}
+      const newRowMapper = {}
 
       headerRule.forEach((elm, elmIdx) => {
         const value = row[elmIdx];
 
         const keyName = headerRule[elmIdx].keyName;
-        if (!bufferRef.current.rowMapper[keyName]) {
+        if (!newRowMapper[keyName]) {
           console.log(`Migration: called from useEffect`);
 
           let typeIntialValue = getValueType(value, formatList);
@@ -109,7 +109,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
             typeIntialValue = typeIntialValue['type'];
           }
 
-          bufferRef.current.rowMapper[keyName] = {
+          newRowMapper[keyName] = {
             acceptableTypes: [typeIntialValue],
             samples: [
               {
@@ -121,6 +121,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         }
       });
 
+      bufferRef.current.rowMapper = newRowMapper;
       setRowMapper(bufferRef.current.rowMapper);
     }
 
