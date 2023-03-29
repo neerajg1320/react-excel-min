@@ -63,24 +63,24 @@ const App = () => {
   // The App keeps a copy of signatures
   // TBD: We are yet to verify the json created using a rule with the related schema
   const [signatureList, setSignatureList] = useState([
-    // {
-    //   signature: kotakSignature,
-    //   name: 'Kotak',
-    //   dateRange:{},
-    //   schema: bankStatementSchema,
-    // },
-    // {
-    //   signature: hdfcSignature,
-    //   name: 'HDFC',
-    //   dateRange:{},
-    //   schema: bankStatementSchema,
-    // },
-    // {
-    //   signature: axisSignature,
-    //   name: 'Axis',
-    //   dateRange:{},
-    //   schema: bankStatementSchema,
-    // }
+    {
+      signature: kotakSignature,
+      name: 'Kotak',
+      dateRange:{},
+      schema: bankStatementSchema,
+    },
+    {
+      signature: hdfcSignature,
+      name: 'HDFC',
+      dateRange:{},
+      schema: bankStatementSchema,
+    },
+    {
+      signature: axisSignature,
+      name: 'Axis',
+      dateRange:{},
+      schema: bankStatementSchema,
+    }
   ]);
 
   //
@@ -179,7 +179,7 @@ const App = () => {
 
     return [
       {
-        name: 'constructor',
+        name: 'HeaderDetector',
         rule: (row, rIdx) => {
           const rSig = getRowSignature(row, rIdx, -1, formatList).map(elm => elm.finalType);
           const rSigSet = [...new Set(rSig)];
