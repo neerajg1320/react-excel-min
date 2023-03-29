@@ -84,14 +84,15 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
   useEffect(() => {
-    console.log(`Clearing the rowMapper`);
-    bufferRef.current.rowMapper = {}
     // This achieves the required rerender as well.
     // TBD: we need to fix this logic.
     // Note: Do not remove the setMapperSufficient till we fix the rerender logic for rowMapper
     setMapperSufficient(false);
 
     if (type != 'header' && (headerRule && headerRule.length > 0)) {
+      console.log(`Clearing the rowMapper`);
+      bufferRef.current.rowMapper = {}
+
       headerRule.forEach((elm, elmIdx) => {
         const value = row[elmIdx];
 
@@ -116,7 +117,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         }
       });
     }
-  }, [type, tag])
+  }, [type, tag, row])
 
   const handleSaveMapperClick = (type, tag) => {
     // console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
@@ -315,7 +316,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
           return  (
             <Fragment key={elmIdx}>
-              {/*<p>{`${keyName}`}</p>*/}
+              <p>{`${keyName}`}</p>
               {bufferRef.current.rowMapper[keyName] ?
                 <RowElement
                     elmValue={value}
