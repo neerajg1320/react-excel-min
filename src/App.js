@@ -174,14 +174,14 @@ const App = () => {
   // This helps in finding the proable rows which are a header
   // We often skip this one
   const headerDetectionRules = useMemo(() => {
-    const debugRowIdx = [3,4];
+    const debugRowIdx = [20];
     const headerMemberThreshold = 5;
 
     return [
       {
         name: 'constructor',
         rule: (row, rIdx) => {
-          const rSig = getRowSignature(row, rIdx, -1, formatList);
+          const rSig = getRowSignature(row, rIdx, -1, formatList).map(elm => elm.finalType);
           const rSigSet = [...new Set(rSig)];
 
           if (debugRowIdx.includes(rIdx)) {
