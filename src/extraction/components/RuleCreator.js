@@ -239,11 +239,11 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
       // Update the rowMapper
       const acceptableTypes = sels.map(sel => sel.value);
-      bufferRef.current.rowMapper[keyName] = {
-        ...bufferRef.current.rowMapper[keyName],
-        acceptableTypes
-      };
-      console.log(`bufferRef.current.rowMapper: ${JSON.stringify(bufferRef.current.rowMapper, null, 2)}`);
+      // bufferRef.current.rowMapper[keyName] = {
+      //   ...bufferRef.current.rowMapper[keyName],
+      //   acceptableTypes
+      // };
+      console.log(`rowMapper: ${JSON.stringify(rowMapper, null, 2)}`);
 
       const updatedRowMapper = {
         ...rowMapper,
@@ -254,6 +254,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       };
       console.log(`updatedRowMapper: ${JSON.stringify(updatedRowMapper, null, 2)}`);
 
+      bufferRef.current.rowMapper = updatedRowMapper;
       setRowMapper(updatedRowMapper);
 
       const mappedKeys = Object.keys(updatedRowMapper);
