@@ -209,19 +209,15 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     const schemaKeyOptions = useMemo(() => {
       return listToOptions(keyNameChoices, "")
     }, [keyNameChoices]);
-    const [selection, setSelection] = useState(schemaKeyOptions.filter(opt => opt.value === keyNameInitialValue));
-    const debug = false;
+
+    const selection = useMemo(() => {
+      return schemaKeyOptions.filter(opt => opt.value === keyNameInitialValue);
+    });
 
     const handleSelectChange = (sel) => {
-      if (debug) {
-        console.log(`option.value=${sel.value}`);
-      }
-
       if (onChange) {
         onChange(elmValue, sel.value);
       }
-
-      // setSelection(sel);
     };
 
     return (
