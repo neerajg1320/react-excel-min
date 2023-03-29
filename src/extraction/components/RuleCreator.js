@@ -248,17 +248,12 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       return listToOptions(typeChoices, "")
     }, [typeChoices]);
 
-    // const [selection, setSelection] = useState(typeOptions.filter(opt => opt.value === typeInitialValues[0]));
-    const [multiSelection, setMultiSelection] = useState(typeOptions.filter(opt => typeInitialValues.includes(opt.value)));
-
-    const debug = true;
+    const multiSelection = useMemo(() => {
+      return typeOptions.filter(opt => typeInitialValues.includes(opt.value));
+    });
 
     const handleMultiSelectionChange = (sels) => {
-      console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
-
-      // setMultiSelection(sels);
-
-      // Update the rowMapper
+      // console.log(`handleMultiSelectChange: selections=${JSON.stringify(sels)}`);
       const acceptableTypes = sels.map(sel => sel.value);
 
       if (onChange) {
