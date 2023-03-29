@@ -78,10 +78,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   const [headerMapper, setHeaderMapper] = useState(defaultMapper);
   const [rowMapper, setRowMapper] = useState({});
 
-  const bufferRef = useRef({
-    rowMapper: {}
-  });
-
   const [mapperSufficient, setMapperSufficient] = useState(false);
 
   useEffect(() => {
@@ -120,10 +116,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         })
       )
       setRowMapper(newRowMapper);
-      bufferRef.current.rowMapper = newRowMapper;
     }
-
-    console.log(`bufferRef.current: ${JSON.stringify(bufferRef.current, null, 2)}`);
   }, [type, tag, row, headerRule])
 
   const handleSaveMapperClick = (type, tag) => {
@@ -163,6 +156,27 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       if (onEvent) {
         onEvent({name:'complete'}, eventObj);
       }
+    }
+  }
+
+  const handleRowElementTypesChange = (keyName, acceptableTypes) => {
+    console.log(`handleRowElementTypesChange: ${keyName} ${acceptableTypes}`)
+    
+    const updatedRowMapper = {
+      ...rowMapper,
+      [keyName]: {
+        ...rowMapper[keyName],
+        acceptableTypes
+      }
+    };
+
+    // console.log(`updatedRowMapper: ${JSON.stringify(updatedRowMapper, null, 2)}`);
+    setRowMapper(updatedRowMapper);
+
+    const mappedKeys = Object.keys(updatedRowMapper);
+    if (mappedKeys.length >= requiredKeys.length) {
+      const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
+      setMapperSufficient(allMandatoryKeysMapped);
     }
   }
 
@@ -222,7 +236,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
   // Row Element
   // Need to pass the row value so that it can be put in samples
-  const RowElement = ({elmValue, keyName, typeChoices, typeInitialValues}) => {
+  const RowElement = ({elmValue, keyName, typeChoices, typeInitialValues, onChange}) => {
     const typeOptions = useMemo(() => {
       return listToOptions(typeChoices, "")
     }, [typeChoices]);
@@ -239,29 +253,29 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
       // Update the rowMapper
       const acceptableTypes = sels.map(sel => sel.value);
-      // bufferRef.current.rowMapper[keyName] = {
-      //   ...bufferRef.current.rowMapper[keyName],
-      //   acceptableTypes
-      // };
-      console.log(`rowMapper: ${JSON.stringify(rowMapper, null, 2)}`);
 
-      const updatedRowMapper = {
-        ...rowMapper,
-        [keyName]: {
-          ...rowMapper[keyName],
-          acceptableTypes
-        }
-      };
-      console.log(`updatedRowMapper: ${JSON.stringify(updatedRowMapper, null, 2)}`);
-
-      bufferRef.current.rowMapper = updatedRowMapper;
-      setRowMapper(updatedRowMapper);
-
-      const mappedKeys = Object.keys(updatedRowMapper);
-      if (mappedKeys.length >= requiredKeys.length) {
-        const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
-        setMapperSufficient(allMandatoryKeysMapped);
+      if (onChange) {
+        onChange(keyName, acceptableTypes);
       }
+
+      // console.log(`rowMapper: ${JSON.stringify(rowMapper, null, 2)}`);
+
+      // const updatedRowMapper = {
+      //   ...rowMapper,
+      //   [keyName]: {
+      //     ...rowMapper[keyName],
+      //     acceptableTypes
+      //   }
+      // };
+      //
+      // // console.log(`updatedRowMapper: ${JSON.stringify(updatedRowMapper, null, 2)}`);
+      // setRowMapper(updatedRowMapper);
+      //
+      // const mappedKeys = Object.keys(updatedRowMapper);
+      // if (mappedKeys.length >= requiredKeys.length) {
+      //   const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
+      //   setMapperSufficient(allMandatoryKeysMapped);
+      // }
     }
 
     return (
@@ -320,6 +334,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
                     keyName={keyName}
                     typeChoices={typeChoices}
                     typeInitialValues={rowMapper[keyName]['acceptableTypes']}
+                    onChange={handleRowElementTypesChange}
                 />
                   :
                   <h4>{`${rowMapper[keyName]} is not valid`}</h4>
