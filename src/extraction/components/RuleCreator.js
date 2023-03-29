@@ -176,11 +176,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
       return updatedHeaderMapper;
     });
+  }
 
-    const schemaKeys = Object.entries(updatedHeaderMapper).map(([k, v]) => v);
+  useEffect(() => {
+    const schemaKeys = Object.entries(headerMapper).map(([k, v]) => v);
 
     if (debug) {
-      console.log(`mapper:${JSON.stringify(updatedHeaderMapper, null, 2)}`);
+      console.log(`mapper:${JSON.stringify(headerMapper, null, 2)}`);
       console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
       console.log(`requiredKeys=${requiredKeys}`);
     }
@@ -190,7 +192,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       const allMandatoryKeysMapped = requiredKeys.every(sKey => schemaKeys.includes(sKey))
       setMapperSufficient(allMandatoryKeysMapped);
     }
-  }
+  }, [headerMapper, requiredKeys])
 
   const handleRowElementTypesChange = (keyName, acceptableTypes) => {
     console.log(`handleRowElementTypesChange: ${keyName} ${acceptableTypes}`)
