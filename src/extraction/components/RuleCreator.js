@@ -161,11 +161,9 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   const handleHeaderElementMappingChange = (key, value) => {
     console.log(`handleHeaderElementMappingChange: ${key} ${value}`)
 
-    let updatedHeaderMapper;
-
-    setHeaderMapper((prev) => {
-      updatedHeaderMapper = {
-        ...headerMapper
+    setHeaderMapper((prevHeaderMapper) => {
+      const updatedHeaderMapper = {
+        ...prevHeaderMapper
       }
 
       if (value === "") {
@@ -197,18 +195,14 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   const handleRowElementTypesChange = (keyName, acceptableTypes) => {
     console.log(`handleRowElementTypesChange: ${keyName} ${acceptableTypes}`)
 
-    let updatedRowMapper;
-
-    setRowMapper((prev) => {
-      updatedRowMapper =  {
-        ...prev,
+    setRowMapper((prevRowMapper) => {
+      return  {
+        ...prevRowMapper,
         [keyName]: {
-          ...prev[keyName],
+          ...prevRowMapper[keyName],
           acceptableTypes
         }
       }
-
-      return updatedRowMapper;
     });
   }
 
