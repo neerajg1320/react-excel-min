@@ -76,6 +76,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     }
   });
   const [headerMapper, setHeaderMapper] = useState(defaultMapper);
+  const [rowMapper, setRowMapper] = useState({});
 
   const bufferRef = useRef({
     rowMapper: {}
@@ -91,6 +92,9 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
     if (type != 'header' && (headerRule && headerRule.length > 0)) {
       console.log(`Clearing the rowMapper`);
+      console.log(`headerRule: ${JSON.stringify(headerRule, null, 2)}`);
+      console.log(`row: ${JSON.stringify(row, null, 2)}`);
+
       bufferRef.current.rowMapper = {}
 
       headerRule.forEach((elm, elmIdx) => {
@@ -116,8 +120,12 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           };
         }
       });
+
+      setRowMapper(bufferRef.current.rowMapper);
     }
-  }, [type, tag, row])
+
+    console.log(`bufferRef.current: ${JSON.stringify(bufferRef.current, null, 2)}`);
+  }, [type, tag, row, headerRule])
 
   const handleSaveMapperClick = (type, tag) => {
     // console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
@@ -317,15 +325,15 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           return  (
             <Fragment key={elmIdx}>
               <p>{`${keyName}`}</p>
-              {bufferRef.current.rowMapper[keyName] ?
+              {rowMapper[keyName] ?
                 <RowElement
                     elmValue={value}
                     keyName={keyName}
                     typeChoices={typeChoices}
-                    typeInitialValues={bufferRef.current.rowMapper[keyName]['acceptableTypes']}
+                    typeInitialValues={rowMapper[keyName]['acceptableTypes']}
                 />
                   :
-                  <h4>{`${bufferRef.current.rowMapper[keyName]} is not valid`}</h4>
+                  <h4>{`${rowMapper[keyName]} is not valid`}</h4>
               }
             </Fragment>
           );
