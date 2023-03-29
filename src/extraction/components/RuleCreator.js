@@ -121,8 +121,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
         }
       });
 
+      setRowMapper(newRowMapper);
       bufferRef.current.rowMapper = newRowMapper;
-      setRowMapper(bufferRef.current.rowMapper);
     }
 
     console.log(`bufferRef.current: ${JSON.stringify(bufferRef.current, null, 2)}`);
