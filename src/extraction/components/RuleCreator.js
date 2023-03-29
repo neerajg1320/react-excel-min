@@ -150,9 +150,9 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     } else {
       // console.log(`row[${row.length}]=${JSON.stringify(row)}`, row);
       // console.log(`headerRule[${headerRule.length}]=${JSON.stringify(headerRule, null, 2)}`);
-      
+
       // Here we are updating the logic
-      eventObj['rule'] = Object.entries(bufferRef.current.rowMapper).map(([keyName, rowRuleElm]) => {
+      eventObj['rule'] = Object.entries(rowMapper).map(([keyName, rowRuleElm]) => {
         return {
           acceptableTypes: rowRuleElm.acceptableTypes,
           keyName,
@@ -303,7 +303,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
           return  (
             <Fragment key={elmIdx}>
-              <p>{`${keyName}`}</p>
+              {/*<p>{`${keyName}`}</p>*/}
               {rowMapper[keyName] ?
                 <RowElement
                     elmValue={value}
