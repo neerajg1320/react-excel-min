@@ -1,4 +1,4 @@
-import {dateFromString, getValueType, isDate, isString, numberFromString} from "./types";
+import {dateFromString, getValueType} from "./types";
 
 export const getRowSignature = (row, rIdx, numProps, formatList) => {
   const debugRowIdx = [];
