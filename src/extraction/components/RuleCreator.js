@@ -185,16 +185,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   const handleRowElementTypesChange = (keyName, acceptableTypes) => {
     console.log(`handleRowElementTypesChange: ${keyName} ${acceptableTypes}`)
 
-    // const updatedRowMapper = {
-    //   ...rowMapper,
-    //   [keyName]: {
-    //     ...rowMapper[keyName],
-    //     acceptableTypes
-    //   }
-    // };
     let updatedRowMapper;
 
-    // console.log(`updatedRowMapper: ${JSON.stringify(updatedRowMapper, null, 2)}`);
     setRowMapper((prev) => {
       updatedRowMapper =  {
         ...prev,
@@ -206,13 +198,15 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
       return updatedRowMapper;
     });
+  }
 
-    const mappedKeys = Object.keys(updatedRowMapper);
+  useEffect(() => {
+    const mappedKeys = Object.keys(rowMapper);
     if (mappedKeys.length >= requiredKeys.length) {
       const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
       setMapperSufficient(allMandatoryKeysMapped);
     }
-  }
+  }, [rowMapper, requiredKeys])
 
   return (
     <div style={{
