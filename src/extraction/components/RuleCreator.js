@@ -159,9 +159,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     }
   }
 
+  const handleHeaderElementMappingChange = (key, value) => {
+    console.log(`handleHeaderElementMappingChange: ${key} ${value}`)
+  }
+
   const handleRowElementTypesChange = (keyName, acceptableTypes) => {
     console.log(`handleRowElementTypesChange: ${keyName} ${acceptableTypes}`)
-    
+
     const updatedRowMapper = {
       ...rowMapper,
       [keyName]: {
@@ -181,7 +185,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   }
 
   // Header Element
-  const HeaderElement = ({elmValue, keyNameChoices, keyNameInitialValue}) => {
+  const HeaderElement = ({elmValue, keyNameChoices, keyNameInitialValue, onChange}) => {
     const schemaKeyOptions = useMemo(() => {
       return listToOptions(keyNameChoices, "")
     }, [keyNameChoices]);
@@ -191,6 +195,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     const handleSelectChange = (sel) => {
       if (debug) {
         console.log(`option.value=${sel.value}`);
+      }
+
+      if (onChange) {
+        onChange(elmValue, sel.value);
       }
 
       if (sel.value === "") {
@@ -257,25 +265,6 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       if (onChange) {
         onChange(keyName, acceptableTypes);
       }
-
-      // console.log(`rowMapper: ${JSON.stringify(rowMapper, null, 2)}`);
-
-      // const updatedRowMapper = {
-      //   ...rowMapper,
-      //   [keyName]: {
-      //     ...rowMapper[keyName],
-      //     acceptableTypes
-      //   }
-      // };
-      //
-      // // console.log(`updatedRowMapper: ${JSON.stringify(updatedRowMapper, null, 2)}`);
-      // setRowMapper(updatedRowMapper);
-      //
-      // const mappedKeys = Object.keys(updatedRowMapper);
-      // if (mappedKeys.length >= requiredKeys.length) {
-      //   const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
-      //   setMapperSufficient(allMandatoryKeysMapped);
-      // }
     }
 
     return (
@@ -313,6 +302,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
                 elmValue={elm}
                 keyNameChoices={[...schema.map(item => item.keyName), 'none']}
                 keyNameInitialValue={headerMapper[elm] || 'none'}
+                onChange={handleHeaderElementMappingChange}
             />
           );
         })
