@@ -161,6 +161,26 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
 
   const handleHeaderElementMappingChange = (key, value) => {
     console.log(`handleHeaderElementMappingChange: ${key} ${value}`)
+
+    if (value === "") {
+      delete headerMapper[key];
+    } else {
+      headerMapper[key] = value;
+    }
+
+    const schemaKeys = Object.keys(headerMapper).map((k) => headerMapper[k]);
+
+    if (debug) {
+      console.log(`mapper:${JSON.stringify(headerMapper, null, 2)}`);
+      console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
+      console.log(`requiredKeys=${requiredKeys}`);
+    }
+
+    // This has to be outside the header element
+    if (schemaKeys.length >= requiredKeys.length) {
+      const allMandatoryKeysMapped = requiredKeys.every(sKey => schemaKeys.includes(sKey))
+      setMapperSufficient(allMandatoryKeysMapped);
+    }
   }
 
   const handleRowElementTypesChange = (keyName, acceptableTypes) => {
@@ -200,29 +220,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       if (onChange) {
         onChange(elmValue, sel.value);
       }
-
-      if (sel.value === "") {
-        delete headerMapper[elmValue];
-      } else {
-        headerMapper[elmValue] = sel.value;
-      }
-
+      
       setSelection(sel);
-
-      // This part can be taken out by using a callback
-      const schemaKeys = Object.keys(headerMapper).map((k) => headerMapper[k]);
-
-      if (debug) {
-        console.log(`mapper:${JSON.stringify(headerMapper, null, 2)}`);
-        console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
-        console.log(`requiredKeys=${requiredKeys}`);
-      }
-
-      // This has to be outside the header element
-      if (schemaKeys.length >= requiredKeys.length) {
-        const allMandatoryKeysMapped = requiredKeys.every(sKey => schemaKeys.includes(sKey))
-        setMapperSufficient(allMandatoryKeysMapped);
-      }
     };
 
     return (
