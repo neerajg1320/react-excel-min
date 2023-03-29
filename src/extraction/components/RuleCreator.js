@@ -161,16 +161,26 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   const handleHeaderElementMappingChange = (key, value) => {
     console.log(`handleHeaderElementMappingChange: ${key} ${value}`)
 
-    if (value === "") {
-      delete headerMapper[key];
-    } else {
-      headerMapper[key] = value;
-    }
+    let updatedHeaderMapper;
 
-    const schemaKeys = Object.keys(headerMapper).map((k) => headerMapper[k]);
+    setHeaderMapper((prev) => {
+      updatedHeaderMapper = {
+        ...headerMapper
+      }
+
+      if (value === "") {
+        delete updatedHeaderMapper[key];
+      } else {
+        updatedHeaderMapper[key] = value;
+      }
+
+      return updatedHeaderMapper;
+    });
+
+    const schemaKeys = Object.entries(updatedHeaderMapper).map(([k, v]) => v);
 
     if (debug) {
-      console.log(`mapper:${JSON.stringify(headerMapper, null, 2)}`);
+      console.log(`mapper:${JSON.stringify(updatedHeaderMapper, null, 2)}`);
       console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
       console.log(`requiredKeys=${requiredKeys}`);
     }
