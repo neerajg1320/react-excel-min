@@ -3,7 +3,9 @@ import {
   parse as fnsParse,
   isDate as fnsIsDate,
   isValid as fnsIsValid,
-  addHours, addMinutes, addSeconds
+  getYear,
+  addHours, addMinutes, addSeconds,
+  addYears
 } from "date-fns";
 
 export const isoDateFormat = "yyyy-MM-dd";
@@ -135,6 +137,14 @@ export function dateFromString(value, format) {
       if (!fnsIsValid(date)) {
         // console.error(`dateFromString: '[${typeof(date)}]${date}' is not a valid date`);
         date = null;
+      } else {
+        // Fix the year and change 20 to 2020
+        const year = getYear(date);
+        if (year < 100) {
+          console.log(`year fixed from ${year}`);
+          date = addYears(date, 2000);
+        }
+
       }
     } catch (e) {
       console.error(`dateFromString: ${e}`);
