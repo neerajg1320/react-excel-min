@@ -141,7 +141,6 @@ export function dateFromString(value, format) {
         // Fix the year and change 20 to 2020
         const year = getYear(date);
         if (year < 100) {
-          console.log(`year fixed from ${year}`);
           date = addYears(date, 2000);
         }
 
