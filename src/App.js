@@ -429,6 +429,10 @@ const App = () => {
     }
   }, []);
 
+  const handleShowSignatures = () => {
+    console.log(`handleShowSignatures: signature:${JSON.stringify(signature,null, 2)}`);
+  }
+
   const handleShowData = () => {
     console.log(`handleShowData: data:${JSON.stringify(transactionsBufferRef.current.data,null, 2)}`);
   }
@@ -556,6 +560,9 @@ const App = () => {
                         width: "100%",
                         display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"20px"
                       }}>
+                        <Button className="btn-outline-info" onClick={handleShowSignatures}>
+                          Show Signatures
+                        </Button>
                         <Button className="btn-outline-info" onClick={handleShowData}>
                           Show Data
                         </Button>
