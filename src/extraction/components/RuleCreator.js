@@ -139,7 +139,6 @@ export const RuleCreator = ({rows, schema, name:initialName, type, tag, onEvent,
         };
       });
     } else {
-      // Here we are updating the logic
       eventObj['rule'] = Object.entries(rowMapper).map(([keyName, rowRuleElm]) => {
         return {
           acceptableTypes: rowRuleElm.acceptableTypes,

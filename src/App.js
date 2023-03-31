@@ -69,12 +69,12 @@ const App = () => {
     //   dateRange:{},
     //   schema: bankStatementSchema,
     // },
-    "HDFC0": {
-      signature: hdfcSignature,
-      name: 'HDFC',
-      dateRange:{},
-      schema: bankStatementSchema,
-    },
+    // "HDFC0": {
+    //   signature: hdfcSignature,
+    //   name: 'HDFC',
+    //   dateRange:{},
+    //   schema: bankStatementSchema,
+    // },
     // "Axis0": {
     //   signature: axisSignature,
     //   name: 'Axis',
@@ -82,6 +82,8 @@ const App = () => {
     //   schema: bankStatementSchema,
     // }
   });
+
+  const sigFileRef = useRef();
 
   //
   const [highlighterDetected, setHighlighterDetected] = useState(false);
@@ -431,8 +433,34 @@ const App = () => {
     }
   }, []);
 
+  const handleLoadSignatures = () => {
+    sigFileRef.current.click();
+    // console.log(`handleLoadSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
+  }
+
+  const handleFileChange = (e) => {
+    // console.log(e.target.files[0]);
+
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+      const text = (e.target.result)
+      // console.log(text)
+      // alert(text)
+    };
+    reader.readAsText(e.target.files[0])
+  }
+
   const handleSaveSignatures = () => {
-    console.log(`handleSaveSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
+    // console.log(`handleSaveSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
+
+    const fileData = JSON.stringify(signatureMap, null, 2);
+    const blob = new Blob([fileData], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.download = "signatures.json";
+    link.href = url;
+    link.click();
   }
 
   const handleShowSignatures = () => {
@@ -575,7 +603,8 @@ const App = () => {
                           width: "100%",
                           display: "flex", flexDirection: "row", justifyContent:"center", gap:"20px"
                         }}>
-                          <Button className="btn-outline-info" onClick={handleSaveSignatures}>
+                          <Button className="btn-outline-info" onClick={handleLoadSignatures}>
+                            <input ref={sigFileRef} type="file" onChange={handleFileChange} style={{display: "none"}} />
                             Load Signatures
                           </Button>
                           <Button className="btn-outline-info" onClick={handleSaveSignatures}>
