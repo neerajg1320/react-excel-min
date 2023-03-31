@@ -29,7 +29,7 @@ export const RuleCreator = ({rows, schema, name:initialName, type, tag, onEvent,
     }
   }, []);
 
-  const [ruleName, setRuleName] = useState(initialName || "name");
+  const [ruleName, setRuleName] = useState(initialName || "");
 
   const typeChoices = useMemo(() => {
     return getAllTypes();
@@ -182,7 +182,7 @@ export const RuleCreator = ({rows, schema, name:initialName, type, tag, onEvent,
     }
 
     // This has to be outside the header element
-    if (schemaKeys.length >= requiredKeys.length) {
+    if (ruleName && schemaKeys.length >= requiredKeys.length) {
       const allMandatoryKeysMapped = requiredKeys.every(sKey => schemaKeys.includes(sKey))
       setMapperSufficient(allMandatoryKeysMapped);
     }
@@ -204,7 +204,7 @@ export const RuleCreator = ({rows, schema, name:initialName, type, tag, onEvent,
 
   useEffect(() => {
     const mappedKeys = Object.keys(rowMapper);
-    if (mappedKeys.length >= requiredKeys.length) {
+    if (ruleName && mappedKeys.length >= requiredKeys.length) {
       const allMandatoryKeysMapped = requiredKeys.every(sKey => mappedKeys.includes(sKey))
       setMapperSufficient(allMandatoryKeysMapped);
     }

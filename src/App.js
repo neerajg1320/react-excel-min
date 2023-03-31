@@ -62,26 +62,26 @@ const App = () => {
 
   // The App keeps a copy of signatures
   // TBD: We are yet to verify the json created using a rule with the related schema
-  const [signatureList, setSignatureList] = useState([
-    {
-      signature: kotakSignature,
-      name: 'Kotak',
-      dateRange:{},
-      schema: bankStatementSchema,
-    },
-    {
-      signature: hdfcSignature,
-      name: 'HDFC',
-      dateRange:{},
-      schema: bankStatementSchema,
-    },
-    {
-      signature: axisSignature,
-      name: 'Axis',
-      dateRange:{},
-      schema: bankStatementSchema,
-    }
-  ]);
+  const [signatureMap, setSignatureMap] = useState({
+    // "Kotak0": {
+    //   signature: kotakSignature,
+    //   name: 'Kotak',
+    //   dateRange:{},
+    //   schema: bankStatementSchema,
+    // },
+    // "HDFC0": {
+    //   signature: hdfcSignature,
+    //   name: 'HDFC',
+    //   dateRange:{},
+    //   schema: bankStatementSchema,
+    // },
+    // "Axis0": {
+    //   signature: axisSignature,
+    //   name: 'Axis',
+    //   dateRange:{},
+    //   schema: bankStatementSchema,
+    // }
+  });
 
   //
   const [highlighterDetected, setHighlighterDetected] = useState(false);
@@ -125,9 +125,10 @@ const App = () => {
     }
   ]);
 
-  const detectHighlighter = useCallback((data, signatures) => {
+  const detectHighlighter = useCallback((data, sigMap) => {
     // console.log(`data:${JSON.stringify(data, null, 2)}`);
     // console.log(`detectHighlighter:`, signatures);
+    const signatures = Object.entries(sigMap).map(([k,v]) => v);
 
     data.map((row, rIdx) => {
       if (signatures) {
@@ -164,10 +165,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // console.log(`signatureList.signaure: ${JSON.stringify(signatureList.map(sig => sig), null, 2)}`);
+    // console.log(`signatureMap.signaure: ${JSON.stringify(signatureMap.map(sig => sig), null, 2)}`);
 
-    detectHighlighter(rows, signatureList);
-  }, [rows, signatureList]);
+    detectHighlighter(rows, signatureMap);
+  }, [rows, signatureMap]);
 
 
   // Rules for highlighter detection
@@ -430,7 +431,7 @@ const App = () => {
   }, []);
 
   const handleShowSignatures = () => {
-    console.log(`handleShowSignatures: signature:${JSON.stringify(signature,null, 2)}`);
+    console.log(`handleShowSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
   }
 
   const handleShowData = () => {
@@ -467,7 +468,7 @@ const App = () => {
 
     if (tag === 'header') {
       setHeaderRule(rule);
-      setSignatureName('Axis')
+      setSignatureName(name);
 
       const sigObj = {
         signature: {
@@ -500,11 +501,14 @@ const App = () => {
   useEffect(() => {
     // console.log(`useEffect[signature]: signature=`, signature);
 
-    setSignatureList((prev) => {
-      // return [...prev, sigObj]
-      // Temporarily a single member list
-      return [signature];
-    });
+    if (signature && Object.keys(signature).length > 0) {
+      setSignatureMap((prev) => {
+        return {
+          ...prev,
+          [signatureName]: signature
+        };
+      });
+    }
   }, [signature]);
   
   const handleSelectionChange = (selRows) => {
