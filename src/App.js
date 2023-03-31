@@ -69,12 +69,12 @@ const App = () => {
     //   dateRange:{},
     //   schema: bankStatementSchema,
     // },
-    // "HDFC0": {
-    //   signature: hdfcSignature,
-    //   name: 'HDFC',
-    //   dateRange:{},
-    //   schema: bankStatementSchema,
-    // },
+    "HDFC0": {
+      signature: hdfcSignature,
+      name: 'HDFC',
+      dateRange:{},
+      schema: bankStatementSchema,
+    },
     // "Axis0": {
     //   signature: axisSignature,
     //   name: 'Axis',
@@ -127,8 +127,9 @@ const App = () => {
 
   const detectHighlighter = useCallback((data, sigMap) => {
     // console.log(`data:${JSON.stringify(data, null, 2)}`);
-    // console.log(`detectHighlighter:`, signatures);
+
     const signatures = Object.entries(sigMap).map(([k,v]) => v);
+    console.log(`detectHighlighter:`, signatures);
 
     data.map((row, rIdx) => {
       if (signatures) {
@@ -430,6 +431,10 @@ const App = () => {
     }
   }, []);
 
+  const handleSaveSignatures = () => {
+    console.log(`handleSaveSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
+  }
+
   const handleShowSignatures = () => {
     console.log(`handleShowSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
   }
@@ -564,20 +569,36 @@ const App = () => {
                     }}>
                       <div style={{
                         width: "100%",
-                        display: "flex", flexDirection: "row", justifyContent:"space-between", gap:"20px"
+                        display: "flex", flexDirection: "column", justifyContent:"space-between", gap:"20px"
                       }}>
-                        <Button className="btn-outline-info" onClick={handleShowSignatures}>
-                          Show Signatures
-                        </Button>
-                        <Button className="btn-outline-info" onClick={handleShowData}>
-                          Show Data
-                        </Button>
-                        <Button className="btn-outline-info" onClick={handleClearData}>
-                          Clear Data
-                        </Button>
+                        <div style={{
+                          width: "100%",
+                          display: "flex", flexDirection: "row", justifyContent:"center", gap:"20px"
+                        }}>
+                          <Button className="btn-outline-info" onClick={handleSaveSignatures}>
+                            Load Signatures
+                          </Button>
+                          <Button className="btn-outline-info" onClick={handleSaveSignatures}>
+                            Save Signatures
+                          </Button>
+                          <Button className="btn-outline-info" onClick={handleShowSignatures}>
+                            Show Signatures
+                          </Button>
+                        </div>
+                        <div style={{
+                          width: "100%",
+                          display: "flex", flexDirection: "row", justifyContent:"center", gap:"20px"
+                        }}>
+                          <Button className="btn-outline-info" onClick={handleShowData}>
+                            Show Data
+                          </Button>
+                          <Button className="btn-outline-info" onClick={handleClearData}>
+                            Clear Data
+                          </Button>
+                        </div>
                       </div>
                     </div>
-
+                    <div style={{marginBottom: "40px"}}></div>
                     {
                       <>
                       <h4>Raw Table</h4>
