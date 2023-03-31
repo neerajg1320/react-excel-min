@@ -12,7 +12,7 @@ import {RowElement} from "./RowElement";
 // Then it is called to create RowElements. So the RowElements can make use of a filtered Schema
 // We will pass a schemaMap which carries the info of which index maps to which row
 // The headerRule is required. It will be passed to type=data rows
-export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, formatList}) => {
+export const RuleCreator = ({rows, schema, name:initialName, type, tag, onEvent, headerRule, formatList}) => {
   if (debug.lifecycle) {
     console.log(`RuleCreator:rendered`);
   }
@@ -28,6 +28,8 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       }
     }
   }, []);
+
+  const [ruleName, setRuleName] = useState(initialName || "name");
 
   const typeChoices = useMemo(() => {
     return getAllTypes();
@@ -118,12 +120,14 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
     }
   }, [type, tag, row, headerRule])
 
-  const handleSaveMapperClick = (type, tag) => {
-    // console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
+  const handleSaveMapperClick = (name, type, tag) => {
+    console.log(`handleSaveMapperClick: type=${type} tag=${tag}`);
 
     const eventObj = {
+      name: ruleName,
       tag
     };
+
     if (tag === 'header') {
       eventObj['rule'] = row.map((elm) => {
         const keyName = headerMapper[elm] !== undefined ? headerMapper[elm] : 'none';
@@ -134,14 +138,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           required: true,
         };
       });
-
-      if (onEvent) {
-        onEvent({name:'complete'}, eventObj);
-      }
     } else {
-      // console.log(`row[${row.length}]=${JSON.stringify(row)}`, row);
-      // console.log(`headerRule[${headerRule.length}]=${JSON.stringify(headerRule, null, 2)}`);
-
       // Here we are updating the logic
       eventObj['rule'] = Object.entries(rowMapper).map(([keyName, rowRuleElm]) => {
         return {
@@ -150,11 +147,10 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
           required:true
         };
       });
+    }
 
-      // We need to add the onEvent call
-      if (onEvent) {
-        onEvent({name:'complete'}, eventObj);
-      }
+    if (onEvent) {
+      onEvent({name:'complete'}, eventObj);
     }
   }
 
@@ -220,6 +216,13 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
       textAlign: "center"
     }}>
 
+      <div style={{
+        display: "flex", flexDirection: "row", gap: "20px",
+        marginBottom: "20px"
+      }}>
+        <span style={{fontWeight: "bold"}}>Signature Name:</span>
+        <span><input value={ruleName} onChange={(e) => {setRuleName(e.target.value)}}/></span>
+      </div>
       {
         (type === 'header' && row && row.length > 0) &&
         row.map((elm, elmIdx) => {
@@ -266,7 +269,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
             <p style={{backgroundColor:'rgba(255, 0, 0, 0.2)'}}>Mapper Incomplete</p>
       }
 
-      <Button onClick={() => handleSaveMapperClick(type, tag)} disabled={!mapperSufficient}>
+      <Button onClick={() => handleSaveMapperClick(ruleName, type, tag)} disabled={!mapperSufficient}>
         Save Mapper
       </Button>
       <p>Header Creator Kept for display correction</p>
