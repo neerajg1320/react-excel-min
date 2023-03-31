@@ -436,7 +436,11 @@ const App = () => {
 
   const handleLoadSignatures = (text) => {
     console.log(`handleLoadSignatures: text=${text}`);
-
+    const sigMap = JSON.parse(text);
+    console.log(`sigMap:${sigMap}`);
+    if (sigMap) {
+      setSignatureMap(sigMap);
+    }
   }
 
   const handleSaveSignatures = () => {
