@@ -596,16 +596,14 @@ const App = () => {
                           width: "100%",
                           display: "flex", flexDirection: "row", justifyContent:"center", gap:"20px"
                         }}>
-                          <LoadFileButton onChange={handleLoadSignatures}>
+                          <LoadFileButton className="btn-outline-info" onChange={handleLoadSignatures}>
                             Load Signatures
                           </LoadFileButton>
-                          {/*<Button className="btn-outline-info" onClick={handleLoadSignatures}>*/}
-                          {/*  <input ref={sigFileRef} type="file" onChange={handleFileChange} style={{display: "none"}} />*/}
-                          {/*  Load Signatures*/}
-                          {/*</Button>*/}
+
                           <Button className="btn-outline-info" onClick={handleSaveSignatures}>
                             Save Signatures
                           </Button>
+                          
                           <Button className="btn-outline-info" onClick={handleShowSignatures}>
                             Show Signatures
                           </Button>
@@ -686,7 +684,6 @@ const App = () => {
                     }
 
                     {
-                      highlighterDetected &&
                       <>
                       <h4>Highlighted Table</h4>
                       <TableBulk
@@ -695,6 +692,8 @@ const App = () => {
                           onRulesEvent={handleHighlightingRulesEvent}
                           ref={highlightedTableRef}
                       />
+                      <div style={{marginBottom:"50px"}}>
+                      </div>
                       </>
                     }
 
