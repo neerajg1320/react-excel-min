@@ -606,12 +606,9 @@ const App = () => {
                           </LoadFileButton>
 
                           <SaveFileButton className="btn-outline-info" data={JSON.stringify(signatureMap, null,2)} onChange={handleSaveComplete}>
-                            Save Sig
+                            Save Signatures
                           </SaveFileButton>
 
-                          {/*<Button className="btn-outline-info" onClick={handleSaveSignatures}>*/}
-                          {/*  Save Signatures*/}
-                          {/*</Button>*/}
 
                           <Button className="btn-outline-info" onClick={handleShowSignatures}>
                             Show Signatures
