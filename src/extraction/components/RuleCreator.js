@@ -179,7 +179,7 @@ export const RuleCreator = ({rows, schema, type, tag, onEvent, headerRule, forma
   useEffect(() => {
     const schemaKeys = Object.entries(headerMapper).map(([k, v]) => v);
 
-    if (debug) {
+    if (debug.details) {
       console.log(`mapper:${JSON.stringify(headerMapper, null, 2)}`);
       console.log(`schemaKeys:${JSON.stringify(schemaKeys, null, 2)}`);
       console.log(`requiredKeys=${requiredKeys}`);
