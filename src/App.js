@@ -20,6 +20,7 @@ import {axisSignature} from "./extraction/parsers/axisSignature";
 import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 import Switch from "react-switch";
 import {RuleCreator} from "./extraction/components/RuleCreator";
+import {LoadFileButton} from "./extraction/components/LoadFileButton";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -433,21 +434,9 @@ const App = () => {
     }
   }, []);
 
-  const handleLoadSignatures = () => {
-    sigFileRef.current.click();
-    // console.log(`handleLoadSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
-  }
+  const handleLoadSignatures = (text) => {
+    console.log(`handleLoadSignatures: text=${text}`);
 
-  const handleFileChange = (e) => {
-    // console.log(e.target.files[0]);
-
-    const reader = new FileReader()
-    reader.onload = async (e) => {
-      const text = (e.target.result)
-      // console.log(text)
-      // alert(text)
-    };
-    reader.readAsText(e.target.files[0])
   }
 
   const handleSaveSignatures = () => {
@@ -603,10 +592,13 @@ const App = () => {
                           width: "100%",
                           display: "flex", flexDirection: "row", justifyContent:"center", gap:"20px"
                         }}>
-                          <Button className="btn-outline-info" onClick={handleLoadSignatures}>
-                            <input ref={sigFileRef} type="file" onChange={handleFileChange} style={{display: "none"}} />
+                          <LoadFileButton onChange={handleLoadSignatures}>
                             Load Signatures
-                          </Button>
+                          </LoadFileButton>
+                          {/*<Button className="btn-outline-info" onClick={handleLoadSignatures}>*/}
+                          {/*  <input ref={sigFileRef} type="file" onChange={handleFileChange} style={{display: "none"}} />*/}
+                          {/*  Load Signatures*/}
+                          {/*</Button>*/}
                           <Button className="btn-outline-info" onClick={handleSaveSignatures}>
                             Save Signatures
                           </Button>
