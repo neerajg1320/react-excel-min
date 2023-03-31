@@ -21,6 +21,7 @@ import {bankStatementSchema} from "./extraction/schemas/bankStatement";
 import Switch from "react-switch";
 import {RuleCreator} from "./extraction/components/RuleCreator";
 import {LoadFileButton} from "./extraction/components/LoadFileButton";
+import {SaveFileButton} from "./extraction/components/SaveFileButton";
 
 // The groups are kept here so that the state can be preserved across Category component render
 
@@ -443,6 +444,10 @@ const App = () => {
     }
   }
 
+  const handleSaveComplete = () => {
+    console.log(`Save completed`);
+  }
+
   const handleSaveSignatures = () => {
     // console.log(`handleSaveSignatures: signatureMap:${JSON.stringify(signatureMap,null, 2)}`);
 
@@ -600,10 +605,14 @@ const App = () => {
                             Load Signatures
                           </LoadFileButton>
 
-                          <Button className="btn-outline-info" onClick={handleSaveSignatures}>
-                            Save Signatures
-                          </Button>
-                          
+                          <SaveFileButton className="btn-outline-info" data={JSON.stringify(signatureMap, null,2)} onChange={handleSaveComplete}>
+                            Save Sig
+                          </SaveFileButton>
+
+                          {/*<Button className="btn-outline-info" onClick={handleSaveSignatures}>*/}
+                          {/*  Save Signatures*/}
+                          {/*</Button>*/}
+
                           <Button className="btn-outline-info" onClick={handleShowSignatures}>
                             Show Signatures
                           </Button>

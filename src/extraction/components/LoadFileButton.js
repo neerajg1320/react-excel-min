@@ -45,6 +45,5 @@ export const LoadFileButton = ({children, onChange, onClick:parentClick, ...prop
           {children}
         </Button>
       </>
-  )
-
+  );
 }
